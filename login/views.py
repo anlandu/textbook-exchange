@@ -59,10 +59,11 @@ class OAuth2CallBack(generic.View):
 
 class TempHome(generic.View):
     def get(self, request, *args, **kwargs):
-        if request.session['access_token'] != "":
-            if request.session['email_domain'] != "virginia.edu":
-                return HttpResponse("Please log in with your UVA email address. This is so we can verify every student is from UVA!<br><a href='logout'>Logout?</a>")
-            return HttpResponse('Welcome ' + request.session['current_email'] + "!" + '<br><a href="logout">Logout?</a>')
+        if 'access_token' in request.session:
+            if request.session['access_token'] != "":
+                if request.session['email_domain'] != "virginia.edu":
+                    return HttpResponse("Please log in with your UVA email address. This is so we can verify every student is from UVA!<br><a href='logout'>Logout?</a>")
+                return HttpResponse('Welcome ' + request.session['current_email'] + "!" + '<br><a href="logout">Logout?</a>')
         return HttpResponse("You're not logged in! Would you like to <a href='oauth'>log in?</a>")
 
 class TempLogout(generic.View):
