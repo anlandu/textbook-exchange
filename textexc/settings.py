@@ -10,16 +10,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'bzlj_!^o$51mc-3zb^xg87$0u=ygwuo*(+(57fk1^=0w4zs#j-'
 
-# OAUTH 2 ID and Secret: keep this private
-CLIENT_ID = '926789688582-6hj6sj5kcquk9o6hc4proqh9p266v6mj.apps.googleusercontent.com'
-CLIENT_SECRET = 'VKJy7twp3ZHgG8wUoGFxv3yx'
-REDIRECT_URI = 'http://localhost:8000/login/oauth2callback'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# OAUTH 2 ID and Secret: keep this private
+CLIENT_ID = '926789688582-6hj6sj5kcquk9o6hc4proqh9p266v6mj.apps.googleusercontent.com'
+CLIENT_SECRET = 'VKJy7twp3ZHgG8wUoGFxv3yx'
+if DEBUG is True:
+    REDIRECT_URI = 'http://localhost:8000/login/oauth2callback'
+else:
+    REDIRECT_URI = 'http://pineapple-seals.herokuapp.com/login/oauth2callback'
 
+ALLOWED_HOSTS = []
 
 # Application definition
 
