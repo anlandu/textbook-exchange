@@ -11,7 +11,7 @@
     <!-- <link rel="stylesheet" type="text/css" href="{% static '/main.css' %}"> -->
 
     {% if title %}
-        <title>Textbook Exchange "{{ title }}" </title>
+        <title>Textbook Exchange: {{ title }}</title>
     {% else %}
         <title>Textbook Exchange</title>
     {% endif %}
@@ -26,7 +26,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                {% block loginlink %}<li class="nav-item text-black"><a class="nav-link text-black font-weight-bold" href="{% url 'login:home' %}">Login</a></li>{% endblock %}
+                {% block loginlink %}<li class="nav-item text-black"><a class="nav-link text-black font-weight-bold" href="{% url 'login:home' %}">{% if logged_in %}{{ account }}{% else %}Login{% endif %}</a></li>{% endblock %}
             </ul>
         </div>
     </div>
@@ -34,7 +34,6 @@
 
 <body>
     <div class="container">
-        <!-- navbar -->
         {% block content %}
         {% endblock %}
     </div>
