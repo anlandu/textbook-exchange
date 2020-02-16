@@ -12,16 +12,34 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     
     <!-- My CSS -->
-    <!-- <link rel="stylesheet" type="text/css" href="{% static '/main.css' %}"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="{% static '/landing.css' %}"> -->
 
     <title>Textbook Exchange</title>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Landing pg</h1>
-    </div>
-
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+          <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+          Awesome Textbook Exchange
+        </a>
+        <span class="navbar-text">
+            Login
+        </span>
+    </nav>
+    <div class="container" style="margin-top: 100px; ">
+        <div id="left-side" style="width: 40%; float: left;">
+            <h1 class="bigblurb">Landing pg!</h1>
+            <h3 class="smallblurb">This is the awesome textbook exchange site where you can buy or sell your textbooks to 
+                    other UVA students!</h3>
+        </div>
+        <button type="button" class="btn btn-primary btn-lg" style="width: 20%; margin: 5px 10%; float: right;">
+            Buy Books 
+        </button>
+        <button type="button" class="btn btn-secondary btn-lg" style="width: 20%; margin: 5px 10%; float: right;">
+            Sell Books 
+        </button>
+ 
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

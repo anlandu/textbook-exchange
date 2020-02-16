@@ -46,7 +46,7 @@ class OAuth2CallBack(generic.View):
             domain = "gmail"
 
         #if domain != "virginia.edu":
-        #    return HttpResponse("Please log in with your UVA email address. This is so we can verify every student is from UVA!<br><a href='logout'>Logout?</a>")
+        #    return HttpResponse("Please log in with your UVA email address. This is so we can verify that every student is from UVA!<br><a href='logout'>Logout?</a>")
 
         request.session['access_token'] = access_token
         request.session['current_email'] = email
