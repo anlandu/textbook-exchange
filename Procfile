@@ -1,1 +1,1 @@
-web:	gunicorn textexc.wsgi
+web:	gunicorn textexc.wsgi --log-level debug
