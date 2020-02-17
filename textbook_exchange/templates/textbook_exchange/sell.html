@@ -2,58 +2,75 @@
 {% load static %}
 {% block content %}
 <form>
-  <div class="form-group row">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+    <div class="form-group row">
+    <label for="bookName" class="col-sm-2 col-form-label">Book Name</label>
     <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+        <input type="text" class="form-control" id="bookName">
     </div>
-  </div>
-  <div class="form-group row">
-    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+    </div>
+    <div class="form-group row">
+    <label for="bookAuthor" class="col-sm-2 col-form-label">Book Author</label>
     <div class="col-sm-10">
-      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+        <input type="text" class="form-control" id="bookAuthor">
     </div>
-  </div>
-  <fieldset class="form-group">
+    </div>
+    <div class="form-group row">
+    <label for="ISBN" class="col-sm-2 col-form-label">ISBN</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="isbn">
+    </div>
+    </div>
+    <fieldset class="form-group">
     <div class="row">
-      <legend class="col-form-label col-sm-2 pt-0">Book Condition</legend>
-      <div class="col-sm-10">
+        <legend class="col-form-label col-sm-2 pt-0">Book Condition</legend>
+        <div class="col-sm-10">
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="likenew">
-          <label class="form-check-label" for="gridRadios1">
+            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="likenew">
+            <label class="form-check-label" for="gridRadios1">
             Like New <img src="{% static 'textbook_exchange/images/qmark.png' %}" style="height:2ex;" data-toggle="tooltip" data-placement="right" title="Item may have minor cosmetic defects (marks, wears, cuts, bends, crushes) on the cover, spine, pages or dust cover. Dust cover is intact and pages are clean and not marred by notes. Item may contain remainder marks on outside edges.">
-          </label>
+            </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="good">
-          <label class="form-check-label" for="gridRadios2">
+            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="good">
+            <label class="form-check-label" for="gridRadios2">
             Good <img src="{% static 'textbook_exchange/images/qmark.png' %}" style="height:2ex;" data-toggle="tooltip" data-placement="right" title="All pages and cover are intact (including the dust cover, if applicable). Spine may show signs of wear. Pages may include limited notes and highlighting. May include library labels. Shrink wrap, dust covers, or boxed set case may be missing. Item may be missing bundled media.">
-          </label>
+            </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="acceptable">
-          <label class="form-check-label" for="gridRadios3">
+            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="acceptable">
+            <label class="form-check-label" for="gridRadios3">
             Acceptable <img src="{% static 'textbook_exchange/images/qmark.png' %}" style="height:2ex;" data-toggle="tooltip" data-placement="right" title="All pages and the cover are intact, but shrink wrap, dust covers, or boxed set case may be missing. Pages may include limited notes, highlighting, or minor water damage but the text is readable. Item may but the dust cover may be missing. Pages may include limited notes and highlighting, but the text cannot be obscured or unreadable.">
-          </label>
+            </label>
         </div>
-      </div>
+        </div>
     </div>
-  </fieldset>
-  <div class="form-group row">
-    <div class="col-sm-2">Checkbox</div>
+    </fieldset>
+    <div class="form-group row">
+    <label for="price" class="col-sm-2 col-form-label">Price</label>
     <div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="gridCheck1">
-        <label class="form-check-label" for="gridCheck1">
-          Example checkbox
-        </label>
-      </div>
+        <input type="text" class="form-control" id="price">
     </div>
-  </div>
-  <div class="form-group row">
+    </div>
+
+    <div class="input-group mb-3">
+    <div class="custom-file">
+    <input type="file" class="custom-file-input" id="inputGroupFile01">
+    <label class="custom-file-label" for="inputGroupFile01">Add a Picture</label>
+    </div>
+    </div>
+
+    <div class="form-group row">
+    <label for="comments" class="col-sm-2 col-form-label">Comments about Textbook</label>
     <div class="col-sm-10">
-      <button type="submit" class="btn btn-primary">Sign in</button>
+        <input type="text" class="form-control" id="comments">
     </div>
-  </div>
+    </div>
+
+    <div class="form-group row">
+    <div class="col-sm-10">
+        <button type="submit" class="btn btn-primary">Sell!</button>
+    </div>
+    </div>
+</div>
 </form>
 {% endblock content %}
