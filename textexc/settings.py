@@ -17,7 +17,7 @@ DEBUG = True
 CLIENT_ID = '926789688582-6hj6sj5kcquk9o6hc4proqh9p266v6mj.apps.googleusercontent.com'
 CLIENT_SECRET = 'VKJy7twp3ZHgG8wUoGFxv3yx'
 
-is_production = False
+is_production = True
 if is_production is False:
     REDIRECT_URI = 'http://localhost:8000/login/oauth2callback'
 else:
