@@ -52,7 +52,7 @@ class OAuth2CallBack(generic.View):
         request.session['current_email'] = email
         request.session['email_domain'] = domain
 
-        return HttpResponseRedirect(reverse('login:home'))
+        return HttpResponseRedirect(reverse('exchange:landing'))
 
     def post(self, request, *args, **kwargs):
         return HttpResponseNotAllowed('Only GET requests!')
