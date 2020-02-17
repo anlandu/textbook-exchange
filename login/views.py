@@ -59,16 +59,22 @@ class OAuth2CallBack(generic.View):
 
 class TempHome(generic.View):
     def get(self, request, *args, **kwargs):
-        if 'access_token' in request.session:
-            if request.session['access_token'] != "":
-                if request.session['email_domain'] != "virginia.edu":
-                    return HttpResponse("Please log in with your UVA email address. This is so we can verify that you are a UVA student!<br><a href='logout'>Logout?</a>")
-                return HttpResponse('Welcome ' + request.session['current_email'] + "!" + '<br><a href="logout">Logout?</a>')
-        return HttpResponse("You're not logged in! Would you like to <a href='oauth'>Try again?</a>")
+        if 'email_domain' not in request.session:
+            #never logged in, redirect
+            return HttpResponseRedirect(reverse('login:oauth'))
+        elif request.session['email_domain'] == "":
+            #not logged in, redirect
+            return HttpResponseRedirect(reverse("login:oauth"))
+        elif request.session['email_domain'] != "virginia.edu":
+            #not logged in with uva email
+            return HttpResponse("Please log in with your UVA email address. This is so we can verify that you are a UVA student!<br><a href='logout'>Logout?</a>")
+        else:
+            #logged into uva account, proceed to temp account page
+            return HttpResponse('Welcome ' + request.session['current_email'] + "!" + '<br><a href="logout">Logout?</a>')
 
 class TempLogout(generic.View):
     def get(self, request, *args, **kwargs):
         request.session['access_token'] = ""
         request.session['current_email'] = ""
         request.session['email_domain'] = ""
-        return HttpResponseRedirect(reverse('login:home'))
+        return HttpResponseRedirect(reverse('exchange:landing'))
