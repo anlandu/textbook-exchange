@@ -1,5 +1,5 @@
 {% extends "textbook_exchange/base.html" %}
-
+{% load static %}
 {% block content %}
 <form>
   <div class="form-group row">
@@ -16,24 +16,24 @@
   </div>
   <fieldset class="form-group">
     <div class="row">
-      <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+      <legend class="col-form-label col-sm-2 pt-0">Book Condition</legend>
       <div class="col-sm-10">
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="likenew">
           <label class="form-check-label" for="gridRadios1">
-            First radio
+            Like New <img src="{% static 'textbook_exchange/images/qmark.png' %}" style="height:2ex;" data-toggle="tooltip" data-placement="right" title="Item may have minor cosmetic defects (marks, wears, cuts, bends, crushes) on the cover, spine, pages or dust cover. Dust cover is intact and pages are clean and not marred by notes. Item may contain remainder marks on outside edges.">
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="good">
           <label class="form-check-label" for="gridRadios2">
-            Second radio
+            Good <img src="{% static 'textbook_exchange/images/qmark.png' %}" style="height:2ex;" data-toggle="tooltip" data-placement="right" title="All pages and cover are intact (including the dust cover, if applicable). Spine may show signs of wear. Pages may include limited notes and highlighting. May include library labels. Shrink wrap, dust covers, or boxed set case may be missing. Item may be missing bundled media.">
           </label>
         </div>
-        <div class="form-check disabled">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="acceptable">
           <label class="form-check-label" for="gridRadios3">
-            Third disabled radio
+            Acceptable <img src="{% static 'textbook_exchange/images/qmark.png' %}" style="height:2ex;" data-toggle="tooltip" data-placement="right" title="All pages and the cover are intact, but shrink wrap, dust covers, or boxed set case may be missing. Pages may include limited notes, highlighting, or minor water damage but the text is readable. Item may but the dust cover may be missing. Pages may include limited notes and highlighting, but the text cannot be obscured or unreadable.">
           </label>
         </div>
       </div>
