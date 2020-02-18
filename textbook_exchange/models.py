@@ -11,14 +11,14 @@ class User(models.Model):
         return self.name
 
 class Textbook(models.Model):
-    class_object = models.ForeignKey(Class, on_delete = models.CASCADE)
+    class_object = models.ForeignKey(User, on_delete = models.CASCADE)
     isbn = models.CharField(max_length = 13)
     #An ISBN Check is going to be needed here
     author = models.CharField(max_length = 200)
     title = models.CharField(max_length = 250)
     edition = models.CharField(max_length = 200)
     cover_photo = models.ImageField(upload_to = 'textbook_images')
-    class_key = models.CharFiled(max_length = 200)
+    class_key = models.CharField(max_length = 200)
     
     def __str__(self):
         return self.title + " " + self.edition
