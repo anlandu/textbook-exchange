@@ -2,11 +2,9 @@ from django.shortcuts import render
 from django.views import generic
 
 def get_logged_in(request):
-    logged_in = request.session.get("email_domain", "")
-    if logged_in == "virginia.edu":
+    if request.user.is_authenticated:
         context = {
             'logged_in': True,
-            'account': request.session.get('current_email', ''),
         }
     else:
         context = {

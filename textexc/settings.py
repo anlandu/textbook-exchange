@@ -17,12 +17,6 @@ DEBUG = True
 CLIENT_ID = '926789688582-6hj6sj5kcquk9o6hc4proqh9p266v6mj.apps.googleusercontent.com'
 CLIENT_SECRET = 'VKJy7twp3ZHgG8wUoGFxv3yx'
 
-is_production = True
-if is_production is False:
-    REDIRECT_URI = 'http://localhost:8000/login/oauth2callback'
-else:
-    REDIRECT_URI = 'http://pineapple-seals.herokuapp.com/login/oauth2callback'
-
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -35,6 +29,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google'
 ]
 
 MIDDLEWARE = [
@@ -97,6 +96,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -116,5 +123,29 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SITE_ID = 1
+
+
+# ALL AUTH CONFIG
+ACCOUNT_LOGOUT_REDIRECT_URL ='/'
+LOGIN_REDIRECT_URL = '/'
+SOCIALACCOUNT_QUERY_EMAIL=True
+ACCOUNT_LOGOUT_ON_GET = True
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '926789688582-6hj6sj5kcquk9o6hc4proqh9p266v6mj.apps.googleusercontent.com',
+            'secret': 'VKJy7twp3ZHgG8wUoGFxv3yx',
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+    }
+}
+
 
 django_heroku.settings(locals())
