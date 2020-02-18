@@ -17,12 +17,6 @@ DEBUG = True
 CLIENT_ID = '926789688582-6hj6sj5kcquk9o6hc4proqh9p266v6mj.apps.googleusercontent.com'
 CLIENT_SECRET = 'VKJy7twp3ZHgG8wUoGFxv3yx'
 
-is_production = True
-if is_production is False:
-    REDIRECT_URI = 'http://localhost:8000/login/oauth2callback'
-else:
-    REDIRECT_URI = 'http://pineapple-seals.herokuapp.com/login/oauth2callback'
-
 ALLOWED_HOSTS = []
 
 # Application definition
