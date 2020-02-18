@@ -26,7 +26,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                {% block loginlink %}<li class="nav-item text-black"><a class="nav-link text-black font-weight-bold" href="{% url 'google_login' %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
+                {% block loginlink %}<li class="nav-item text-black"><a class="nav-link text-black font-weight-bold" href="{% if user.is_authenticated %}{% url 'account_logout' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
             </ul>
         </div>
     </div>
