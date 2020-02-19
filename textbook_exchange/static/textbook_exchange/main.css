@@ -1,3 +1,12 @@
+:root {
+    --uva-blue: rgb(35, 45, 75);
+    --uva-orange: rgb(229, 114, 0);
+}
+
 div.container {
     margin-top: 50px;
+}
+
+nav.uva {
+    background-color: var(--uva-blue);
 }
