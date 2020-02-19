@@ -9,5 +9,5 @@ class SellForm(forms.Form):
     picture = forms.ImageField(label='Picture of Book', widget=forms.FileInput(attrs={'class': 'form-control'}))
     comments = forms.CharField(label='Comments about Textbook', max_length=300, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': '3'}))
 
-    def submit_suggestion(self):
+    def submit_listing(self):
         print(self.cleaned_data['book_name'] + " by " + self.cleaned_data['book_author'])
