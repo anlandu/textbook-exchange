@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
+from .forms import SellForm
 
 def get_logged_in(request):
     if request.user.is_authenticated:
@@ -27,5 +28,6 @@ def buy_books(request):
 def sell_books(request):
     context=get_logged_in(request)
     context['title']='Sell Books'
+    context['form'] = SellForm
     
     return render(request, 'textbook_exchange/sell.html', context=context)

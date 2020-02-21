@@ -17,16 +17,16 @@
     {% endif %}
 </head>
 
-<nav class="navbar navbar-expand navbar-dark bg-dark shadow" id="mainNav">
+<nav class="uva navbar navbar-expand shadow" id="mainNav">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
+        <a class="uva navbar-brand" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
             aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                {% block loginlink %}<li class="nav-item text-black"><a class="nav-link text-black font-weight-bold" href="{% if user.is_authenticated %}{% url 'account_logout' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
+                {% block loginlink %}<li class="nav-item text-black"><a class="uva nav-link text-black font-weight-bold" href="{% if user.is_authenticated %}{% url 'account_logout' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
             </ul>
         </div>
     </div>
