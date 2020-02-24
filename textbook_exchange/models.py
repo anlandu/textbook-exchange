@@ -5,17 +5,17 @@ from django.db import models
 
 # Create your models here.
 #Django User Model
-#class User(AbstractUser):
-#    username = models.CharField(_('username'), max_length = 30, unique = True)
-#    first_name = models.CharField(_('first name'), max_length = 30, blank = True)
-#    last_name = models.CharField(_('last name'), max_length = 30, blank = True)
-#    email = models.EmailField(_('email address'), blank = True)
-#    password = models.CharField(_('password'), max_length = 30)
-#    is_staff = models.BooleanField(_('staff status'), default = False)
-#    date_joined = models.DateTimeField(_('date joined'), default = timezone.now)
-#
-#    USERNAME_FIELD = 'username'
-#    REQUIRED_FIELDS = ['email']
+class User(AbstractUser):
+    username = models.CharField(_('username'), max_length = 30, unique = True)
+    first_name = models.CharField(_('first name'), max_length = 30, blank = True)
+    last_name = models.CharField(_('last name'), max_length = 30, blank = True)
+    email = models.EmailField(_('email address'), blank = True)
+    password = models.CharField(_('password'), max_length = 30)
+    is_staff = models.BooleanField(_('staff status'), default = False)
+    date_joined = models.DateTimeField(_('date joined'), default = timezone.now)
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
 
 class Textbook(models.Model):
     class_object = models.ForeignKey(User, on_delete = models.CASCADE)
