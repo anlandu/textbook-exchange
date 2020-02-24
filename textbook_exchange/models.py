@@ -1,21 +1,21 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from django.utils import timezone
+#from django.utils import timezone
 
 
 # Create your models here.
 #Django User Model
-class User(AbstractUser):
-    username = models.CharField(_('username'), max_length = 30, unique = True)
-    first_name = models.CharField(_('first name'), max_length = 30, blank = True)
-    last_name = models.CharField(_('last name'), max_length = 30, blank = True)
-    email = models.EmailField(_('email address'), blank = True)
-    password = models.CharField(_('password'), max_length = 30)
-    is_staff = models.BooleanField(_('staff status'), default = False)
-    date_joined = models.DateTimeField(_('date joined'), default = timezone.now)
-
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+#class User(AbstractUser):
+#    username = models.CharField(_('username'), max_length = 30, unique = True)
+#    first_name = models.CharField(_('first name'), max_length = 30, blank = True)
+#    last_name = models.CharField(_('last name'), max_length = 30, blank = True)
+#    email = models.EmailField(_('email address'), blank = True)
+#    password = models.CharField(_('password'), max_length = 30)
+#    is_staff = models.BooleanField(_('staff status'), default = False)
+#    date_joined = models.DateTimeField(_('date joined'), default = timezone.now)
+#
+#    USERNAME_FIELD = 'username'
+#    REQUIRED_FIELDS = ['email']
 
 class Textbook(models.Model):
     class_object = models.ForeignKey(User, on_delete = models.CASCADE)
@@ -44,7 +44,7 @@ class Class(models.Model):
         return class_info.strip()
 
 class Listing(models.Model):
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
+#    user = models.ForeignKey(User, on_delete = models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete = models.CASCADE)
     class_object = models.ForeignKey(Class, on_delete = models.CASCADE)
     condition = models.IntegerField(default = 0)
