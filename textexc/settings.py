@@ -72,8 +72,12 @@ WSGI_APPLICATION = 'textexc.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.path.join(BASE_DIR, 'db.postgresql'), #stored in project directory
+        'USER': 'pineapple-seals-admin',
+        'PASSWORD': 'mypassword',
+        'HOST': '', #127.0.0.1 is the default for postgre
+        'PORT': '5432',
     }
 }
 
@@ -110,7 +114,7 @@ AUTHENTICATION_BACKENDS = (
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 
