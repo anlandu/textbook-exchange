@@ -1,17 +1,21 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils import timezone
+
 
 # Create your models here.
-"""class User(models.Model):
-    name = models.CharField(max_length = 200)
-    email = models.EmailField(max_length = 200)
-    number_of_transactions = models.IntegerField(default = 0)
-    number_of_positive_transactions = models.IntegerField(default = 0)
+#Django User Model
+class User(AbstractUser):
+    username = models.CharField(_('username'), max_length = 30, unique = True)
+    first_name = models.CharField(_('first name'), max_length = 30, blank = True)
+    last_name = models.CharField(_('last name'), max_length = 30, blank = True)
+    email = models.EmailField(_('email address'), blank = True)
+    password = models.CharField(_('password'), max_length = 30)
+    is_staff = models.BooleanField(_('staff status'), default = False)
+    date_joined = models.DateTimeField(_('date joined'), default = timezone.now)
 
-    def __str__(self):
-        return self.name
-"""
-#Going to use the custom user model provided by Django
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
 
 class Textbook(models.Model):
     class_object = models.ForeignKey(User, on_delete = models.CASCADE)
@@ -24,7 +28,8 @@ class Textbook(models.Model):
     class_key = models.CharField(max_length = 200)
     
     def __str__(self):
-        return self.title + " " + self.edition
+        textbook = '%s %s' % (self.title, self.edition)
+        return textbook.strip()
 
 class Class(models.Model):
     department = models.CharField(max_length = 200)
@@ -35,10 +40,11 @@ class Class(models.Model):
     professor = models.CharField(max_length = 200)
 
     def __str__(self):
-        return self.subject + self.class_code
+        class_info = '%s%s' % (self.subject, self.class_code)
+        return class_info.strip()
 
 class Listing(models.Model):
-    #foreign key to user
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete = models.CASCADE)
     class_object = models.ForeignKey(Class, on_delete = models.CASCADE)
     condition = models.IntegerField(default = 0)
