@@ -1,0 +1,36 @@
+:root {
+    --uva-blue: rgb(35, 45, 75);
+    --uva-orange: rgb(229, 114, 0);
+    --uva-white: rgb(255, 255, 255);
+}
+
+div.container {
+    margin-top: 50px;
+}
+
+.uva {
+    background-color: var(--uva-blue);
+    color: var(--uva-white);
+}
+
+.uva:hover {
+    color: var(--uva-white);
+}
+
+.btn-uva {
+    background-color: var(--uva-orange);
+    color: var(--uva-white);
+}
+
+.btn-uva:hover {
+    color: var(--uva-white);
+}
+
+.btn-uva-secondary {
+    background-color: var(--uva-blue);
+    color: var(--uva-white);
+}
+
+.btn-uva-secondary:hover {
+    color: var(--uva-white);
+}
