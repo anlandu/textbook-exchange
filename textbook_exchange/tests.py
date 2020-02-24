@@ -1,3 +1,9 @@
 from django.test import TestCase
 
-# Create your tests here.
+class HelloWord(TestCase):
+
+    def two_plus_two(self):
+        """
+        Stub test
+        """
+        self.assertEqual(2+2, 4)
