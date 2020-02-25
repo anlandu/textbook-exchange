@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-#from django.utils import timezone
+from django.utils import timezone
 
 
 # Create your models here.
@@ -49,9 +49,13 @@ class Listing(models.Model):
     class_object = models.ForeignKey(Class, on_delete = models.CASCADE)
     condition = models.IntegerField(default = 0)
     picture = models.ImageField(upload_to = 'listing_images')
-    comments = models.ArrayField(models.CharField(max_length = 500), blank = True)
+    comments = ArrayField(models.CharField(max_length = 500), blank = True)
     price = models.DecimalField(max_digits = 5, decimal_places = 2)
     hasBeenSoldFlag = models.BooleanField()
+
+    def publish(self):
+        self.published_date = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.textbook
