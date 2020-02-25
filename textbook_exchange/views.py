@@ -31,3 +31,9 @@ def sell_books(request):
     context['form'] = SellForm
     
     return render(request, 'textbook_exchange/sell.html', context=context)
+
+def account_page(request):
+    context = get_logged_in(request)
+    context['title'] = 'Account Page'
+
+    return render(request, 'textbook_exchange/account_page.html', context=context)
