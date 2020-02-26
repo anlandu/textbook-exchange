@@ -14,21 +14,17 @@ class User(AbstractUser):
     # is_staff = models.BooleanField(_('staff status'), default = False)
     # date_joined = models.DateTimeField(_('date joined'), default = timezone.now)
 
-    #blank means the fields are optional, but these aren't...
-    #don't need username
-    #do we need is_staff? they don't function any differently than other users
-
     # id = models.AutoField()
     username = models.CharField(_('username'), max_length=30)
     password = models.CharField(max_length=30)
-    first_name = models.CharField(_('first name'), max_length=30)
-    last_name = models.CharField(_('last name'), max_length=30)
-    email = models.EmailField(_('email address'), primary_key=True)
+    first_name = models.CharField(_('first name'), max_length=30, blank = True)
+    last_name = models.CharField(_('last name'), max_length=30, blank = True)
+    email = models.EmailField(_('email address'), primary_key=True, blank = True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'email', 'password'] #add first and last name?
+    REQUIRED_FIELDS = ['username', 'password'] #add first and last name?
 
 class Textbook(models.Model):
     class_object = models.ForeignKey(User, on_delete=models.CASCADE)
