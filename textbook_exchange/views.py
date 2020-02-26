@@ -30,10 +30,12 @@ def sell_books(request):
     context['title']='Sell Books'
     context['form'] = SellForm
     
-    return render(request, 'textbook_exchange/sell.html', context=context)
+    return render(request, 'textbook_exchange/sellbooks.html', context=context)
 
 def account_page(request):
     context = get_logged_in(request)
     context['title'] = 'Account Page'
+
+    #save if you mde chnges to dtbse
 
     return render(request, 'textbook_exchange/account_page.html', context=context)
