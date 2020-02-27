@@ -75,11 +75,11 @@ WSGI_APPLICATION = 'textexc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.path.join(BASE_DIR, 'db.postgresql'), #stored in project directory
+        'NAME': 'db.postgresql',
         'USER': 'pineapple-seals-admin',
         'PASSWORD': 'mypassword',
-        'HOST': '', #127.0.0.1 is the default for postgre
-        'PORT': '5432',
+        'HOST': '', # default - 127.0.0.1
+        'PORT': '', # default - 5432
     }
 }
 
