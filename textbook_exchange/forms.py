@@ -15,11 +15,11 @@ class SellForm(forms.Form):
 
 # from django.utils.translation import ugettext_lazy as _
 # from django.forms import ModelForm, Textarea, TextInput, NumberInput, FileInput
-# from .models import Listing
+# from .models import ProductListing
 # 
 # class SellForm(forms.ModelForm):
 #     class Meta:
-#         model = Listing
+#         model = ProductListing
 #         fields = ('textbook', 'class_object', 'condition_choices', 'picture', 'price', 'comments') #how to get foreignKey fields?
 #         # https://stackoverflow.com/questions/21164798/django-modelform-with-foreign-key
 #         # https://stackoverflow.com/questions/5708650/how-do-i-add-a-foreign-key-field-to-a-modelform-in-django

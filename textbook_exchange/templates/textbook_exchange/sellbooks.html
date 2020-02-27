@@ -55,6 +55,7 @@
     <div class="col-sm-12">
         <!-- FORM -->
         <form action="" method="post" novalidate>
+            {% csrf_token %}
             <div class="card">
                 <div class="card-content p-3">
                     <h3 class="card-title">Book Info</h3>

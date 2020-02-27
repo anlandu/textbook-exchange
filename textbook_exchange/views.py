@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django import forms
 
 from .forms import SellForm
-from .models import Listing
+from .models import ProductListing
 
 def get_logged_in(request):
     if request.user.is_authenticated:
@@ -45,7 +45,7 @@ def sell_books(request):
 
             # TODO: validate the ISBN and throw error if not valid
 
-            listing_obj = Listing() #gets new object
+            listing_obj = ProductListing() #gets new object
             # listing_obj.textbook.title = cleaned_data['book_title']
             # listing_obj.textbook.author = cleaned_data['book_author']
             # listing_obj.textbook.isbn = cleaned_data['isbn']

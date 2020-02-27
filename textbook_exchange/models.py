@@ -44,7 +44,7 @@ class Class(models.Model):
         class_info = '%s%s' % (self.subject, self.class_code)
         return class_info.strip()
 
-class Listing(models.Model):
+class ProductListing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     class_object = models.ForeignKey(Class, on_delete=models.CASCADE)
