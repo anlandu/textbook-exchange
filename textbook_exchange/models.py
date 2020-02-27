@@ -3,8 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils import timezone
 
-# does every model need user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) ?
-
 # Create your models here.
 class User(AbstractUser):
     username = models.CharField(_('username'), max_length=30)
