@@ -29,14 +29,12 @@ def buy_books(request):
 
     return render(request, 'textbook_exchange/buybooks.html', context=context)
 
-# def sell_books(request):
-#     context=get_logged_in(request)
-#     context['title'] ='Sell Books'
-#     context['form'] = SellForm
-    
-#     return render(request, 'textbook_exchange/sellbooks.html', context=context)
 
-def sell_on_submit(request):
+# https://djangobook.com/mdj2-django-forms/
+def sell_books(request):
+    # context=get_logged_in(request)
+    # context['title'] ='Sell Books'
+    # context['form'] = SellForm
     submitted = False
     if request.method == 'POST':
         form = SellForm(request.POST)
@@ -44,7 +42,7 @@ def sell_on_submit(request):
         if form.is_valid():
             cleaned_data = form.cleaned_data
             assert False
-            return HttpResponseRedirect('/sell_on_submit?submitted=True')
+            return HttpResponseRedirect('/sell_books?submitted=True')
     else:
         form = SellForm()
         if 'submitted' in request.GET:
