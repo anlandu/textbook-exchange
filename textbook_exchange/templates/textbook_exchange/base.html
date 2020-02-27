@@ -6,7 +6,6 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
 
@@ -20,19 +19,21 @@
     {% endif %}
 </head>
 
-<nav class="uva navbar navbar-expand shadow" id="mainNav">
+<nav class="uva navbar navbar-expand-lg shadow" id="mainNav" role='navigation'>
     <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="uva fa fa-bars"></span>          
+        </button>
         <!-- Logo -->
-        <a class="uva navbar-brand" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
-        <!-- Search Bar -->
-        <span class="glyphicon glyphicon-search" style="padding-right: 10px;"></span>
-        <input class="form-control" style="width: 30%;" type="text" placeholder="Search" aria-label="Search">
-        <!-- Or Sell A Book -->
-        <a class="uva navbar-collapse container-fullwidth" href="{% url 'exchange:sellbooks' %}" style="text-decoration:underline;">Or sell a book</a>
+        <a class="uva navbar-brand text-center text-lg-right" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
         <!-- Login/Username -->
         <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto"  style="float: right;">
-                {% block loginlink %}<li class="nav-item text-black"><a class="uva nav-link text-black font-weight-bold" href="{% if user.is_authenticated %}{% url 'account_logout' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
+            <form class="my-2 my-lg-0" style="width: 70%;">
+                <input class="form-control mr-sm" type="search" placeholder="Search for a book" aria-label="Search">
+            </form>
+            <ul class="navbar-nav ml-auto" style="float: right;">
+                <li class="nav-item"><a class="uva nav-link font-weight-bold ml-2" href="{% url 'exchange:sellbooks' %}" style="text-decoration:underline;">Or sell a book</a></li>
+                {% block loginlink %}<li class="nav-item"><a class="uva nav-link font-weight-bold" href="{% if user.is_authenticated %}{% url 'account_logout' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
             </ul>
         </div>
     </div>
