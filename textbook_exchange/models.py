@@ -3,6 +3,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils import timezone
 
+import datetime
+
+
 # does every model need user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) ?
 
 # Create your models here.
@@ -17,9 +20,9 @@ class User(AbstractUser):
     # id = models.AutoField()
     username = models.CharField(_('username'), max_length=30)
     password = models.CharField(max_length=30)
-    first_name = models.CharField(_('first name'), max_length=30, blank = True)
-    last_name = models.CharField(_('last name'), max_length=30, blank = True)
-    email = models.EmailField(_('email address'), primary_key=True, blank = True)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    email = models.EmailField(_('email address'), primary_key=True, blank=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
@@ -65,6 +68,7 @@ class Listing(models.Model):
     # comments = ArrayField(models.CharField(max_length=500), blank=True)
     comments = models.CharField(max_length=500, blank=True)
     hasBeenSoldFlag = models.BooleanField()
+    # date_published = models.DateTimeField('date published', auto_now_add=True, blank=True)
 
     def publish(self):
         self.published_date = timezone.now()
