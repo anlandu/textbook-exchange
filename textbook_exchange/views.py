@@ -31,7 +31,7 @@ def buy_books(request):
     return render(request, 'textbook_exchange/buybooks.html', context=context)
 
 
-# https://djangobook.com/mdj2-django-forms/
+# Followed this tutorials: https://djangobook.com/mdj2-django-forms/
 def sell_books(request):
     # context=get_logged_in(request)
     # context['title'] ='Sell Books'
@@ -43,12 +43,21 @@ def sell_books(request):
             cleaned_data = form.cleaned_data
             # assert False
 
-            listing_obj = Listing() #gets new object
-            listing_obj.business_name = cleaned_data['business_name']
-            listing_obj.business_email = cleaned_data['business_email']
-            listing_obj.business_phone = cleaned_data['business_phone']
-            listing_obj.business_website = cleaned_data['business_website']
+            # TODO: validate the ISBN and throw error if not valid
 
+            listing_obj = Listing() #gets new object
+            # listing_obj.textbook.title = cleaned_data['book_title']
+            # listing_obj.textbook.author = cleaned_data['book_author']
+            # listing_obj.textbook.isbn = cleaned_data['isbn']
+            listing_obj.condition = cleaned_data['book_condition']
+            listing_obj.price = cleaned_data['price']
+            listing_obj.picture = cleaned_data['picture']
+            listing_obj.comments = cleaned_data['comments']
+
+            # TODO: find this book in UVA books and save with that foreign key
+            # user=request.user
+            # https://stackoverflow.com/questions/24793385/django-saving-form-with-user-as-foreign-key
+            
             listing_obj.save()
 
             return HttpResponseRedirect('/sell_books?submitted=True')

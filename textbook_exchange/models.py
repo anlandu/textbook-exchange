@@ -48,9 +48,11 @@ class Listing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     class_object = models.ForeignKey(Class, on_delete=models.CASCADE)
+    
     price = models.DecimalField(max_digits=5, decimal_places=2)
-    condition = [("likenew", "Like new"), ("verygood", "Very good"), ("good", "Good"), ("acceptable", "Acceptable")]
-    condition_choices = models.CharField(condition, default="likenew", max_length=10)
+    # condition = [("likenew", "Like new"), ("verygood", "Very good"), ("good", "Good"), ("acceptable", "Acceptable")]
+    # condition_choices = models.CharField(condition, default="likenew", max_length=10)
+    condition = models.CharField(max_length=10)
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)
     hasBeenSoldFlag = models.BooleanField(default=False)
