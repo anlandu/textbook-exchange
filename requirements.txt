@@ -9,3 +9,4 @@ pytz==2019.3
 sqlparse==0.3.0
 whitenoise==5.0.1
 django-allauth==0.41.0
+Pillow==7.0.0
