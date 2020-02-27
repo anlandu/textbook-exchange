@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django import forms
 
 from .forms import SellForm
+from .models import Listing
 
 def get_logged_in(request):
     if request.user.is_authenticated:
@@ -38,10 +39,18 @@ def sell_books(request):
     submitted = False
     if request.method == 'POST':
         form = SellForm(request.POST)
-
         if form.is_valid():
             cleaned_data = form.cleaned_data
-            assert False
+            # assert False
+
+            listing_obj = Listing() #gets new object
+            listing_obj.business_name = cleaned_data['business_name']
+            listing_obj.business_email = cleaned_data['business_email']
+            listing_obj.business_phone = cleaned_data['business_phone']
+            listing_obj.business_website = cleaned_data['business_website']
+
+            listing_obj.save()
+
             return HttpResponseRedirect('/sell_books?submitted=True')
     else:
         form = SellForm()

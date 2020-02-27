@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils import timezone
 
+# does every model need user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) ?
+
 # Create your models here.
 class User(AbstractUser):
     username = models.CharField(_('username'), max_length=30)
@@ -51,7 +53,8 @@ class Listing(models.Model):
     condition_choices = models.CharField(condition, default="likenew", max_length=10)
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)
-    hasBeenSoldFlag = models.BooleanField()
+    hasBeenSoldFlag = models.BooleanField(default=False)
+    published_date = models.DateTimeField('date published') #second prm and its type (time)
 
     def publish(self):
         self.published_date = timezone.now()
