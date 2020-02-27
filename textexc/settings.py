@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google'
 ]
 
+#AUTH_USER_MODEL = 'textbook_exchange.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
