@@ -8,10 +8,10 @@ from django.conf import settings
 
 # Create your models here.
 class User(AbstractUser):
-    username = models.CharField(_('username'), max_length=60)
-    password = models.CharField(max_length=60)
-    first_name = models.CharField(_('first name'), max_length=60, blank=True)
-    last_name = models.CharField(_('last name'), max_length=60, blank=True)
+    username = models.CharField(_('username'), max_length=120)
+    password = models.CharField(max_length=120)
+    first_name = models.CharField(_('first name'), max_length=120, blank=True)
+    last_name = models.CharField(_('last name'), max_length=120, blank=True)
     email = models.EmailField(_('email address'), primary_key=True, blank=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
