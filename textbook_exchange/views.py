@@ -3,6 +3,7 @@ from django.views import generic
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django import forms
+from django.utils import timezone
 
 from .forms import SellForm
 from .models import ProductListing
@@ -38,7 +39,7 @@ def sell_books(request):
     # context['form'] = SellForm
     submitted = False
     if request.method == 'POST':
-        form = SellForm(request.POST)
+        form = SellForm(request.POST, request.FILES)
         if form.is_valid():
             cleaned_data = form.cleaned_data
             # assert False
@@ -53,6 +54,7 @@ def sell_books(request):
             listing_obj.price = cleaned_data['price']
             listing_obj.picture = cleaned_data['picture']
             listing_obj.comments = cleaned_data['comments']
+            listing_obj.published_date = timezone.now()
 
             # TODO: find this book in UVA books and save with that foreign key
             # user=request.user
@@ -61,6 +63,8 @@ def sell_books(request):
             listing_obj.save()
 
             return HttpResponseRedirect('/sell_books?submitted=True')
+        else:
+            print(form.errors)
     else:
         form = SellForm()
         if 'submitted' in request.GET:
