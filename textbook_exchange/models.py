@@ -20,19 +20,6 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'password'] #add first and last name?
 
-class Textbook(models.Model):
-    class_object = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    isbn = models.IntegerField(primary_key=True)
-    class_key = models.CharField(max_length=200)
-    title = models.CharField(max_length=350)
-    author = models.CharField(max_length=200)
-    edition = models.CharField(max_length=200)
-    cover_photo = models.ImageField(upload_to='textbook_images')
-    
-    def __str__(self):
-        textbook = '%s %s' % (self.title, self.edition)
-        return textbook.strip()
-
 class Class(models.Model):
     department = models.CharField(max_length=200)
     subject = models.CharField(max_length=200)
@@ -45,6 +32,19 @@ class Class(models.Model):
     def __str__(self):
         class_info = '%s%s' % (self.subject, self.class_code)
         return class_info.strip()
+
+class Textbook(models.Model):
+    class_object = models.ForeignKey(Class, on_delete=models.CASCADE)
+    isbn = models.IntegerField(primary_key=True)
+    class_key = models.CharField(max_length=200)
+    title = models.CharField(max_length=350)
+    author = models.CharField(max_length=200)
+    edition = models.CharField(max_length=200)
+    cover_photo = models.ImageField(upload_to='textbook_images')
+    
+    def __str__(self):
+        textbook = '%s, Edition %s' % (self.title, self.edition)
+        return textbook.strip()
 
 class ProductListing(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -65,7 +65,7 @@ class ProductListing(models.Model):
         self.save()
 
     def __str__(self):
-        return self.textbook
+        return str(self.textbook)
 
     
 

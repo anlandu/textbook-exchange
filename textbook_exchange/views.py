@@ -55,6 +55,9 @@ def sell_books(request):
             listing_obj.picture = cleaned_data['picture']
             listing_obj.comments = cleaned_data['comments']
             listing_obj.published_date = timezone.now()
+            listing_obj.class_object_id = 3240
+            listing_obj.textbook_id = 111
+            listing_obj.user_id = 'nw5zp@virginia.edu'
 
             # TODO: find this book in UVA books and save with that foreign key
             # user=request.user
