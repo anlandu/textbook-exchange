@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 # does every model need user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) ?
 
@@ -19,7 +20,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username', 'password'] #add first and last name?
 
 class Textbook(models.Model):
-    class_object = models.ForeignKey(User, on_delete=models.CASCADE)
+    class_object = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     isbn = models.IntegerField(primary_key=True)
     class_key = models.CharField(max_length=200)
     title = models.CharField(max_length=350)
@@ -45,13 +46,13 @@ class Class(models.Model):
         return class_info.strip()
 
 class ProductListing(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     class_object = models.ForeignKey(Class, on_delete=models.CASCADE)
     
     price = models.DecimalField(max_digits=5, decimal_places=2)
     # condition = [("likenew", "Like new"), ("verygood", "Very good"), ("good", "Good"), ("acceptable", "Acceptable")]
-    # condition_choices = models.CharField(condition, default="likenew", max_length=10)
+    # condition_choices = models.Cpy (condition, default="likenew", max_length=10)
     condition = models.CharField(max_length=10)
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)
