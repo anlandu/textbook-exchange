@@ -2,83 +2,152 @@
 {% load static %}
 
 {% block content %}
-<form>
-    <fieldset>
-        <div class="form-group row">
-            <div class="col-md-2 col-form-label">{{ form.book_name.label_tag }}</div>
-            <div class="col-md-10">{{ form.book_name }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-2 col-form-label">{{ form.book_author.label_tag }}</div>
-            <div class="col-md-10">{{ form.book_author }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-2 col-form-label">{{ form.isbn.label_tag }}</div>
-            <div class="col-md-10">{{ form.isbn }}</div>
-        </div>
-    
-        <div class="form-group row">
-            <div class="col-md-2 col-form-label">{{ form.book_condition.label_tag }}</div>
-            <div class="col-md-10">
-                {% for choice in form.book_condition %}
-                    <div class="form-check">
-                        {{ choice.tag }}
-                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </fieldset>
-    <!--
-        <fieldset class="form-group">
-        <div class="row">
-            <legend class="col-form-label col-sm-2 pt-0">Book Condition</legend>
-            <div class="col-sm-10">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="likenew">
-                <label class="form-check-label" for="gridRadios1">
-                Like New <img src="{% static 'textbook_exchange/images/qmark.png' %}" style="height:2ex;" data-toggle="tooltip" data-placement="right" title="Item may have minor cosmetic defects (marks, wears, cuts, bends, crushes) on the cover, spine, pages or dust cover. Dust cover is intact and pages are clean and not marred by notes. Item may contain remainder marks on outside edges.">
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="good">
-                <label class="form-check-label" for="gridRadios2">
-                Good <img src="{% static 'textbook_exchange/images/qmark.png' %}" style="height:2ex;" data-toggle="tooltip" data-placement="right" title="All pages and cover are intact (including the dust cover, if applicable). Spine may show signs of wear. Pages may include limited notes and highlighting. May include library labels. Shrink wrap, dust covers, or boxed set case may be missing. Item may be missing bundled media.">
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="acceptable">
-                <label class="form-check-label" for="gridRadios3">
-                Acceptable <img src="{% static 'textbook_exchange/images/qmark.png' %}" style="height:2ex;" data-toggle="tooltip" data-placement="right" title="All pages and the cover are intact, but shrink wrap, dust covers, or boxed set case may be missing. Pages may include limited notes, highlighting, or minor water damage but the text is readable. Item may but the dust cover may be missing. Pages may include limited notes and highlighting, but the text cannot be obscured or unreadable.">
-                </label>
-            </div>
-            </div>
-        </div>
-    </fieldset>
--->
-
-    <fieldset>
-        <div class="form-group row">
-            <div class="col-md-2 col-form-label">{{ form.price.label_tag }}</div>
-            <div class="col-md-10">{{ form.price }}</div>
-        </div>
-    
-        <div class="form-group row">
-            <div class="col-md-2 col-form-label">{{ form.picture.label_tag }}</div>
-            <div class="col-md-10">{{ form.picture }}</div>
-        </div>
-    
-        <div class="form-group row">
-            <div class="col-md-2 col-form-label">{{ form.comments.label_tag }}</div>
-            <div class="col-md-10">{{ form.comments }}</div>
-        </div>
-    </fieldset>
-
-    <div class="form-group row">
-        <div class="col-12 text-center">
-            <button type="submit" class="btn btn-lg btn-uva">Sell!</button>
+<div class="row">
+    <div class="d-flex align-items-center justify-content-center">
+        <div class="col-xs-12 text-center">
+            <h1>Step 1 - Find the Book</h1>
         </div>
     </div>
 </div>
-</form>
+<br>
+<div class="row">
+    <div class="col-sm-5">
+        <div class="card d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#scanModalCenter">
+            <div class="text-center p-4">
+                <h3>Scan the barcode</h3>
+                <img src="{% static 'textbook_exchange/images/barcode.png' %}" style="height: 10em;">
+            </div> 
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="d-flex align-items-center justify-content-center">
+            <h3>OR</h3>
+        </div>
+    </div>
+    <div class="col-sm-5">
+        <div class="card d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#searchModalCenter">
+            <div class="text-center p-4">
+                <h3>Search for a book</h3>
+                <img src="{% static 'textbook_exchange/images/search.png' %}" style="height: 10em;">
+            </div> 
+        </div>
+    </div>
+</div>
+<br>
+<hr>
+<br>
+<div class="row">
+    <div class="d-flex align-items-center justify-content-center">
+        <div class="col-xs-12 text-center">
+            <h1>Step 2 - Fill out listing</h1>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-sm-12">
+        <form>
+            <div class="card">
+                <div class="card-content p-3">
+                    <h3 class="card-title">Book Info</h3>
+                    <hr>
+                    <fieldset>
+                        <div class="form-group row">
+                            <div class="col-md-2 col-form-label">{{ form.book_name.label_tag }}</div>
+                            <div class="col-md-10">{{ form.book_name }}</div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-2 col-form-label">{{ form.book_author.label_tag }}</div>
+                            <div class="col-md-10">{{ form.book_author }}</div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-2 col-form-label">{{ form.isbn.label_tag }}</div>
+                            <div class="col-md-10">{{ form.isbn }}</div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="card-content p-3">
+                    <h3 class="card-title">Listing Info</h3>
+                    <hr>
+                    <fieldset>
+                        <div class="form-group row">
+                            <div class="col-md-2 col-form-label">{{ form.picture.label_tag }}</div>
+                            <div class="col-md-10">{{ form.picture }}</div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-2 col-form-label">{{ form.price.label_tag }}</div>
+                            <div class="col-md-10">{{ form.price }}</div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-2 col-form-label">{{ form.book_condition.label_tag }}</div>
+                            <div class="col-md-10">
+                                {% for choice in form.book_condition %}
+                                    <div class="form-check">
+                                        {{ choice.tag }}
+                                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>               
+                    
+                        <div class="form-group row">
+                            <div class="col-md-2 col-form-label">{{ form.comments.label_tag }}</div>
+                            <div class="col-md-10">{{ form.comments }}</div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group row">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-lg btn-uva">Sell!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>       
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="scanModalCenter" tabindex="-1" role="dialog" aria-labelledby="scanModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scanModalLongTitle">Scan a barcode</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                scanner
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-uva-secondary" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn btn-uva">Select</button>-->
+            </div>
+        </div>   
+    </div>
+</div>
+  
+<div class="modal fade" id="searchModalCenter" tabindex="-1" role="dialog" aria-labelledby="searchModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLongTitle">Search for a textbook</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control" type="text" placeholder="Search by ISBN, title, author or class code" aria-label="Search">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-uva-secondary" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn btn-uva">Select</button>-->
+            </div>
+        </div>   
+    </div>
+</div>
 {% endblock content %}
