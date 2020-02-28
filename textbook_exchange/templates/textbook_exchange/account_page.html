@@ -3,8 +3,48 @@
 
 {% block content %}
 <head>
+<style>
+ul{
+	text-align: center;;
+}	
+.col-4-bg{
+	background-color: rgb(99, 95, 94);
+}
+.align-shit{
+	vertical-align: middle;
+	display: table-cell;
+}
+</style>
 </head>
 <body>
-	<h1>Test Message</h1>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-2 col-4-bg">
+				<ul style="list-style-type:none;">
+					<br>
+					<li>
+						<button class="btn btn-uva">Dashboard</button>
+					</li>
+					<br>
+					<li>
+						<button class="btn btn-uva">Past Posts</button>
+					</li>
+					<br>
+					<li>
+						<button class="btn btn-uva">Current Posts</button>
+					</li>
+					<br>
+					<li>
+						<button class="btn btn-uva">Messages</button>
+					</li>
+				</ul>
+			</div>
+			<div class='col-sm-10'>
+				<h1>First Name</h1>
+				<h3>Computing ID of User</h3>
+				<h3>Any new messages? Updates?</h3>
+			</div>
+		</div>
+	</div>
 </body>
 {% endblock content %}
