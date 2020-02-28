@@ -1,0 +1,14 @@
+<!-- https://stackoverflow.com/questions/39050820/best-dry-way-to-show-the-same-html-block-in-multiple-django-template-files -->
+<!-- https://stackoverflow.com/questions/9472034/how-to-make-a-reusable-template-in-django -->
+
+{% for textbook_listing in textbook_exchange.textbook_listings_set.all %}
+    <!-- how to get foreign key (class)? (rename h5 value) -->
+    <h5 name="textbook_listing id="textbook_listing{{ forloop.counter }}" value="{{ textbook_listing.id }}"></h5>
+    <ul>
+        <li>{{ textbook_listing.class_key }}</li><br>
+        <li>{{ textbook_listing.title }}</li><br>
+        <li>{{ textbook_listing.author }}</li><br>
+        <li>{{ textbook_listing.edition }}</li><br>
+        <li>{{ textbook_listing.isbn }}</li><br>
+    </ul>
+{% endfor %}

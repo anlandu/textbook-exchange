@@ -53,7 +53,7 @@ class ProductListing(models.Model):
     
     price = models.DecimalField(max_digits=5, decimal_places=2)
     # condition = [("likenew", "Like new"), ("verygood", "Very good"), ("good", "Good"), ("acceptable", "Acceptable")]
-    # condition_choices = models.Cpy (condition, default="likenew", max_length=10)
+    # condition_choices = models.CharField(condition, default="likenew", max_length=10)
     condition = models.CharField(max_length=10)
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)
