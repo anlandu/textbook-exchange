@@ -56,7 +56,7 @@ class ProductListing(models.Model):
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)
     hasBeenSoldFlag = models.BooleanField(default=False)
-    published_date = models.DateTimeField('date published') #second prm and its type (time)
+    published_date = models.DateTimeField('date published')
 
     def publish(self):
         self.published_date = timezone.now()
