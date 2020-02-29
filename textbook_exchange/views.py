@@ -65,7 +65,7 @@ def sell_books(request):
             
             listing_obj.save()
 
-            return HttpResponseRedirect('/sell_books?submitted=True')
+            return HttpResponseRedirect('/sell?submitted=True')
         else:
             print(form.errors)
     else:
