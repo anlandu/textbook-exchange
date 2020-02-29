@@ -1,8 +1,5 @@
 <!-- https://stackoverflow.com/questions/9472034/how-to-make-a-reusable-template-in-django -->
 
-{% load listing_extras %}
-{% show_textbook_listings textbook_exchange %}
-
 {% for textbook_listing in textbook_listings_set.all %}
     <!-- how to get foreign key (class)?  -->
     <h5 name="textbook_listing id="textbook_listing{{ forloop.counter }}" value="{{ textbook_listing.title }}"></h5>
