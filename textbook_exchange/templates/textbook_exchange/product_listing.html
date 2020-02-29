@@ -1,10 +1,16 @@
-<!-- https://stackoverflow.com/questions/39050820/best-dry-way-to-show-the-same-html-block-in-multiple-django-template-files -->
 <!-- https://stackoverflow.com/questions/9472034/how-to-make-a-reusable-template-in-django -->
 
-{% for product_listing in textbook_exchange.product_listings_set.all %}
-    <!-- how to get foreign key (title)? (rename h5 value) -->
+{% load listing_extras %}
+{% show_product_listings textbook_exchange %}
+
+<!-- how to get only user's product listings -->
+{% for product_listing in product_listings_set.all %}
+    <!-- how to get foreign key (textbook title)? (rename h5 value) -->
     <h5 name="product_listing id="product_listing{{ forloop.counter }}" value="{{ product_listing.id }}"></h5>
     <ul>
+        <li>${{ product_listing.price }}</li><br>
+        <li>${{ product_listing.price }}</li><br>
+        <li>${{ product_listing.price }}</li><br>
         <li>${{ product_listing.price }}</li><br>
         <li>{{ product_listing.condition }}</li><br>
         <li>{{ product_listing.comments }}</li><br>
