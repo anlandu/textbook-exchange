@@ -38,3 +38,7 @@ div.container {
 .li-bottom {
     padding-bottom: 30em;
 }
+
+.form-control, .btn, .card {
+    border-radius: 0;
+}
