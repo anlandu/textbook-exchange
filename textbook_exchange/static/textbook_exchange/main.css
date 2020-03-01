@@ -37,3 +37,7 @@ div.container {
 .btn-uva-secondary:hover {
     color: var(--uva-white);
 }
+
+.form-control, .btn, .card {
+    border-radius: 0;
+}
