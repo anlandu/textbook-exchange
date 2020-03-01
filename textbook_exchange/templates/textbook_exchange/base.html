@@ -28,7 +28,10 @@
         <!-- Login/Username -->
         <div class="collapse navbar-collapse text-center" id="navbarResponsive">
             <form class="my-2 my-lg-0 mx-auto" style="width: 70%;">
-                <input class="form-control mr-sm" type="search" placeholder="Search for a book" aria-label="Search">
+                <div class="input-group">
+                    <input type="search" class="form-control mr-sm" id="search_text" placeholder="Seach for a book">
+                    <span class="input-group-append"><button type="button" class="btn btn-uva"><i class="fa fa-search"></i></i></button></span>
+                </div>
             </form>
             <ul class="navbar-nav mx-auto float-lg-right">
                 <li class="nav-item"><a class="uva nav-link font-weight-bold ml-2" href="{% url 'exchange:sellbooks' %}" style="text-decoration:underline;">Or sell a book</a></li>
