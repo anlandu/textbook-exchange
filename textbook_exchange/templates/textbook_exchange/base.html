@@ -6,7 +6,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- My CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/main.css' %}">
@@ -24,13 +24,13 @@
             <span class="uva fa fa-bars"></span>          
         </button>
         <!-- Logo -->
-        <a class="uva navbar-brand text-center text-lg-right" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
+        <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
         <!-- Login/Username -->
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <form class="my-2 my-lg-0" style="width: 70%;">
+        <div class="collapse navbar-collapse text-center" id="navbarResponsive">
+            <form class="my-2 my-lg-0 mx-auto" style="width: 70%;">
                 <input class="form-control mr-sm" type="search" placeholder="Search for a book" aria-label="Search">
             </form>
-            <ul class="navbar-nav ml-auto" style="float: right;">
+            <ul class="navbar-nav mx-auto float-lg-right">
                 <li class="nav-item"><a class="uva nav-link font-weight-bold ml-2" href="{% url 'exchange:sellbooks' %}" style="text-decoration:underline;">Or sell a book</a></li>
                 {% block loginlink %}<li class="nav-item"><a class="uva nav-link font-weight-bold" href="{% if user.is_authenticated %}{% url 'account_logout' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
             </ul>

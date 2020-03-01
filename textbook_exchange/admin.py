@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Textbook, Class, ProductListing
+from django.contrib.auth.admin import UserAdmin
+from .models import Textbook, Class, ProductListing, User
 
 admin.site.register(Textbook)
 admin.site.register(Class)
 admin.site.register(ProductListing)
-
-# Register your models here.
+admin.site.register(User, UserAdmin)

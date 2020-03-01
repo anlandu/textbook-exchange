@@ -16,7 +16,7 @@ class User(AbstractUser):
 
     ACCOUNT_EMAIL_VERIFICATION = None
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'password'] #add first and last name?
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
 class Class(models.Model):
     department = models.CharField(max_length=200)
