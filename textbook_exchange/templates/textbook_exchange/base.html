@@ -6,7 +6,8 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
     <!-- My CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/main.css' %}">
 
@@ -17,16 +18,26 @@
     {% endif %}
 </head>
 
-<nav class="uva navbar navbar-expand shadow" id="mainNav">
+<nav class="uva navbar navbar-expand-lg shadow" id="mainNav" role='navigation'>
     <div class="container-fluid">
-        <a class="uva navbar-brand" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="uva fa fa-bars"></span>          
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                {% block loginlink %}<li class="nav-item text-black"><a class="uva nav-link text-black font-weight-bold" href="{% if user.is_authenticated %}{% url 'account_logout' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
+        <!-- Logo -->
+        <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
+        <!-- Login/Username -->
+        <div class="collapse navbar-collapse text-center" id="navbarResponsive">
+            <form class="my-2 my-lg-0 mx-auto" action="/buy/" style="width: 70%;" method="GET">
+                {% block searchbar %} 
+                    <div class="input-group">
+                        <input type="search" class="form-control mr-sm search" name="search" id="search_text" placeholder="Search for a book">
+                        <span class="input-group-append"><button type="submit" class="btn btn-uva"><i class="fa fa-search"></i></button></span>
+                    </div>
+                {% endblock %}
+            </form>
+            <ul class="navbar-nav mx-auto float-lg-right">
+                <li class="nav-item"><a class="uva nav-link font-weight-bold ml-2" href="{% url 'exchange:sellbooks' %}" style="text-decoration:underline;">Or sell a book</a></li>
+                {% block loginlink %}<li class="nav-item"><a class="uva nav-link font-weight-bold" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
             </ul>
         </div>
     </div>

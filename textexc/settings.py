@@ -1,5 +1,6 @@
 import os
 import django_heroku
+import psycopg2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,6 +36,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google'
 ]
+
+AUTH_USER_MODEL = 'textbook_exchange.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,11 +76,11 @@ WSGI_APPLICATION = 'textexc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.path.join(BASE_DIR, 'db.postgresql'), #stored in project directory
-        'USER': 'pineapple-seals-admin',
-        'PASSWORD': 'mypassword',
-        'HOST': '', #127.0.0.1 is the default for postgre
-        'PORT': '5432',
+        'NAME': 'project_103_pineapple_seals', #stored in project directory
+        'USER': 'pineappleseals_admin',
+        'PASSWORD': 'pineappleseals',
+        'HOST': '', #default = 127.0.0.1
+        'PORT': '', #default = 5432
     }
 }
 
