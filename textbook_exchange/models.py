@@ -19,7 +19,6 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
 class Class(models.Model):
-    department = models.CharField(max_length=200)
     subject = models.CharField(max_length=200)
     class_name = models.CharField(max_length=200)
     class_acronym = models.CharField(max_length=200)
