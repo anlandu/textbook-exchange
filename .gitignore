@@ -1,5 +1,12 @@
 env
 db.sqlite3
+listing_images/
+textbook_images/
+*.png
+
+#image upload locations
+listing_images/
+textbook_images/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

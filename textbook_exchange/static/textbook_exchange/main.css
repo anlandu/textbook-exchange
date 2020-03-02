@@ -38,6 +38,10 @@ div.container {
     color: var(--uva-white);
 }
 
+.li-bottom {
+    padding-bottom: 30em;
+}
+
 .form-control, .btn, .card {
     border-radius: 0;
 }
