@@ -18,7 +18,7 @@ class AutocompleteTest(TestCase):
     '''
     def test_template(self):
         search = "test_search" #this should return no results
-        expected_results = {}
+        expected_results = {'search': 'test_search', 'books': [], 'courses': []}
 
         response = self.client.get('/buy/autocomplete/', {'search': search})
 
