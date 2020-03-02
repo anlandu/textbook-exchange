@@ -47,20 +47,25 @@ def sell_books(request):
             # TODO: validate the ISBN and throw error if not valid
 
             listing_obj = ProductListing() #gets new object
-            # listing_obj.textbook.title = cleaned_data['book_title']
-            # listing_obj.textbook.author = cleaned_data['book_author']
-            # listing_obj.textbook.isbn = cleaned_data['isbn']
             listing_obj.condition = cleaned_data['book_condition']
             listing_obj.price = cleaned_data['price']
             listing_obj.picture = cleaned_data['picture']
             listing_obj.comments = cleaned_data['comments']
             listing_obj.published_date = timezone.now()
-            listing_obj.class_object_id = 3240
+            listing_obj.class_object_id = 3240 
             listing_obj.textbook_id = 111
             listing_obj.user_id = 'nw5zp@virginia.edu'
 
             # TODO: find this book in UVA books and save with that foreign key
             # user=request.user
+            
+            # listing_obj.textbook.isbn = cleaned_data['isbn']
+            # Query dtbse for tht ISBN (or title) for listing_obj.textbook.isbn (this isbn finds the rest of title, author, isbn)
+            # find that query
+            # listing_obj.textbook = query
+
+            # listing_obj.user = user #(user pk)?
+
             # https://stackoverflow.com/questions/24793385/django-saving-form-with-user-as-foreign-key
             
             listing_obj.save()
