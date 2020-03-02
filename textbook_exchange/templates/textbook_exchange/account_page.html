@@ -1,5 +1,6 @@
 {% extends "textbook_exchange/base.html" %}
 {% load static %}
+{% include 'show_product_listings.html' %}
 
 {% block content %}
 <head>
@@ -8,11 +9,10 @@ ul{
 	text-align: center;;
 }	
 .col-4-bg{
-	background-color: rgb(99, 95, 94);
+	background-color: var(--uva-blue);
 }
-.align-shit{
-	vertical-align: middle;
-	display: table-cell;
+.sidebar-align {
+  display: inline;
 }
 </style>
 </head>
@@ -20,29 +20,35 @@ ul{
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-2 col-4-bg">
-				<ul style="list-style-type:none;">
+				<ul class="sidebar-align" style="list-style-type:none;">
 					<br>
 					<li>
-						<button class="btn btn-uva">Dashboard</button>
+						<a class="btn btn-uva"; href="{% url 'exchange:account_page' %}">Dashboard</a>
 					</li>
 					<br>
 					<li>
-						<button class="btn btn-uva">Past Posts</button>
+						<a class="btn btn-uva">Past Posts</a>
 					</li>
 					<br>
 					<li>
-						<button class="btn btn-uva">Current Posts</button>
+						<a class="btn btn-uva">Current Posts</a>
 					</li>
 					<br>
 					<li>
-						<button class="btn btn-uva">Messages</button>
+						<a class="btn btn-uva">Messages</a>
 					</li>
+					<br>
+					<li>
+						<a class="btn btn-uva"; href="{% url 'account_logout' %}">Sign Out</a>
+					</li>
+					<br>
 				</ul>
 			</div>
 			<div class='col-sm-10'>
-				<h1>First Name</h1>
-				<h3>Computing ID of User</h3>
+				<h1>{{ user.first_name }} {{ user.last_name }}</h1>
+				<h3>{{ user.email }}</h3>
 				<h3>Any new messages? Updates?</h3>
+				<!-- {% block show_product_listings %}<h3> See all the posts below!</h3>{% endblock %} -->
 			</div>
 		</div>
 	</div>
