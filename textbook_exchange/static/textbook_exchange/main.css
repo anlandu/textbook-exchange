@@ -1,3 +1,6 @@
+body {
+    border-radius: 0;
+}
 :root {
     --uva-blue: rgb(35, 45, 75);
     --uva-orange: rgb(229, 114, 0);
