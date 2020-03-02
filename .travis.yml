@@ -1,9 +1,12 @@
 language: python
 python:
-  - "3.6"      # current default Python on Travis CI
-# command to install dependencies
+  - "3.8"      # current default Python on Travis CI
+services:
+  - postgresql
 install:
   - pip install -r requirements.txt
-# command to run tests
+before_script:
+  - psql -c 'create user pineappleseals_admin with password 'pineappleseals''
+  - psql -c 'create database project_103_pineapple_seals -U pineappleseals_admin'
 script:
   - python manage.py test
