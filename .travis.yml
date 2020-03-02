@@ -3,10 +3,12 @@ python:
   - "3.8"      # current default Python on Travis CI
 services:
   - postgresql
+env:
+  - export DJANGO_SETTINGS_MODULE=django_postgres_example.settings.travis
 install:
   - pip install -r requirements.txt
 before_script:
-  - psql -c 'create user pineappleseals_admin with password pineappleseals'
-  - psql -c 'create database project_103_pineapple_seals with owner=pineappleseals_admin'
+  - psql -c 'create user pineappleseals_admin with password pineappleseals;' -U postgres
+  - psql -c 'create database project_103_pineapple_seals with owner=pineappleseals_admin;' -U postgres
 script:
   - python manage.py test
