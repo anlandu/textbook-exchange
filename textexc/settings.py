@@ -75,11 +75,11 @@ WSGI_APPLICATION = 'textexc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db.postgresql',
-        'USER': 'pineapple-seals-admin',
-        'PASSWORD': 'mypassword',
-        'HOST': '', # default - 127.0.0.1
-        'PORT': '', # default - 5432
+        'NAME': 'project_103_pineapple_seals', #stored in project directory
+        'USER': 'pineappleseals_admin',
+        'PASSWORD': 'pineappleseals',
+        'HOST': '', #default = 127.0.0.1
+        'PORT': '', #default = 5432
     }
 }
 
