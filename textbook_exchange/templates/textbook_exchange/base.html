@@ -6,7 +6,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- My CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/main.css' %}">
@@ -57,8 +57,8 @@
                     </div>
             </form>
             <ul class="navbar-nav mx-auto float-lg-right">
-                <li class="nav-item"><a class="uva nav-link font-weight-bold ml-2" href="{% url 'exchange:sellbooks' %}" style="text-decoration:underline;">Or sell a book</a></li>
-                {% block loginlink %}<li class="nav-item"><a class="uva nav-link font-weight-bold" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}{{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
+                <li class="nav-item"><a class="uva ml-2" href="{% url 'exchange:sellbooks' %}" style="display: block; padding: .5rem 1rem; float:left;">Sell a book</a></li>
+                {% block loginlink %}<li class="nav-item"><a class="uva nav-link font-weight-bold" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
             </ul>
         </div>
     </div>
