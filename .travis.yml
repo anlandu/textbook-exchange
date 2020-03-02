@@ -8,8 +8,8 @@ install:
 before_script:
   #- psql -c 'create user pineappleseals_admin with password pineappleseals;' -U postgres
   #- psql -c 'create database project_103_pineapple_seals with owner=pineappleseals_admin;' -U postgres
-  - psql -c 'create database project_103_pineapple_seals;' -U postgres
   - psql -c "CREATE USER pineappleseals_admin WITH PASSWORD 'pineappleseals';" -U postgres
+  - psql -c 'create database project_103_pineapple_seals with owner=pineappleseals_admin;' -U postgres
   - psql -c "ALTER USER pineappleseals_admin CREATEDB"
   - python manage.py migrate --noinput
   - python manage.py collectstatic
