@@ -31,7 +31,7 @@ class Class(models.Model):
         return class_info.strip()
 
 class Textbook(models.Model):
-    class_object = models.ForeignKey(Class, on_delete=models.CASCADE)
+    class_object = models.ManyToManyField(Class, on_delete=models.CASCADE)
     isbn = models.IntegerField(primary_key=True)
     class_key = models.CharField(max_length=200)
     title = models.CharField(max_length=350)
