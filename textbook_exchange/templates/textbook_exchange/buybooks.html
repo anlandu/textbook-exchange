@@ -2,6 +2,84 @@
 
 {% block content %}
 
+<script>
+    function updateSearch(search){
+        if(search.length >= 2){
+            console.log(search);
+
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                    if (xmlhttp.status == 200) {
+                        $('.dropdown-menu').show(); //open the dropdown menu
+                        var searchResults = JSON.parse(xmlhttp.responseText);
+                        console.log(searchResults);
+
+                        //update dropdown with availible results
+                        if(searchResults['books'].length > 0){
+                            //console.log("books: " + searchResults['books']);
+
+                            document.getElementById("results_books").style.display = 'inline'; //show header
+                            var isbnList = document.getElementById("results_books").getElementsByTagName("ul")[0];
+
+                            isbnList.innerHTML = ''; //remove old list elements
+
+                            for(var i = 0; i < searchResults['books'].length; i++){ //add new elements
+                                var entry = document.createElement('li');
+                                entry.innerHTML = searchResults['books'][i]['title'] + ' <i>' + searchResults['books'][i]['author'] + '</i>';
+                                //entry.appendChild(document.createTextNode(
+                                //    searchResults['books'][i]['title'] +
+                                //    ' <i>' + searchResults['books'][i]['author'] + '</i>')); //simple text element (change to link)
+                                isbnList.appendChild(entry);
+                            }
+                        }
+                        else{
+                            document.getElementById("results_books").style.display = 'none'; //hide header
+                        }
+
+                        if(searchResults['courses'].length > 0){
+                            //console.log("courses: " + searchResults['courses']);
+
+                            document.getElementById("results_courses").style.display = 'inline'; //show header
+                            var isbnList = document.getElementById("results_courses").getElementsByTagName("ul")[0];
+
+                            isbnList.innerHTML = ''; //remove old list elements
+
+                            for(var i = 0; i < searchResults['courses'].length; i++){ //add new elements
+                                var entry = document.createElement('li');
+                                entry.appendChild(document.createTextNode(searchResults['courses'][i])); //simple text element (change to link)
+                                isbnList.appendChild(entry);
+                            }
+                        }
+                        else{
+                            document.getElementById("results_courses").style.display = 'none'; //hide header
+                        }
+
+                        if(searchResults['courses'].length > 0 || searchResults['books'].length > 0){
+                            document.getElementById("noresults").style.display = 'none'; //hide no results message
+                        }
+                        else{
+                            document.getElementById("noresults").style.display = 'inline'; //show no results message
+                        }
+                    }
+                    else {
+                        console.error("Search autocomplete not availible");
+                        $('.dropdown-menu').hide();
+                    }
+                }
+            };
+
+            xmlhttp.open("GET", "autocomplete?search="+search, true);
+            xmlhttp.send();
+        }
+        else{
+            $('.dropdown-menu').hide();
+        }
+    };
+
+</script>
+
 <div class="container">
     <div class="row">
         <div class="col-3">
@@ -11,10 +89,28 @@
             <form>
                 <div class="input-group">
                     <input type="text" class="form-control" id="search_text"
-                        placeholder="Seach by Title, Author, ISBN, or Course Number">
+                        placeholder="Seach by Title, Author, ISBN, or Course Number"
+                        onkeyup="updateSearch(this.value)" autofocus>
                     <span class="input-group-append">
                         <button type="button" class="btn btn-uva">Search</button>
                     </span>
+                </div>
+                <div class="dropdown">
+                    <ul id = "results_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li id="results_books">
+                            Books
+                            <ul>
+                            </ul>
+                        </li>
+                        <li id="results_courses">
+                            Courses
+                            <ul>
+                            </ul>
+                        </li>
+                        <div id = "noresults">
+                            <i>No Results Found</i>
+                        </div>
+                    </ul>
                 </div>
             </form>
         </div>
@@ -36,19 +132,25 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="qualityLikeNew" checked>
                                     <label class="form-check-label" for="qualityLikeNew">
-                                        Used - Like New
+                                        Like New
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="qualityUsed" checked>
-                                    <label class="form-check-label" for="qualityNew">
-                                        Used
+                                    <input class="form-check-input" type="checkbox" value="" id="qualityVeryGood" checked>
+                                    <label class="form-check-label" for="qualityVeryGood">
+                                        Very Good 
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="qualityBad" checked>
-                                    <label class="form-check-label" for="qualityBad">
-                                        Bad
+                                    <input class="form-check-input" type="checkbox" value="" id="qualityGood" checked>
+                                    <label class="form-check-label" for="qualityGood">
+                                        Good
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="qualityAcceptable" checked>
+                                    <label class="form-check-label" for="qualityAcceptable">
+                                        Acceptable
                                     </label>
                                 </div>
                             </div>
