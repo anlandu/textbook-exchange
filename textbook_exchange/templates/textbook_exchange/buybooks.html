@@ -155,8 +155,13 @@
             $('.dropdown-menu').hide();
         }
     };
+    {% if search %}
+    updateSearch("{{ search }}");
+    document.getElementById("search_text").value = "{{ search }}";
+    {% endif %}
 
 </script>
+
 {% endblock content %}
 
 {% block searchbar %}

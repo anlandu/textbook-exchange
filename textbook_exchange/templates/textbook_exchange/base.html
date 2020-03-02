@@ -27,11 +27,11 @@
         <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
         <!-- Login/Username -->
         <div class="collapse navbar-collapse text-center" id="navbarResponsive">
-            <form class="my-2 my-lg-0 mx-auto" style="width: 70%;">
+            <form class="my-2 my-lg-0 mx-auto" action="/buy/" style="width: 70%;" method="GET">
                 {% block searchbar %} 
                     <div class="input-group">
-                        <input type="search" class="form-control mr-sm" id="search_text" placeholder="Search for a book">
-                        <span class="input-group-append"><button type="button" class="btn btn-uva"><i class="fa fa-search"></i></button></span>
+                        <input type="search" class="form-control mr-sm search" name="search" id="search_text" placeholder="Search for a book">
+                        <span class="input-group-append"><button type="submit" class="btn btn-uva"><i class="fa fa-search"></i></button></span>
                     </div>
                 {% endblock %}
             </form>

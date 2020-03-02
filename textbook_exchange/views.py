@@ -31,7 +31,8 @@ def landing(request):
 def buy_books(request):    
     context=get_logged_in(request)
     context['title'] ='Buy Books'
-
+    if (request.GET.get("search")):
+        context['search'] = request.GET.get('search');
     return render(request, 'textbook_exchange/buybooks.html', context=context)
 
 
