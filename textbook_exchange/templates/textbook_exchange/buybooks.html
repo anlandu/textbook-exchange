@@ -1,6 +1,84 @@
 {% extends "textbook_exchange/base.html" %}
 
 {% block content %}
+<div class="container">
+    <div class="row .d-none .d-sm-block .d-md-none">
+        <div class="input-group">
+            <input type="text" class="form-control" id="search_text"
+                placeholder="Search for a book"
+                onkeyup="updateSearch(this.value)" autofocus>
+                <span class="input-group-append"><button type="button" class="btn btn-uva"><i class="fa fa-search"></i></button></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3">
+            <div id="searchFilters">
+                <div class="card card-body mx-auto">
+                    <div class="row mx-auto">
+                        <div class="col mx-auto">
+                            <h6>Book Quality</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="qualityNew" checked>
+                                <label class="form-check-label" for="qualityNew">New</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="qualityLikeNew" checked>
+                                <label class="form-check-label" for="qualityLikeNew">
+                                    Like New
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="qualityVeryGood" checked>
+                                <label class="form-check-label" for="qualityVeryGood">
+                                    Very Good 
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="qualityGood" checked>
+                                <label class="form-check-label" for="qualityGood">
+                                    Good
+                            </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="qualityAcceptable" checked>
+                                <label class="form-check-label" for="qualityAcceptable">
+                                    Acceptable
+                                </label>
+                            </div>
+                            </div>
+                          </div>
+                          <hr>
+                          <div class="row">
+                            <div class="col">
+                                <!-- slider show value source: https://stackoverflow.com/a/18936328 -->
+                                <h6 style="display: inline">Max Price:</h6> $<output id="maxPriceOutput">400</output>
+                                <input class="form-control" type="range" min="0" max="400" value="400" id="maxPrice" oninput="maxPriceOutput.value = maxPrice.value">
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-9">
+            <div class="dropdown">
+                <ul id = "results_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li id="results_books">
+                        Books
+                        <ul>
+                        </ul>
+                    </li>
+                    <li id="results_courses">
+                        Courses
+                        <ul>
+                        </ul>
+                    </li>
+                    <div id = "noresults">
+                        <i>No Results Found</i>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     function updateSearch(search){
@@ -79,95 +157,13 @@
     };
 
 </script>
-
-<div class="container">
-    <div class="row">
-        <div class="col-3">
-            <!--Filler for alignment-->
-        </div>
-        <div class="col-9">
-            <form>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="search_text"
-                        placeholder="Seach by Title, Author, ISBN, or Course Number"
-                        onkeyup="updateSearch(this.value)" autofocus>
-                    <span class="input-group-append">
-                        <button type="button" class="btn btn-uva">Search</button>
-                    </span>
-                </div>
-                <div class="dropdown">
-                    <ul id = "results_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li id="results_books">
-                            Books
-                            <ul>
-                            </ul>
-                        </li>
-                        <li id="results_courses">
-                            Courses
-                            <ul>
-                            </ul>
-                        </li>
-                        <div id = "noresults">
-                            <i>No Results Found</i>
-                        </div>
-                    </ul>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-3">
-            <div> <!-- not sure what class to make this div yet -->
-                <div id="searchFilters">
-                    <div class="card card-body mx-auto">
-                        <div class="row mx-auto">
-                            <div class="col mx-auto">
-                                <h6>Book Quality</h6>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="qualityNew" checked>
-                                    <label class="form-check-label" for="qualityNew">New</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="qualityLikeNew" checked>
-                                    <label class="form-check-label" for="qualityLikeNew">
-                                        Like New
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="qualityVeryGood" checked>
-                                    <label class="form-check-label" for="qualityVeryGood">
-                                        Very Good 
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="qualityGood" checked>
-                                    <label class="form-check-label" for="qualityGood">
-                                        Good
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="qualityAcceptable" checked>
-                                    <label class="form-check-label" for="qualityAcceptable">
-                                        Acceptable
-                                    </label>
-                                </div>
-                            </div>
-                          </div>
-                          <hr>
-                          <div class="row">
-                            <div class="col">
-                                <!-- slider show value source: https://stackoverflow.com/a/18936328 -->
-                                <h6 style="display: inline">Max Price:</h6> $<output id="maxPriceOutput">400</output>
-                                <input class="form-control" type="range" min="0" max="400" value="400" id="maxPrice" oninput="maxPriceOutput.value = maxPrice.value">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        </div>
-        <div class="col-xs-9">
-            
-        </div>
-    </div>
-</div>
-
 {% endblock content %}
+
+{% block searchbar %}
+    <div class="input-group">
+        <input type="text" class="form-control" id="search_text"
+            placeholder="Search for a book"
+            onkeyup="updateSearch(this.value)" autofocus>
+            <span class="input-group-append"><button type="button" class="btn btn-uva"><i class="fa fa-search"></i></button></span>
+    </div>
+{% endblock %}

@@ -28,7 +28,7 @@ def landing(request):
 
     return render(request, 'textbook_exchange/landing.html', context=context)
 
-def buy_books(request):
+def buy_books(request):    
     context=get_logged_in(request)
     context['title'] ='Buy Books'
 
@@ -120,4 +120,5 @@ def autocomplete(request):
         'books' : matched_books,
         'courses' : matched_classes,
     }
+
     return JsonResponse(data)
