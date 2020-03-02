@@ -6,7 +6,7 @@ services:
 install:
   - pip install -r requirements.txt
 before_script:
-  - psql -c 'create user pineappleseals_admin with password pineappleseals
+  - psql -c 'create user pineappleseals_admin with password pineappleseals'
   - psql -c 'create database project_103_pineapple_seals with owner=pineappleseals_admin'
 script:
   - python manage.py test
