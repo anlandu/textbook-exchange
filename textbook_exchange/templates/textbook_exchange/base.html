@@ -12,9 +12,9 @@
     <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/main.css' %}">
 
     {% if title %}
-        <title>Textbook Exchange: {{ title }}</title>
+        <title>TextEx: {{ title }}</title>
     {% else %}
-        <title>Textbook Exchange</title>
+        <title>TextEx</title>
     {% endif %}
 </head>
 
@@ -24,7 +24,7 @@
             <span class="uva fa fa-bars"></span>          
         </button>
         <!-- Logo -->
-        <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">Awesome Textbook Exchange</a>
+        <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">(UVA) TextEx</a>
         <!-- Login/Username -->
         <div class="collapse navbar-collapse text-center" id="navbarResponsive">
             <form class="my-2 my-lg-0 mx-auto" action="/buy/" style="width: 70%;" method="GET">
@@ -37,8 +37,8 @@
                                 <i class="fa fa-search"></i>
                             </button>
                         </span>
-                        <div class="input-group-append">
-                            <ul id="results_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <div class="input-group-append" style="width: 100%;">
+                            <ul style="width:100%;" id="results_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                 <li id="results_books">
                                     Books
                                     <ul>
