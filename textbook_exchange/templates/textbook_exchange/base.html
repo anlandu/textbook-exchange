@@ -31,7 +31,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="search_text"
                             placeholder="Search for a book"
-                            onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
+                            onkeyup="updateSearch(this.value)" autofocus autocomplete="off" onfocusout="hideAutocomplete()" onfocus="updateSearch(this.value)">
                         <span class="input-group-append">
                             <button type="button" class="btn btn-uva">
                                 <i class="fa fa-search"></i>
@@ -148,10 +148,12 @@
                 $('.dropdown-menu').hide();
             }
         };
+        function hideAutocomplete() {
+            $('.dropdown-menu').hide();
+        }
         {% if search %}
         updateSearch("{{ search }}");
         document.getElementById("search_text").value = "{{ search }}";
         {% endif %}
-
     </script>
 </body>
