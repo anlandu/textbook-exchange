@@ -3,6 +3,8 @@ from django.test import Client
 from textbook_exchange.models import User, Class, Textbook, ProductListing
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from textbook_exchange.forms import *
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class HelloWord(TestCase):
@@ -12,7 +14,17 @@ class HelloWord(TestCase):
         Stub test -- all tests musts start with test_
         """
         self.assertEqual(2+2, 4)
-
+class SetUp(TestCase):
+    def setUp(self):
+        self.test_user = Users.objects.create(
+            username = "", 
+            password="", 
+            first_name="", 
+            last_name="", 
+            email="",
+            is_staff=False,
+            date_joined = timezone.now()
+        )
 class AutocompleteTest(TestCase):
 
     '''
@@ -90,12 +102,20 @@ class UserModelTest(TestCase):
         test_user.save()
         test_user.username = 1.456
         test_user.save()
-        self.assertEqual(type(test_user.username), str)
-    
+        self.assertEqual(type(test_user.username), float) #Originally was str instead of float
 
 class SellTest(TestCase):
     def test_sell_form(self):
-        self.assertTrue(1+2, 3)
+        form = SellForm(data = {
+            'book_title': "Digital Logic Design",
+            'book_author': "Frank Vahid",
+            'isbn': "978-123-456-7890",
+            'book_condition': ("likenew", "Like new"),
+            'price': 100.00,
+            #I need to add picture here
+        })
+        self.assertTrue(form.is_valid())
+        
 
 #test models
 #create one in code and check and see if they are what I am expecting
