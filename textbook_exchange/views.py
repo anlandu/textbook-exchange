@@ -91,9 +91,7 @@ class ProductListingListView(ListView):
 def account_page(request):
     context = get_logged_in(request)
     context['title'] = 'Account Page'
-
-    #save if you mde chnges to dtbse
-
+    
     return render(request, 'textbook_exchange/account_page.html', context=context)
 
 def autocomplete(request):
