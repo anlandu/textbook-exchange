@@ -24,11 +24,14 @@ class Class(models.Model):
     course_code = models.IntegerField(default=0) #e.g. 1110
     section_number = models.CharField(max_length=10) #e.g. 001
     professor = models.CharField(max_length=200)
-    class_info = models.CharField(max_length=200, primary_key=True) #e.g. Intro to Programming
+    class_info = models.TextField(max_length=200, primary_key=True) #e.g. CS1110
+
+    def save(self, *args, **kwargs):
+        self.class_info = self.department + str(self.course_code)
+        super(Class, self).save(*args, **kwargs) 
 
     def __str__(self):
-        class_info = '%s%s' % (self.department, self.course_code) #e.g. CS1110
-        return class_info.strip()
+        return self.class_info
 
 class Textbook(models.Model):
     class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
@@ -60,4 +63,3 @@ class ProductListing(models.Model):
     def __str__(self):
         return str(self.textbook)
     
-
