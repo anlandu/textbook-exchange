@@ -27,7 +27,7 @@ class Class(models.Model):
     class_info = models.CharField(max_length=200, primary_key=True) #e.g. Intro to Programming
 
     def __str__(self):
-        class_info = '%s%s' % (self.dept, self.course_code) #e.g. CS1110
+        class_info = '%s%s' % (self.department, self.course_code) #e.g. CS1110
         return class_info.strip()
 
 class Textbook(models.Model):
