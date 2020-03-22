@@ -4,9 +4,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django import forms
 from django.utils import timezone
+from django.views.generic import ListView
 
 from .forms import SellForm
-from .models import ProductListing
+from .models import ProductListing, Class, Textbook
 from django.http import JsonResponse #for autocompletion response
 
 from textbook_exchange import models as textbook_exchange_models
@@ -22,67 +23,72 @@ def get_logged_in(request):
         }
     return context
 
-# Create your views here.
 def landing(request):
     context=get_logged_in(request)
 
     return render(request, 'textbook_exchange/landing.html', context=context)
 
 def buy_books(request):    
-    context=get_logged_in(request)
+    context = get_logged_in(request)
     context['title'] ='Buy Books'
     if (request.GET.get("search")):
         context['search'] = request.GET.get('search');
     return render(request, 'textbook_exchange/buybooks.html', context=context)
 
 
-# Followed this tutorials: https://djangobook.com/mdj2-django-forms/
 def sell_books(request):
-    # context=get_logged_in(request)
-    # context['title'] ='Sell Books'
+    context = get_logged_in(request) 
+    # context['title'] = 'Sell Books'
     # context['form'] = SellForm
+
     submitted = False
     if request.method == 'POST':
-        form = SellForm(request.POST, request.FILES)
-        if form.is_valid():
-            cleaned_data = form.cleaned_data
-            # assert False
+        if not context['logged_in']:
+            return render(request, 'textbook_exchange/sellbooks.html', {'not_logged_in': True}) 
 
-            # TODO: validate the ISBN and throw error if not valid
+        elif context['logged_in']:
+            form = SellForm(request.POST, request.FILES)
+            if form.is_valid():
+                cleaned_data = form.cleaned_data
+                user = request.user
 
-            listing_obj = ProductListing() #gets new object
-            listing_obj.condition = cleaned_data['book_condition']
-            listing_obj.price = cleaned_data['price']
-            listing_obj.picture = cleaned_data['picture']
-            listing_obj.comments = cleaned_data['comments']
-            listing_obj.published_date = timezone.now()
-            listing_obj.class_object_id = 3240 
-            listing_obj.textbook_id = 111
-            listing_obj.user_id = 'nw5zp@virginia.edu'
+                listing_obj = ProductListing()
+                listing_obj.user = user
+                listing_obj.price = cleaned_data['price']
+                listing_obj.condition = cleaned_data['book_condition']
+                listing_obj.picture = cleaned_data['picture']
+                listing_obj.comments = cleaned_data['comments']
+                listing_obj.published_date = timezone.now()
+                listing_obj.hasBeenSoldFlag = False
 
-            # TODO: find this book in UVA books and save with that foreign key
-            # user=request.user
-            
-            # listing_obj.textbook.isbn = cleaned_data['isbn']
-            # Query dtbse for tht ISBN (or title) for listing_obj.textbook.isbn (this isbn finds the rest of title, author, isbn)
-            # find that query
-            # listing_obj.textbook = query
+                # find this book in UVA books and save with that foreign key
+                # TODO: split isbn on dashes
+                isbn = cleaned_data['isbn']
+                txtbk = Textbook.objects.get(pk=isbn)
+                listing_obj.textbook = txtbk
+                
+                # TODO: find class codes from dtbse (query) + split + add to class_object
+                # class_codes = .split(" ")
+                # for class in class_codes:
+                #       listing_obj.class_object.add(class)
+                
+                listing_obj.save()
 
-            # listing_obj.user = user #(user pk)?
-
-            # https://stackoverflow.com/questions/24793385/django-saving-form-with-user-as-foreign-key
-            
-            listing_obj.save()
-
-            return HttpResponseRedirect('/sell?submitted=True')
-        else:
-            print(form.errors)
+                return HttpResponseRedirect('/sell?submitted=True')
+            else:
+                print(form.errors)
     else:
         form = SellForm()
         if 'submitted' in request.GET:
             submitted = True
 
     return render(request, 'textbook_exchange/sellbooks.html', {'form': form, 'submitted': submitted})
+
+class ProductListingListView(ListView):
+    model = ProductListing
+    template_name = "textbook_exchange/account_page.html"
+    context_object_name = 'user.PostLisitings' #?
+    ordering = ['-dateposted']
 
 def account_page(request):
     context = get_logged_in(request)

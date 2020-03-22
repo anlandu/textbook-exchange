@@ -9,6 +9,13 @@
     </h1>
 
 {% else %}
+
+{% if not_logged_in %}
+<script>
+        alert('Please login first.');
+</script>
+{% endif %}
+
 <div class="row">
     <div class="d-flex align-items-center justify-content-center">
         <div class="col-xs-12 text-center">

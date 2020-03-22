@@ -31,7 +31,7 @@ class Class(models.Model):
         return class_info.strip()
 
 class Textbook(models.Model):
-    class_object = models.ManyToManyField(Class, on_delete=models.CASCADE)
+    class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
     isbn = models.IntegerField(primary_key=True)
     class_key = models.CharField(max_length=200)
     title = models.CharField(max_length=350)
@@ -46,8 +46,8 @@ class Textbook(models.Model):
 class ProductListing(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
-    class_object = models.ForeignKey(Class, on_delete=models.CASCADE) #needed? bc one textbook can have a foreign key to mult. classes
-        
+    class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
+    
     price = models.DecimalField(max_digits=5, decimal_places=2)
     # condition = [("likenew", "Like new"), ("verygood", "Very good"), ("good", "Good"), ("acceptable", "Acceptable")]
     # condition_choices = models.CharField(condition, default="likenew", max_length=10)
@@ -55,14 +55,7 @@ class ProductListing(models.Model):
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)
     hasBeenSoldFlag = models.BooleanField(default=False)
-    published_date = models.DateTimeField('date published')
-
-    def publish(self):
-        self.published_date = timezone.now()
-        self.save()
+    published_date = models.DateTimeField('date published', auto_now=True)
 
     def __str__(self):
         return str(self.textbook)
-
-    
-

@@ -19,23 +19,24 @@ ul{
 <body>
 	<div class="container">
 		<div class="row">
+			<!-- SIDEBAR -->
 			<div class="col-sm-2 col-4-bg">
 				<ul class="sidebar-align" style="list-style-type:none;">
 					<br>
 					<li>
-						<a class="btn btn-uva"; href="{% url 'exchange:account_page' %}">Dashboard</a>
+						<a class="btn btn-uva" href="{% url 'exchange:account_page' %}">Dashboard</a>
 					</li>
 					<br>
 					<li>
-						<a class="btn btn-uva">Past Posts</a>
+						<a class="btn btn-uva" href="{% url 'exchange:account_page' %}">Past Posts</a>
 					</li>
 					<br>
 					<li>
-						<a class="btn btn-uva">Current Posts</a>
+						<a class="btn btn-uva" href="{% url 'exchange:account_page' %}">Current Posts</a>
 					</li>
 					<br>
 					<li>
-						<a class="btn btn-uva">Messages</a>
+						<a class="btn btn-uva" href="{% url 'exchange:account_page' %}">Messages</a>
 					</li>
 					<br>
 					<li>
@@ -44,11 +45,19 @@ ul{
 					<br>
 				</ul>
 			</div>
+
+			<!-- MAIN -->
 			<div class='col-sm-10'>
 				<h1>{{ user.first_name }} {{ user.last_name }}</h1>
-				<h3>{{ user.email }}</h3>
-				<h3>Any new messages? Updates?</h3>
-				<!-- {% block show_product_listings %}<h3> See all the posts below!</h3>{% endblock %} -->
+				<h5>{{ user.email }}</h5>
+				<h5>Any new messages? Updates?</h5>
+
+				{% if current_post %}
+				{% endif %}
+
+				{% if past_post %}
+				{% endif %}
+
 			</div>
 		</div>
 	</div>
