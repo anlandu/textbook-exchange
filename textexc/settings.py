@@ -36,8 +36,16 @@ INSTALLED_APPS = [
     'payments',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google'
+    'allauth.socialaccount.providers.google',
+    'django_private_chat',
 ]
+#Set-up for Django-Private-Chat
+#Link: https://django-private-chat.readthedocs.io/en/latest/readme.html
+
+CHAT_WS_SERVER_HOST = 'localhost'
+CHAT_WS_SERVER_PORT = 5002
+CHAT_WS_SERVER_PROTOCOL = 'ws'
+DATETIME_FORMAT = "d.m.Y H:i:s"
 
 AUTH_USER_MODEL = 'textbook_exchange.User'
 
