@@ -61,10 +61,7 @@ def sell_books(request):
                 listing_obj.published_date = timezone.now()
                 listing_obj.hasBeenSoldFlag = False
 
-                # find this book in UVA books and save with that foreign key
-                # TODO: split isbn on dashes
                 isbn = cleaned_data['isbn']
-                # txtbk = Textbook.objects.get(pk=isbn)
                 txtbk = Textbook.objects.get(pk=isbn)
                 listing_obj.textbook = txtbk
                 

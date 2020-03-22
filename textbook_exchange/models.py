@@ -20,7 +20,7 @@ class User(AbstractUser):
 
 class Class(models.Model):
     class_name = models.CharField(max_length=200) #e.g. Intro to Programming
-    dept = models.CharField(max_length=200) #e.g. CS
+    department = models.CharField(max_length=200) #e.g. CS
     course_code = models.IntegerField(default=0) #e.g. 1110
     section_number = models.CharField(max_length=10) #e.g. 001
     professor = models.CharField(max_length=200)
