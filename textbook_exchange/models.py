@@ -19,20 +19,20 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
 class Class(models.Model):
-    subject = models.CharField(max_length=200)
-    class_name = models.CharField(max_length=200)
-    class_acronym = models.CharField(max_length=200)
-    class_code = models.IntegerField(default=0, primary_key=True)
-    section_number = models.CharField(max_length=10)
+    class_name = models.CharField(max_length=200) #e.g. Intro to Programming
+    dept = models.CharField(max_length=200) #e.g. CS
+    course_code = models.IntegerField(default=0) #e.g. 1110
+    section_number = models.CharField(max_length=10) #e.g. 001
     professor = models.CharField(max_length=200)
+    class_info = models.CharField(max_length=200, primary_key=True) #e.g. Intro to Programming
 
     def __str__(self):
-        class_info = '%s%s' % (self.subject, self.class_code)
+        class_info = '%s%s' % (self.dept, self.course_code) #e.g. CS1110
         return class_info.strip()
 
 class Textbook(models.Model):
     class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
-    isbn = models.IntegerField(primary_key=True)
+    isbn = models.CharField(primary_key=True, max_length=200)
     class_key = models.CharField(max_length=200)
     title = models.CharField(max_length=350)
     author = models.CharField(max_length=200)

@@ -38,7 +38,7 @@ def buy_books(request):
 
 def sell_books(request):
     context = get_logged_in(request) 
-    # context['title'] = 'Sell Books'
+    context['title'] = 'Sell Books'
     # context['form'] = SellForm
 
     submitted = False
@@ -64,6 +64,7 @@ def sell_books(request):
                 # find this book in UVA books and save with that foreign key
                 # TODO: split isbn on dashes
                 isbn = cleaned_data['isbn']
+                # txtbk = Textbook.objects.get(pk=isbn)
                 txtbk = Textbook.objects.get(pk=isbn)
                 listing_obj.textbook = txtbk
                 
