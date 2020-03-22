@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
+from django_private_chat import urls as django_private_chat_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('textbook_exchange.urls')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^', include('django_private_chat.urls')),
 ]
