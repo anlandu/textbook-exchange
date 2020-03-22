@@ -4,15 +4,14 @@
 {% block content %}
 
 {% if submitted %}
-    <h1 class="success">
-        Your book was successfully posted!
-    </h1>
+<script>
+    alert('Your post was successfully posted!');
+</script>
 
 {% else %}
-
 {% if not_logged_in %}
 <script>
-        alert('Please login first.');
+    alert('Please log in');
 </script>
 {% endif %}
 

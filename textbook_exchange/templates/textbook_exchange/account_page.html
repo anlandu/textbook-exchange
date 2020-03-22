@@ -53,6 +53,9 @@ ul{
 				<h5>Any new messages? Updates?</h5>
 
 				{% if current_post %}
+					{% for current_post in current_posts %}
+						{{current_post}}
+					{% endfor %}
 				{% endif %}
 
 				{% if past_post %}

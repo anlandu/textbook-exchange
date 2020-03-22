@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django import forms
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django import forms
 from django.utils import timezone
 from django.views.generic import ListView
+from django.contrib import messages
+
 
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook
@@ -42,10 +43,12 @@ def sell_books(request):
     # context['form'] = SellForm
 
     submitted = False
+    not_logged_in = False
     if request.method == 'POST':
         if not context['logged_in']:
-            return render(request, 'textbook_exchange/sellbooks.html', {'not_logged_in': True}) 
-
+            form = SellForm()
+            # return render(request, 'textbook_exchange/sellbooks.html', {'not_logged_in': True}) 
+            return HttpResponseRedirect('/sell?not_logged_in=True')
         elif context['logged_in']:
             form = SellForm(request.POST, request.FILES)
             if form.is_valid():
@@ -79,19 +82,23 @@ def sell_books(request):
         form = SellForm()
         if 'submitted' in request.GET:
             submitted = True
+        if 'not_logged_in' in request.GET:
+            not_logged_in = True
 
-    return render(request, 'textbook_exchange/sellbooks.html', {'form': form, 'submitted': submitted})
+    return render(request, 'textbook_exchange/sellbooks.html', {'form': form, 'submitted': submitted, 'not_logged_in': not_logged_in})
 
 class ProductListingListView(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_page.html"
-    context_object_name = 'user.PostLisitings' #?
+    context_object_name = 'current_posts' #var being passed in
     ordering = ['-dateposted']
+    # queryset = ProductListing.objects.filter(user=self.request.user) #test
+
 
 def account_page(request):
     context = get_logged_in(request)
     context['title'] = 'Account Page'
-    
+
     return render(request, 'textbook_exchange/account_page.html', context=context)
 
 def autocomplete(request):
