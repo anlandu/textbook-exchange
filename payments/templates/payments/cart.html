@@ -1,21 +1,68 @@
 {% extends 'textbook_exchange/base.html' %}
 {% block content %}
-<div id="paypal-button"></div>
+<div class="row">
+    <div class="col-sm-8">
+        <h2>Cart</h2>
+        <br>
+        <div class="row">
+            <div class="col-sm-2">
+                <p>Picture</p>
+            </div>
+            <div class="col-sm-6">
+                <p>Description</p>
+            </div>
+            <div class="col-sm-4">
+                <p class="text-right">Price</p>
+            </div>
+        </div>
+        <hr>
+        {% for product in cart.productlisting_set.all %}
+        <div class="row">
+            <div class="col-sm-2">
+                <img class="img-fluid" src='{{ product.picture.url }}'>
+            </div>
+            <div class="col-sm-6">
+                <p><b>{{ product.textbook.title }}</b><br>ISBN: {{ product.textbook.isbn }}</p>
+            </div>
+            <div class="col-sm-4">
+                <p class="text-right">${{ product.price}}</p>
+            </div>
+        </div>
+        {% endfor %}
+        <hr>
+        <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-4">
+                <p class="text-right"><b>Total: ${{ cart.subtotal }}</b></p>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-4">
+        <h2>Checkout</h2>
+        <hr>
+        <div id="paypal-button"></div>
+    </div>
+</div>
+
+
+
+
 <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 <script>
-  paypal.Button.render({
+paypal.Button.render({
     // Configure environment
     env: 'sandbox',
     client: {
-      sandbox: 'AcCaARG0gidap3Y0mCgZtbbdE3sDrYHyHSIBwJ20jwhyGk3MQSBLxpWggOwuOQphYKDLl87wRLek-qE8',
-      production: 'demo_production_client_id'
+    sandbox: 'AcCaARG0gidap3Y0mCgZtbbdE3sDrYHyHSIBwJ20jwhyGk3MQSBLxpWggOwuOQphYKDLl87wRLek-qE8',
+    production: 'demo_production_client_id'
     },
     // Customize button (optional)
     locale: 'en_US',
     style: {
-      size: 'small',
-      color: 'gold',
-      shape: 'pill',
+    size: 'small',
+    color: 'gold',
+    shape: 'pill',
     },
 
     // Enable Pay Now checkout flow (optional)
@@ -39,6 +86,8 @@
             description: 'Textbook purchase from TextEx',
             item_list: {
                 items: [
+                    {% for product in cart.productlisting %}
+                    {% endfor %}
                     {
                         name: '112233445566',
                         description: 'Advanced Software Engineering',
@@ -54,12 +103,12 @@
     },
     // Execute the payment
     onAuthorize: function(data, actions) {
-      return actions.payment.execute().then(function() {
+    return actions.payment.execute().then(function() {
         // Show a confirmation message to the buyer
         window.alert('Thank you for your purchase!');
-      });
+    });
     }
-  }, '#paypal-button');
+}, '#paypal-button');
 
 </script>
 {% endblock %}

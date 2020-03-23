@@ -58,8 +58,7 @@ class ProductListing(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
-    cart = models.OneToOneField(Cart, on_delete=models.CASCADE) # should prevent a product listing from being in multiple carts at once
-    
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,) # should prevent a product listing from being in multiple carts at once
     price = models.DecimalField(max_digits=5, decimal_places=2)
     # condition = [("likenew", "Like new"), ("verygood", "Very good"), ("good", "Good"), ("acceptable", "Acceptable")]
     # condition_choices = models.CharField(condition, default="likenew", max_length=10)

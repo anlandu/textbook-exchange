@@ -9,6 +9,7 @@ def get_cart(request):
             'logged_in': True,
             'subtotal': 123.45,
             'currency': 'USD',
+            'cart': request.user.cart
         }
     else:
         context = {
