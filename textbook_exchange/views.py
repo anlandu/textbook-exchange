@@ -6,12 +6,12 @@ from django.utils import timezone
 from django.views.generic import ListView
 from django.contrib import messages
 
-
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook
 from django.http import JsonResponse #for autocompletion response
 
 from textbook_exchange import models as textbook_exchange_models
+
 
 def get_logged_in(request):
     if request.user.is_authenticated:
@@ -26,8 +26,10 @@ def get_logged_in(request):
 
 def landing(request):
     context=get_logged_in(request)
-
     return render(request, 'textbook_exchange/landing.html', context=context)
+
+def error_404(request):
+    return render(request, 'textbook_exchange/404_error.html')
 
 def buy_books(request):    
     context = get_logged_in(request)
@@ -47,7 +49,6 @@ def sell_books(request):
     if request.method == 'POST':
         if not context['logged_in']:
             form = SellForm()
-            # return render(request, 'textbook_exchange/sellbooks.html', {'not_logged_in': True}) 
             return HttpResponseRedirect('/sell?not_logged_in=True')
         elif context['logged_in']:
             form = SellForm(request.POST, request.FILES)
@@ -68,11 +69,6 @@ def sell_books(request):
                 txtbk = Textbook.objects.get(pk=isbn)
                 listing_obj.textbook = txtbk
                 
-                # TODO: find class codes from dtbse (query) + split + add to class_object
-                # class_codes = .split(" ")
-                # for class in class_codes:
-                #       listing_obj.class_object.add(class)
-                
                 listing_obj.save()
 
                 return HttpResponseRedirect('/sell?submitted=True')
@@ -87,19 +83,23 @@ def sell_books(request):
 
     return render(request, 'textbook_exchange/sellbooks.html', {'form': form, 'submitted': submitted, 'not_logged_in': not_logged_in})
 
-class ProductListingListView(ListView):
-    model = ProductListing
-    template_name = "textbook_exchange/account_page.html"
-    context_object_name = 'current_posts' #var being passed in
-    ordering = ['-dateposted']
-    # queryset = ProductListing.objects.filter(user=self.request.user) #test
-
-
 def account_page(request):
     context = get_logged_in(request)
     context['title'] = 'Account Page'
-
+    if not context['logged_in']:
+        return HttpResponseRedirect('/404_error')    
     return render(request, 'textbook_exchange/account_page.html', context=context)
+    
+class CurrentListings(ListView):
+    model = ProductListing
+    template_name = "textbook_exchange/account_page.html"
+    context_object_name = 'current_posts' #var being passed in
+    ordering = ['-published_date']
+
+    def get_queryset(self):
+        queryset = super(CurrentListings, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
+        return queryset
 
 def autocomplete(request):
     search = request.GET['search']

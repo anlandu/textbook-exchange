@@ -20,14 +20,14 @@ class User(AbstractUser):
 
 class Class(models.Model):
     class_name = models.CharField(max_length=200) #e.g. Intro to Programming
-    department = models.CharField(max_length=200) #e.g. CS
-    course_code = models.IntegerField(default=0) #e.g. 1110
+    subject = models.CharField(max_length=200) #e.g. CS
+    class_code = models.IntegerField(default=0) #e.g. 1110
     section_number = models.CharField(max_length=10) #e.g. 001
     professor = models.CharField(max_length=200)
     class_info = models.TextField(max_length=200, primary_key=True) #e.g. CS1110
 
     def save(self, *args, **kwargs):
-        self.class_info = self.department + str(self.course_code)
+        self.class_info = self.subject + str(self.class_code)
         super(Class, self).save(*args, **kwargs) 
 
     def __str__(self):
@@ -35,9 +35,9 @@ class Class(models.Model):
 
 class Textbook(models.Model):
     class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
-    isbn = models.CharField(primary_key=True, max_length=200)
     class_key = models.CharField(max_length=200)
     title = models.CharField(max_length=350)
+    isbn = models.CharField(primary_key=True, max_length=200)
     author = models.CharField(max_length=200)
     edition = models.CharField(max_length=200)
     cover_photo = models.ImageField(upload_to='textbook_images')
@@ -49,11 +49,8 @@ class Textbook(models.Model):
 class ProductListing(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
-    class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
     
     price = models.DecimalField(max_digits=5, decimal_places=2)
-    # condition = [("likenew", "Like new"), ("verygood", "Very good"), ("good", "Good"), ("acceptable", "Acceptable")]
-    # condition_choices = models.CharField(condition, default="likenew", max_length=10)
     condition = models.CharField(max_length=10)
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)

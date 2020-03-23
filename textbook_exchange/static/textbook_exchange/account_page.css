@@ -1,0 +1,18 @@
+ul{
+	text-align: center;;
+}	
+.col-4-bg{
+	background-color: var(--uva-blue);
+	min-width: 175px;
+	margin-right: 40px;
+}
+.sidebar-align {
+  display: inline;
+}
+.side-btn {
+	display: block;
+	margin: 3px 10px;
+}
+.row {
+	flex-wrap: nowrap;
+}

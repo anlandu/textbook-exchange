@@ -4,17 +4,7 @@
 
 {% block content %}
 <head>
-<style>
-ul{
-	text-align: center;;
-}	
-.col-4-bg{
-	background-color: var(--uva-blue);
-}
-.sidebar-align {
-  display: inline;
-}
-</style>
+    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/account_page.css' %}">
 </head>
 <body>
 	<div class="container">
@@ -24,23 +14,23 @@ ul{
 				<ul class="sidebar-align" style="list-style-type:none;">
 					<br>
 					<li>
-						<a class="btn btn-uva" href="{% url 'exchange:account_page' %}">Dashboard</a>
+						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}">Dashboard</a>
 					</li>
 					<br>
 					<li>
-						<a class="btn btn-uva" href="{% url 'exchange:account_page' %}">Past Posts</a>
+						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}">Past Posts</a>
 					</li>
 					<br>
 					<li>
-						<a class="btn btn-uva" href="{% url 'exchange:account_page' %}">Current Posts</a>
+						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}">Current Posts</a>
 					</li>
 					<br>
 					<li>
-						<a class="btn btn-uva" href="{% url 'exchange:account_page' %}">Messages</a>
+						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}">Messages</a>
 					</li>
 					<br>
 					<li>
-						<a class="btn btn-uva"; href="{% url 'account_logout' %}">Sign Out</a>
+						<a class="btn btn-uva side-btn"; href="{% url 'account_logout' %}">Sign Out</a>
 					</li>
 					<br>
 				</ul>
@@ -52,13 +42,21 @@ ul{
 				<h5>{{ user.email }}</h5>
 				<h5>Any new messages? Updates?</h5>
 
+				<ul>
+				{% for current_post in current_posts %}</li>
+					<li style="text-align: left;">{{ current_post.textbook.title }}</li> 
+					<li style="text-align: left;">{{ current_post.textbook.author }}</li> 
+					<li style="text-align: left;">${{ current_post.price }}</li>
+					<li style="text-align: left;">{{ current_post.condition }}</li>
+					<li style="text-align: left;">{{ current_post.comments }}</li>
+				{% endfor %}
+				</ul>
+
 				{% if current_post %}
-					{% for current_post in current_posts %}
-						{{current_post}}
-					{% endfor %}
 				{% endif %}
 
 				{% if past_post %}
+					<h3>Past post</h3>
 				{% endif %}
 
 			</div>
