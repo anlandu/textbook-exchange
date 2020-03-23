@@ -5,8 +5,6 @@ from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views.generic import ListView
 from django.contrib import messages
-
-
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook
 from django.http import JsonResponse #for autocompletion response
