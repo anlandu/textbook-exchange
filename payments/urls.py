@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 app_name = "payments"
 
 urlpatterns = [
-    path('complete/', views.complete, name='confirm'),
-    path('return/', views.redirect, name='redirect')
+    path('', views.cart, name='cart'),
+    path('checkout/success/', views.success, name='success'),
+    path('checkout/cancelled/', views.cancelled, name='cancelled')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,13 +6,13 @@
         <br>
         <div class="row">
             <div class="col-sm-2">
-                <p>Picture</p>
+                <p class="my-0">Picture</p>
             </div>
             <div class="col-sm-6">
-                <p>Description</p>
+                <p class="my-0">Description</p>
             </div>
             <div class="col-sm-4">
-                <p class="text-right">Price</p>
+                <p class="text-right my-0">Price</p>
             </div>
         </div>
         <hr>
@@ -22,18 +22,18 @@
                 <img class="img-fluid" src='{{ product.picture.url }}'>
             </div>
             <div class="col-sm-6">
-                <p><b>{{ product.textbook.title }}</b><br>ISBN: {{ product.textbook.isbn }}</p>
+                <p><b>{{ product.textbook.title }}</b><br>ISBN: {{ product.textbook.isbn }}<br>(<a href="#">remove</a>)</p>
             </div>
             <div class="col-sm-4">
                 <p class="text-right">${{ product.price}}</p>
             </div>
         </div>
-        {% endfor %}
         <hr>
+        {% endfor %}
         <div class="row">
             <div class="col-sm-8"></div>
             <div class="col-sm-4">
-                <p class="text-right"><b>Total: ${{ cart.subtotal }}</b></p>
+                <p class="text-right"><b>Total: ${{ subtotal }}</b></p>
             </div>
         </div>
 
@@ -41,74 +41,70 @@
     <div class="col-sm-4">
         <h2>Checkout</h2>
         <hr>
-        <div id="paypal-button"></div>
+        <div id="paypal"></div>
     </div>
 </div>
 
 
 
 
-<script src="https://www.paypalobjects.com/api/checkout.js"></script>
-<script>
-paypal.Button.render({
-    // Configure environment
-    env: 'sandbox',
-    client: {
-    sandbox: 'AcCaARG0gidap3Y0mCgZtbbdE3sDrYHyHSIBwJ20jwhyGk3MQSBLxpWggOwuOQphYKDLl87wRLek-qE8',
-    production: 'demo_production_client_id'
-    },
-    // Customize button (optional)
-    locale: 'en_US',
-    style: {
-    size: 'small',
-    color: 'gold',
-    shape: 'pill',
-    },
-
-    // Enable Pay Now checkout flow (optional)
-    commit: true,
-
-    // Set up a payment
-    payment: function(data, actions) {
-        var subtotal = parseFloat('{{ subtotal }}');
-        var tax = subtotal * 0.05;
-        var total = Math.round((tax + subtotal) * 100)/100;
-        return actions.payment.create({
-            transactions: [{
-            amount: {
-                total: total.toString(),
-                currency: '{{ currency }}',
-                details: {
-                    subtotal: subtotal.toString(),
-                    tax: (Math.round(tax * 100)/100).toString()
+<script src="https://www.paypal.com/sdk/js?client-id=AcCaARG0gidap3Y0mCgZtbbdE3sDrYHyHSIBwJ20jwhyGk3MQSBLxpWggOwuOQphYKDLl87wRLek-qE8" data-namespace="paypal_sdk"></script>
+<script>paypal_sdk.Buttons({
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [
+                {
+                    amount: {
+                        value: (Math.round(105 * parseFloat('{{ subtotal }}'))/100).toString(),
+                        currency_code: 'USD',
+                        breakdown: {
+                            item_total: {
+                                currency_code: "USD",
+                                value: '{{ subtotal }}',
+                            },
+                            shipping: {
+                                currency_code: "USD",
+                                value: '0',
+                            },
+                            handling: {
+                                currency_code: "USD",
+                                value: '0',
+                            },
+                            tax_total: {
+                                currency_code: "USD",
+                                value: (Math.round(5 * parseFloat('{{ subtotal}}'))/100).toString(),
+                            },
+                        }
+                    },
+                    description: 'this is a description',
+                    items: [
+                        {% for product in cart.productlisting_set.all %}
+                            {
+                                name: '{{ product.textbook.title }}, Edition {{ product.textbook.edition }}',
+                                description: '{{ product.comments }}',
+                                quantity: '1',
+                                unit_amount: {
+                                    value: '{{ product.price }}',
+                                    currency_code: "USD",
+                                },
+                                //tax: (Math.round(({{ product.price }} * 0.05) * 100)/100).toString(),
+                            },
+                        {% endfor %}
+                    ]
                 }
-            },
-            description: 'Textbook purchase from TextEx',
-            item_list: {
-                items: [
-                    {% for product in cart.productlisting %}
-                    {% endfor %}
-                    {
-                        name: '112233445566',
-                        description: 'Advanced Software Engineering',
-                        quantity: '1',
-                        price: subtotal.toString(),
-                        tax: (Math.round(tax * 100)/100).toString(),
-                        currency: '{{ currency }}',
-                    }
-                ]
-            }
-            }]
+            ]
         });
     },
-    // Execute the payment
-    onAuthorize: function(data, actions) {
-    return actions.payment.execute().then(function() {
-        // Show a confirmation message to the buyer
-        window.alert('Thank you for your purchase!');
-    });
+    onApprove: function(data, actions) {
+      // This function captures the funds from the transaction.
+        return actions.order.capture().then(function(details) {
+            // This function shows a transaction success message to your buyer.
+            location.href="{% url 'payments:success' %}"
+            alert('Transaction completed by ' + details.payer.name.given_name);
+        });
+    },
+    onError: function (err) {
+        console.log(err);
     }
-}, '#paypal-button');
-
-</script>
+}).render('#paypal');</script>
 {% endblock %}
