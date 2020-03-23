@@ -88,17 +88,42 @@ def account_page(request):
     context['title'] = 'Account Page'
     if not context['logged_in']:
         return HttpResponseRedirect('/404_error')    
-    return render(request, 'textbook_exchange/account_page.html', context=context)
+    return render(request, 'textbook_exchange/account_dashboard.html', context=context)
+
+def account_page_current_posts(request):
+    context = get_logged_in(request)
+    context['title'] = 'Account Page: Current Posts'
+    if not context['logged_in']:
+        return HttpResponseRedirect('/404_error')
+    return render(request, 'textbook_exchange/account_current_posts.html', context=context)
+
+def account_page_past_posts(request):
+    context = get_logged_in(request)
+    context['title'] = 'Account Page: Past Posts'
+    if not context['logged_in']:
+        return HttpResponseRedirect('/404_error')
+    return render(request, 'textbook_exchange/account_current_posts.html', context=context)
     
-class CurrentListings(ListView):
+class AccountCurrentListings(ListView):
     model = ProductListing
-    template_name = "textbook_exchange/account_page.html"
-    context_object_name = 'current_posts' #var being passed in
+    template_name = "textbook_exchange/account_current_posts.html"
+    context_object_name = 'current_posts'
     ordering = ['-published_date']
 
     def get_queryset(self):
-        queryset = super(CurrentListings, self).get_queryset()
+        queryset = super(AccountCurrentListings, self).get_queryset()
         queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
+        return queryset
+
+class AccountPastListings(ListView):
+    model = ProductListing
+    template_name = "textbook_exchange/account_past_posts.html"
+    context_object_name = 'past_posts'
+    ordering = ['-published_date']
+
+    def get_queryset(self):
+        queryset = super(AccountPastListings, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=True)
         return queryset
 
 def autocomplete(request):

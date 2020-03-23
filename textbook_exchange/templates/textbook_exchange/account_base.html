@@ -1,0 +1,44 @@
+{% extends "textbook_exchange/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/account_page.css' %}">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<!-- SIDEBAR -->
+			<div class="col-sm-2 col-4-bg" style="height: fit-content;">
+				<ul class="sidebar-align" style="list-style-type:none;">
+					<br>
+					<li>
+						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}">Dashboard</a>
+					</li>
+					<br>
+					<li>
+						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page_past_posts' %}">Past Posts</a>
+					</li>
+					<br>
+					<li>
+						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page_current_posts' %}">Current Posts</a>
+					</li>
+					<br>
+					<li>
+						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}">Messages</a>
+					</li>
+					<br>
+					<li>
+						<a class="btn btn-uva side-btn"; href="{% url 'account_logout' %}">Sign Out</a>
+					</li>
+					<br>
+				</ul>
+			</div>
+
+			<!-- MAIN -->
+			{% block inner-content %}
+			{% endblock inner-content %}
+		</div>
+	</div>
+</body>
+{% endblock content %}

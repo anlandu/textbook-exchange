@@ -1,0 +1,9 @@
+{% extends 'textbook_exchange/account_base.html' %}
+{% load static %} 
+
+{% block inner-content %}
+<h1>Past posts</h1>
+{% for current_post in past_posts %}</li>
+    <!-- ... -->
+{% endfor %}
+{% endblock inner-content %}

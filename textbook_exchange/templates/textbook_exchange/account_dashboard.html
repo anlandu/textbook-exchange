@@ -1,0 +1,10 @@
+{% extends 'textbook_exchange/account_base.html' %}
+{% load static %} 
+
+{% block inner-content %}
+<div class='col-sm-10'>
+    <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+    <h5>{{ user.email }}</h5>
+    <h5>Any new messages? Updates?</h5>
+</div>
+{% endblock inner-content %}
