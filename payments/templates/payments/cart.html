@@ -23,14 +23,34 @@
 
     // Set up a payment
     payment: function(data, actions) {
-      return actions.payment.create({
-        transactions: [{
-          amount: {
-            total: '{{ subtotal }}',
-            currency: '{{ currency }}'
-          }
-        }]
-      });
+        var subtotal = parseFloat('{{ subtotal }}');
+        var tax = subtotal * 0.05;
+        var total = Math.round((tax + subtotal) * 100)/100;
+        return actions.payment.create({
+            transactions: [{
+            amount: {
+                total: total.toString(),
+                currency: '{{ currency }}',
+                details: {
+                    subtotal: subtotal.toString(),
+                    tax: (Math.round(tax * 100)/100).toString()
+                }
+            },
+            description: 'Textbook purchase from TextEx',
+            item_list: {
+                items: [
+                    {
+                        name: '112233445566',
+                        description: 'Advanced Software Engineering',
+                        quantity: '1',
+                        price: subtotal.toString(),
+                        tax: (Math.round(tax * 100)/100).toString(),
+                        currency: '{{ currency }}',
+                    }
+                ]
+            }
+            }]
+        });
     },
     // Execute the payment
     onAuthorize: function(data, actions) {

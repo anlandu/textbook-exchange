@@ -46,10 +46,19 @@ class Textbook(models.Model):
         textbook = '%s, Edition %s' % (self.title, self.edition)
         return textbook.strip()
 
+class Cart(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # one cart per user
+    subtotal = models.DecimalField(max_digits=6, decimal_places=2) # total without tax of books
+    items = models.IntegerField() # number of items in cart
+
+    def __str__(self):
+        return str(self.items) + " items totaling $" + str(self.subtotal)
+
 class ProductListing(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
+    cart = models.OneToOneField(Cart, on_delete=models.CASCADE) # should prevent a product listing from being in multiple carts at once
     
     price = models.DecimalField(max_digits=5, decimal_places=2)
     # condition = [("likenew", "Like new"), ("verygood", "Very good"), ("good", "Good"), ("acceptable", "Acceptable")]
