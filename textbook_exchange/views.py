@@ -110,7 +110,7 @@ def autocomplete(request):
     #these will search in our models for matches
     books = textbook_exchange_models.Textbook.objects.filter(
         isbn__contains = search, title__contains = search, author__contains = search)
-    courses = textbook_exchange_models.Class.objects.filter(class_code__contains = search.replace(" ", ""))
+    courses = textbook_exchange_models.Class.objects.filter(course_code__contains = search.replace(" ", ""))
     
     #using fake data for demo
     some_courses = ['CS1110', 'CS2110', 'CS2102', 'CS2150','CS2330',
