@@ -20,14 +20,14 @@ class User(AbstractUser):
 
 class Class(models.Model):
     class_name = models.CharField(max_length=200) #e.g. Intro to Programming
-    subject = models.CharField(max_length=200) #e.g. CS
-    class_code = models.IntegerField(default=0) #e.g. 1110
+    department = models.CharField(max_length=200) #e.g. CS
+    course_code = models.IntegerField(default=0) #e.g. 1110
     section_number = models.CharField(max_length=10) #e.g. 001
     professor = models.CharField(max_length=200)
     class_info = models.TextField(max_length=200, primary_key=True) #e.g. CS1110
 
     def save(self, *args, **kwargs):
-        self.class_info = self.subject + str(self.class_code)
+        self.class_info = self.department + str(self.course_code)
         super(Class, self).save(*args, **kwargs) 
 
     def __str__(self):
@@ -42,6 +42,10 @@ class Textbook(models.Model):
     edition = models.CharField(max_length=200)
     cover_photo = models.ImageField(upload_to='textbook_images')
     
+    # def save(self, *args, **kwargs):
+    #     self.class_key = self.class_object.class_info
+    #     super(Textbook, self).save(*args, **kwargs)
+
     def __str__(self):
         textbook = '%s, Edition %s' % (self.title, self.edition)
         return textbook.strip()
