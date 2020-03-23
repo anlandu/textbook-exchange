@@ -24,14 +24,14 @@ def get_cart(request):
 def cart(request):
     context=get_cart(request)
     if context['logged_in'] is False:
-        return HttpResponseRedirect('/')
+        return render(request, 'payments/log_in.html')
     else:
         return render(request, 'payments/cart.html', context=context)
 
 def success(request):
+    # TODO: remove items from cart, mark them as sold and move to user purchase history
     context=get_cart(request)
-
-    return render(request, 'textbook_exchange/landing.html', context=context)
+    return render(request, 'payments/success.html', context=context)
 
 def cancelled(request):
     context=get_cart(request)
