@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'allauth',
+    'payments',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google'

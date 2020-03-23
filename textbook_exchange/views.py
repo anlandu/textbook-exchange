@@ -114,17 +114,17 @@ def autocomplete(request):
     
     #using fake data for demo
     some_courses = ['CS1110', 'CS2110', 'CS2102', 'CS2150','CS2330',
-    'CS3102', 'CS3330','APMA1110','APMA2120','APMA3100','CHEM160',
+    'CS3102', 'CS3330','APMA1110','APMA2120','APMA3100','CHEM1600',
     'ENGR1620','PHYS1425','PHYS2415','ECON2010','ECON2020','ECON3010',
     'HIUS2060','HIUS2051', 'COMM2010', 'STS1500', 'STS2500']
 
     some_books = [
-    {'isbn' : "1234567890123", 'author' : "Zane Alpher", 'title' : "Intro to CS", 'class_key' : "CS1110"},
-    {'isbn' : "5435678966577", 'author' : "Nick Winans", 'title' : "Object Oriented Programming",  'class_key' : "CS2110"},
-    {'isbn' : "8765434512356", 'author' : "Rohan Chandra", 'title' : "American Economic History", 'class_key' : "HIUS2060"},
-    {'isbn' : "2345673452898", 'author' : "Anlan Du", 'title' : "Physics for Engineers", 'class_key' : "PHYS2415"},
-    {'isbn' : "0318975198234", 'author' : "Zaeda Meherin", 'title' : "Intro to Microeconomics", 'class_key' : "ECON2010"},
-    {'isbn' : "7283916493821", 'author' : "Mark Sherriff", 'title' : "Software Engineering", 'class_key' : "CS3240"},
+        {'isbn' : "1234567890123", 'author' : "Zane Alpher", 'title' : "Intro to CS", 'class_key' : "CS1110"},
+        {'isbn' : "5435678966577", 'author' : "Nick Winans", 'title' : "Object Oriented Programming",  'class_key' : "CS2110"},
+        {'isbn' : "8765434512356", 'author' : "Rohan Chandra", 'title' : "American Economic History", 'class_key' : "HIUS2060"},
+        {'isbn' : "2345673452898", 'author' : "Anlan Du", 'title' : "Physics for Engineers", 'class_key' : "PHYS2415"},
+        {'isbn' : "0318975198234", 'author' : "Zaeda Meherin", 'title' : "Intro to Microeconomics", 'class_key' : "ECON2010"},
+        {'isbn' : "7283916493821", 'author' : "Mark Sherriff", 'title' : "Software Engineering", 'class_key' : "CS3240"},
     ]
 
     matched_classes = list(filter(lambda x: search in x.lower(), some_courses))
