@@ -91,16 +91,24 @@ def account_page(request):
         return HttpResponseRedirect('/404_error')    
     return render(request, 'textbook_exchange/account_dashboard.html', context=context)
 
+def account_page_messages(request):
+    context = get_logged_in(request)
+    context['title'] = 'Messages'
+    if not context['logged_in']:
+        return HttpResponseRedirect('/404_error')    
+    return render(request, 'textbook_exchange/account_messages.html', context=context)
+
+
 def account_page_current_posts(request):
     context = get_logged_in(request)
-    context['title'] = 'Account Page: Current Posts'
+    context['title'] = 'Current Posts'
     if not context['logged_in']:
         return HttpResponseRedirect('/404_error')
     return render(request, 'textbook_exchange/account_current_posts.html', context=context)
 
 def account_page_past_posts(request):
     context = get_logged_in(request)
-    context['title'] = 'Account Page: Past Posts'
+    context['title'] = 'Past Posts'
     if not context['logged_in']:
         return HttpResponseRedirect('/404_error')
     return render(request, 'textbook_exchange/account_current_posts.html', context=context)
