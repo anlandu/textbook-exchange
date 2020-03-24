@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views.generic import ListView
 from django.contrib import messages
+import itertools
+import functools
 
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook
@@ -62,9 +64,8 @@ def sell_books(request):
                 listing_obj.condition = cleaned_data['book_condition']
                 listing_obj.picture = cleaned_data['picture']
                 listing_obj.comments = cleaned_data['comments']
-                listing_obj.published_date = timezone.now()
-                listing_obj.hasBeenSoldFlag = False
-
+                
+                # finding textbook using isbn
                 isbn = cleaned_data['isbn']
                 txtbk = Textbook.objects.get(pk=isbn)
                 listing_obj.textbook = txtbk

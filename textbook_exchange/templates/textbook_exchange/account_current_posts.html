@@ -2,15 +2,24 @@
 {% load static %} 
 
 {% block inner-content %}
-
-<ul>
-    {% for current_post in current_posts %}</li>
-        <li style="text-align: left;">{{ current_post.textbook.title }}</li>
-        <li style="text-align: left;">{{ current_post.textbook.author }}</li> 
-        <li style="text-align: left;">${{ current_post.price }}</li>
-        <li style="text-align: left;">{{ current_post.condition }}</li>
-        <li style="text-align: left;">{{ current_post.comments }}</li>
-    {% endfor %}
-</ul>
-
+<div class="acc-main">
+    <h1 class="header">Current Posts</h1>
+    <div class="container-fluid">
+        <div class="row justify-content-start">
+            {% for post in current_posts %}
+            <div class="col-auto mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <h6 class="card-subtitle mb-4 text-muted">Card subtitle</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock inner-content %}

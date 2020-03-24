@@ -3,42 +3,53 @@
 
 {% block content %}
 <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/account_page.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/account_page.css' %}">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+        crossorigin="anonymous">
 </head>
 <body>
-	<div class="container">
-		<div class="row">
-			<!-- SIDEBAR -->
-			<div class="col-sm-2 col-4-bg" style="height: fit-content;">
-				<ul class="sidebar-align" style="list-style-type:none;">
-					<br>
-					<li>
-						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}">Dashboard</a>
-					</li>
-					<br>
-					<li>
-						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page_past_posts' %}">Past Posts</a>
-					</li>
-					<br>
-					<li>
-						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page_current_posts' %}">Current Posts</a>
-					</li>
-					<br>
-					<li>
-						<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}">Messages</a>
-					</li>
-					<br>
-					<li>
-						<a class="btn btn-uva side-btn"; href="{% url 'account_logout' %}">Sign Out</a>
-					</li>
-					<br>
-				</ul>
-			</div>
-
-			<!-- MAIN -->
-			{% block inner-content %}
-			{% endblock inner-content %}
+	<div class="grid">
+		<!-- SIDEBAR -->
+		<div class="col col-4-bg">
+			<ul class="sidebar-align">
+				<br>
+				<li>
+					<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}" style="display: block; border-radius: 0;">
+						Dashboard
+					</a>
+				</li>
+				<br>
+				<li>
+					<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page_past_posts' %}" style="display: block; border-radius: 0;">
+						Past Posts
+					</a>
+				</li>
+				<br>
+				<li>
+					<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page_current_posts' %}" style="display: block; border-radius: 0;">
+						Current Posts
+					</a>
+				</li>
+				<br>
+				<li>
+					<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}" style="display: block; border-radius: 0;">
+						Messages
+					</a>
+				</li>
+				<br>
+				<li>
+					<a class="btn btn-uva side-btn"; href="{% url 'account_logout' %}" style="display: block; border-radius: 0;">
+						Sign Out
+					</a>
+				</li>
+				<br>
+			</ul>
 		</div>
+
+		<!-- MAIN -->
+		{% block inner-content %}
+		{% endblock inner-content %}
 	</div>
 </body>
 {% endblock content %}
