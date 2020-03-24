@@ -4,12 +4,14 @@
 {% block inner-content %}
 <div class="acc-main">
     <h1 class="header">Current Posts</h1>
-    <div class="container-fluid">
-        <div class="row justify-content-start">
+
+        <div class="row">
+            <div class="card-deck">
             {% for post in current_posts %}
-            <div class="col-auto mb-4">
+            <div class="col-auto">
                 <div class="card">
                     <div class="card-body">
+                        <img class="card-img-top" src="{{ post.picture.url }}" alt="{{ post.textbook.title }}">
                         <h5 class="card-title">Card title</h5>
                         <h6 class="card-subtitle mb-4 text-muted">Card subtitle</h6>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -19,7 +21,7 @@
                 </div>
             </div>
             {% endfor %}
+            </div>
         </div>
-    </div>
 </div>
 {% endblock inner-content %}
