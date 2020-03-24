@@ -98,14 +98,6 @@ def account_page_messages(request):
         return HttpResponseRedirect('/404_error')    
     return render(request, 'textbook_exchange/account_messages.html', context=context)
 
-
-def account_page_current_posts(request):
-    context = get_logged_in(request)
-    context['title'] = 'Current Posts'
-    if not context['logged_in']:
-        return HttpResponseRedirect('/404_error')
-    return render(request, 'textbook_exchange/account_current_posts.html', context=context)
-
 def account_page_past_posts(request):
     context = get_logged_in(request)
     context['title'] = 'Past Posts'
@@ -115,7 +107,7 @@ def account_page_past_posts(request):
     
 class AccountCurrentListings(ListView):
     model = ProductListing
-    template_name = "textbook_exchange/account_current_posts.html"
+    template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
     ordering = ['-published_date']
 
