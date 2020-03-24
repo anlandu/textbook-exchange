@@ -13,6 +13,7 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), primary_key=True, blank=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    balance = models.DecimalField(max_digits=9, decimal_places=2)
 
     ACCOUNT_EMAIL_VERIFICATION = None
     USERNAME_FIELD = 'email'
@@ -58,10 +59,8 @@ class ProductListing(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,) # should prevent a product listing from being in multiple carts at once
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True) # should prevent a product listing from being in multiple carts at once
     price = models.DecimalField(max_digits=5, decimal_places=2)
-    # condition = [("likenew", "Like new"), ("verygood", "Very good"), ("good", "Good"), ("acceptable", "Acceptable")]
-    # condition_choices = models.CharField(condition, default="likenew", max_length=10)
     condition = models.CharField(max_length=10)
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)
@@ -70,3 +69,12 @@ class ProductListing(models.Model):
 
     def __str__(self):
         return str(self.textbook)
+
+class PendingTransaction(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=9, decimal_places=2)
+    date_transacted = models.DateTimeField(auto_now=True)
+    date_settled = models.DateTimeField(auto_now=False)
+
+    def __str__(self):
+        return "Transaction for $" + str(self.balance) + " being settled on " + str(self.date_settled)
