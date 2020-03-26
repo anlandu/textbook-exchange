@@ -75,6 +75,8 @@ def sell_books(request):
                 return HttpResponseRedirect('/sell?submitted=True')
             else:
                 print(form.errors)
+                # raise forms.ValidationError("Please fill in all fields in red.")
+
     else:
         form = SellForm()
         if 'submitted' in request.GET:
