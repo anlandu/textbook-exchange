@@ -3,15 +3,14 @@
 
 {% block content %}
 
-{% if submitted %}
-<script>
-    alert('Your post was successfully posted!');
-</script>
-
-{% else %}
 {% if not_logged_in %}
 <script>
     alert('Please log in');
+</script>
+
+{% elif submitted %}
+<script>
+    alert('Your post was successfully posted!');
 </script>
 {% endif %}
 
@@ -166,6 +165,5 @@
         </div>   
     </div>
 </div>
-{% endif %}
 
 {% endblock content %}

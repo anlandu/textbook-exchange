@@ -1,0 +1,41 @@
+{% extends 'textbook_exchange/account_base.html' %}
+{% load static %} 
+
+{% block inner-content %}
+<div class="account-container">
+    <h1 class="custom-header">Past Posts</h1>
+    <div class="row">
+        {% for post in past_posts %}
+            <div class="card" style="width: 15rem;">
+                <div class="card-header">
+                    <img class="card-img-top" src="{{ post.picture.url }}" alt="{{ post.textbook.title }}">
+                    <h5 class="card-title">{{ post.textbook.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author }}</h6>
+                    <h6 class="card-subtitle mb-3 text-muted">${{ post.price }}</h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-subtitle mb-2 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
+                    <p class="card-subtitle mb-4 text-muted" style="font-size: smaller;">ISBN: {{ post.textbook.isbn }}</p>
+                    {% if post.textbook.edition != null %}
+                        <p class="card-subtitle mb-2">{{ post.edition }}</p>
+                    {% endif %}
+                    <p class="card-text mb-4">
+                        {% if post.condition == "likenew" %}
+                            Like new
+                        {% elif post.condition == "verygood" %}
+                            Very good
+                        {% elif post.condition == "good" %}
+                            Good
+                        {% elif post.condition == "acceptable" %}
+                            Acceptable
+                        {% endif %}
+                    </p>
+                    <p class="card-text">{{ post.comments }}</p>
+                    <a href="#" class="card-link">edit</a>
+                    <a href="#" class="btn btn-primary" style="float: right;">Sold</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+</div>
+{% endblock inner-content %}

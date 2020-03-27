@@ -1,0 +1,43 @@
+.custom-header {
+	margin-bottom: 15px;
+}
+.row {
+	flex-wrap: nowrap;
+	color: black;
+}
+.account-container {
+	padding-left: 50px;
+}
+
+/* CARDS/PANELS */
+.card {
+	margin: 15px;
+}
+.card-title {
+	margin: 5px 0 0 0;
+}
+
+/* SIDEBAR */
+.grid {
+  margin: 1em auto;
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 190px) 1fr;
+}
+.grid.bis {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) 1fr;
+}
+.col-4-bg{
+	background-color: var(--uva-blue);
+	min-width: 175px;
+	height: fit-content;
+}
+.sidebar-align {
+  display: inline;
+  list-style-type:none;
+}
+.side-btn {
+	margin: 3px 10px;
+}

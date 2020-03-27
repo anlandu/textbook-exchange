@@ -36,13 +36,17 @@ class Class(models.Model):
 
 class Textbook(models.Model):
     class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
-    isbn = models.CharField(primary_key=True, max_length=200)
     class_key = models.CharField(max_length=200)
     title = models.CharField(max_length=350)
+    isbn = models.CharField(primary_key=True, max_length=200)
     author = models.CharField(max_length=200)
     edition = models.CharField(max_length=200)
     cover_photo = models.ImageField(upload_to='textbook_images')
     
+    # def save(self, *args, **kwargs):
+    #     self.class_key = self.class_object.class_info
+    #     super(Textbook, self).save(*args, **kwargs)
+
     def __str__(self):
         textbook = '%s, Edition %s' % (self.title, self.edition)
         return textbook.strip()
@@ -60,7 +64,7 @@ class ProductListing(models.Model):
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True) # should prevent a product listing from being in multiple carts at once
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=7, decimal_places=2)
     condition = models.CharField(max_length=10)
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)
