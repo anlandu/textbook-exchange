@@ -16,7 +16,7 @@
             </div>
         </div>
         <hr>
-        {% for product in cart.productlisting_set.all %}
+        {% for product in user.cart.productlisting_set.all %}
         <div class="row">
             <div class="col-sm-2">
                 <img class="img-fluid" src='{{ product.picture.url }}'>
@@ -80,7 +80,7 @@
                     },
                     description: 'this is a description',
                     items: [
-                        {% for product in cart.productlisting_set.all %}
+                        {% for product in user.cart.productlisting_set.all %}
                             {
                                 name: '{{ product.textbook.title }}, Edition {{ product.textbook.edition }}',
                                 description: '{{ product.comments }}',

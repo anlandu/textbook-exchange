@@ -17,7 +17,6 @@ def get_cart(request):
             'tax': tax,
             'total': total,
             'currency': 'USD',
-            'cart': request.user.cart
         }
     else:
         context = {
