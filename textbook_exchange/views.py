@@ -44,7 +44,7 @@ def buy_books(request):
 def sell_books(request):
     context = get_logged_in(request) 
     context['title'] = 'Sell Books'
-    # context['form'] = SellForm
+    context['form'] = SellForm
 
     submitted = False
     not_logged_in = False
