@@ -10,9 +10,9 @@
                 <span class="input-group-append"><button type="button" class="btn btn-uva"><i class="fa fa-search"></i></button></span>
         </div>
     </div>
-    <div class="row">
+    <div class="grid">
         <!-- FILTERS -->
-        <div class="col-xs-3">
+        <div class="col-1-10">
             <div id="searchFilters">
                 <div class="card card-body mx-auto">
                     <div class="row mx-auto">
@@ -38,7 +38,7 @@
                                 <input class="form-check-input" type="checkbox" value="" id="qualityGood" checked>
                                 <label class="form-check-label" for="qualityGood">
                                     Good
-                            </label>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="qualityAcceptable" checked>
@@ -46,27 +46,29 @@
                                     Acceptable
                                 </label>
                             </div>
-                            </div>
-                          </div>
-                          <hr>
-                          <div class="row">
-                            <div class="col">
-                                <!-- slider show value source: https://stackoverflow.com/a/18936328 -->
-                                <h6 style="display: inline">Max Price:</h6> $<output id="maxPriceOutput">400</output>
-                                <input class="form-control" type="range" min="0" max="400" value="400" id="maxPrice" oninput="maxPriceOutput.value = maxPrice.value">
+                           <hr>
+                           <div class="row">
+                                <div class="col">
+                                    <!-- slider show value source: https://stackoverflow.com/a/18936328 -->
+                                    <h6 style="display: inline">Max Price:</h6> $<output id="maxPriceOutput">400</output>
+                                    <input class="form-control" type="range" min="0" max="400" value="400" id="maxPrice" oninput="maxPriceOutput.value = maxPrice.value">
+                            
+                                </div>
                             </div>
                         </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-xs-9">
-            <div class="dropdown">
-                
             </div>
         </div>
 
         <!-- POSTS -->
-        
+        <div class="col-9-10">
+            <h1>Please search a textbook in the search bar above to find listings</h1>
+            <div class="col-xs-9">
+                <div class="dropdown">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
