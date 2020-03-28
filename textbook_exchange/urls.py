@@ -11,10 +11,11 @@ app_name = "exchange"
 urlpatterns = [
     path('', views.landing, name='landing'),
     path('404_error', views.error_404, name='404_error'),
-    path('buy/', views.buy_books, name='buybooks'),
     path('sell/', views.sell_books, name='sellbooks'),
     path('accounts/', views.AccountCurrentListings.as_view(), name='account_page'),
     path('accounts/past_posts', views.AccountPastListings.as_view(), name='past_posts'),
     path('accounts/messages', views.account_page_messages, name='messages'),
+    path('buy/', views.buy_books, name='buybooks'),
     path('buy/autocomplete/', views.autocomplete, name='ajax_autocomplete'),
+    path('buy/<slug:isbn>/', views.BuyProductListings.as_view(), name='buy_product'),
 ]

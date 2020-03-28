@@ -48,14 +48,6 @@ div.container {
 
 .grid {
     margin: 1em auto;
-}
-
-.grid {
     display: grid;
     grid-template-columns: minmax(150px, 190px) 1fr;
-}
-
-.grid.bis {
-    display: grid;
-    grid-template-columns: minmax(100px, 1fr) 1fr;
 }

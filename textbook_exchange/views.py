@@ -1,9 +1,10 @@
 from django import forms
 from django.views import generic
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.views.generic import ListView
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 import itertools
 import functools
@@ -128,6 +129,46 @@ class AccountPastListings(ListView):
         queryset = super(AccountPastListings, self).get_queryset()
         queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=True)
         return queryset
+
+# class BuyProductListings(ListView):
+#     model = ProductListing
+#     template_name = "textbook_exchange/buybooks.html"
+#     context_object_name = 'product_listings'
+#     ordering = ['price']
+
+#     def get_queryset(self, **kwargs):
+#         # https://stackoverflow.com/questions/34184046/how-to-get-all-objects-referenced-as-foreignkey-from-given-field-in-a-module-in
+#         textbook = Textbook.objects.get(isbn=self.kwargs['isbn'])
+#         product_listings = textbook.productlisting_set.all()
+#         product_listings = product_listings.filter(hasBeenSoldFlag=False)
+#         return product_listings
+
+class BuyProductListings(ListView):
+    model = ProductListing
+    template_name = "textbook_exchange/buybooks.html"
+    context_object_name = 'product_listings'
+    ordering = ['price']
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['num_textbooks'] = len(Textbook.objects.filter(isbn=self.kwargs['isbn']))
+        context['num_product_listings'] = Textbook.objects.get(isbn=self.kwargs['isbn']).productlisting_set.all().count()
+        return context
+
+    def get_queryset(self):
+        textbook = Textbook.objects.get(isbn=self.kwargs['isbn'])
+        product_listings = textbook.productlisting_set.all()
+        queryset = product_listings.filter(hasBeenSoldFlag=False)
+        return queryset
+
+    # def get_queryset(self):
+    #     try: # textbook exists
+    #         textbook = Textbook.objects.get(isbn=self.kwargs['isbn'])
+    #         product_listings = textbook.productlisting_set.all()
+    #         queryset = product_listings.filter(hasBeenSoldFlag=False)
+    #         return queryset
+    #     except ObjectDoesNotExist:
+    #         # display error msg on buybooks.html
 
 def autocomplete(request):
     search = request.GET['search']

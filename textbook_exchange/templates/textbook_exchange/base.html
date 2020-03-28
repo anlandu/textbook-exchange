@@ -7,9 +7,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
+    
     <!-- My CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/listings.css' %}">
 
     {% if title %}
         <title>TextEx: {{ title }}</title>
@@ -29,7 +30,7 @@
         <div class="collapse navbar-collapse text-center" id="navbarResponsive">
             <form class="my-2 my-lg-0 mx-auto" action="/buy/" style="width: 70%;" method="GET">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="search_text"
+                        <input type="text" class="form-control" id="search_text" style="border-radius: 0px;"
                             placeholder="Search for a book"
                             onkeyup="updateSearch(this.value)" autofocus autocomplete="off" onfocusout="hideAutocomplete()" onfocus="updateSearch(this.value)">
                         <span class="input-group-append" type='submit'>

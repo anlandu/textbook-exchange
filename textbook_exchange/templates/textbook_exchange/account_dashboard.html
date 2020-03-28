@@ -2,8 +2,8 @@
 {% load static %} 
 
 {% block inner-content %}
-    <!-- Name/Email/Header -->
-    <div class="account-container">
+<!-- Name/Email/Header -->
+<div class="right-container">
     <div style="background-color: whitesmoke; padding: 10px 10px 10px 18px;">
         <h1 style="margin-bottom: 10px;">{{ user.first_name }} {{ user.last_name }}</h1>
         <h5>{{ user.email }}</h5>
@@ -16,7 +16,7 @@
         {% for post in current_posts %}
             <div class="card" style="width: 15rem; border-radius: 0px;">
                 <div class="card-header">
-                    <img class="card-img-top" src="{{ post.picture.url }}" alt="{{ post.textbook.title }}" style=" style="border-radius: 0px;"">
+                    <img class="card-img-top" src="{{ post.picture.url }}" alt="{{ post.textbook.title }}" style="border-radius: 0px;">
                     <h5 class="card-title">{{ post.textbook.title }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author }}</h6>
                     <h6 class="card-subtitle mb-3 text-muted">${{ post.price }}</h6>
@@ -25,9 +25,7 @@
                 <div class="card-body">
                     <p class="card-subtitle mb-2 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
                     <p class="card-subtitle mt-3 mb-1">ISBN: {{ post.textbook.isbn }}</p>
-                    <!-- {% if post.textbook.edition != null %} -->
-                        <p class="card-subtitle mb-1">Edition: {{ post.textbook.edition }}</p>
-                    <!-- {% endif %} -->
+                    <p class="card-subtitle mb-1">Edition: {{ post.textbook.edition }}</p>
                     <p class="card-subtitle mb-5">
                         Condition:
                         {% if post.condition == "likenew" %}
@@ -41,7 +39,9 @@
                         {% endif %}
                     </p>
                     <p class="card-text mb-4">{{ post.comments }}</p>
-                    <a href="#" class="btn btn-primary" style="margin: auto; width: 40%; display: block;">Sold</a>
+                    <a href="#" class="btn btn-primary" style="margin: auto; width: 40%; display: block; border-radius: 0px;">
+                        Sold
+                    </a>
                 </div>
             </div>
         {% endfor %}

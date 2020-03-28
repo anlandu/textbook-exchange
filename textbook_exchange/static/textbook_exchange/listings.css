@@ -1,12 +1,24 @@
 .custom-header {
 	margin-bottom: 15px;
 }
+.right-container {
+	padding-left: 50px;
+}
 .row {
 	flex-wrap: nowrap;
-	color: black;
 }
-.account-container {
-	padding-left: 50px;
+.buy-error-msg {
+	height: 287px;
+    text-align: center;
+    padding: 90px 25px;
+    font-size: 3vw;
+}
+
+/* GRID LAYOUT */
+.grid {
+	margin: 1em auto;
+	display: grid;
+	grid-template-columns: minmax(150px, 190px) 1fr;
 }
 
 /* CARDS/PANELS */

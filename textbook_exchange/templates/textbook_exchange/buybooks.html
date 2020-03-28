@@ -1,6 +1,19 @@
 {% extends "textbook_exchange/base.html" %}
 
 {% block content %}
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+    crossorigin="anonymous">
+    <style>
+        .buy-error-msg {
+            height: 287px;
+            text-align: center;
+            padding: 90px 25px;
+            font-size: 3vw;
+        }
+    </style>
+</head>
 <div class="container">
     <div class="row d-lg-none">
         <div class="input-group">
@@ -14,7 +27,7 @@
         <!-- FILTERS -->
         <div class="col-1-10">
             <div id="searchFilters">
-                <div class="card card-body mx-auto">
+                <div class="card card-body mx-auto" style="border-radius: 0px;">
                     <div class="row mx-auto">
                         <div class="col mx-auto">
                             <h6>Book Quality</h6>
@@ -61,13 +74,61 @@
             </div>
         </div>
 
-        <!-- POSTS -->
-        <div class="col-9-10">
-            <h1>Please search a textbook in the search bar above to find listings</h1>
-            <div class="col-xs-9">
-                <div class="dropdown">
+        <!-- MAIN -->
+        <div class="col-9-10 right-container">
+            <!-- LISTINGS -->            
+            {% if num_textbooks == 0 %}
+                <h1 class="buy-error-msg">
+                    This textbook does not exist. 
+                </h1>
+            {% elif num_product_listings == 0 %}
+                <h1 class="buy-error-msg">
+                    There are no listings for this textbook. Sorry :(
+                </h1>
+            {% elif num_product_listings > 0 %}
+                <div class="row">
+                    {% for listing in product_listings %}
+                        <div class="card" style="width: 15rem; border-radius: 0px;">
+                            <div class="card-header">
+                                <img class="card-img-top" src="{{ listing.picture.url }}" alt="{{ listing.textbook.title }}" style="border-radius: 0px;">
+                                <h5 class="card-title">{{ listing.textbook.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author }}</h6>
+                                <h6 class="card-subtitle mb-3 text-muted">${{ listing.price }}</h6>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
+                                <button type="button" class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;">Message</button>
+
+                                <p class="card-subtitle mt-2 text-muted" style="font-size: smaller;">{{ listing.published_date }}</p>
+                                <p class="card-subtitle mb-4 mt-1 text-muted" style="font-size: smaller;">ISBN: {{ listing.textbook.isbn }}</p>
+                                
+                                <p class="card-subtitle mb-1">Edition: {{ listing.textbook.edition }}</p>
+                                <p class="card-subtitle mb-3">
+                                    Condition:
+                                    {% if listing.condition == "likenew" %}
+                                        Like new
+                                    {% elif listing.condition == "verygood" %}
+                                        Very good
+                                    {% elif listing.condition == "good" %}
+                                        Good
+                                    {% elif listing.condition == "acceptable" %}
+                                        Acceptable
+                                    {% endif %}
+                                </p>
+                                <p class="card-text mb-4">{{ listing.comments }}</p>
+                                <a href="#" class="btn btn-primary" style="margin: auto; width: 55%; display: block; border-radius: 0px;">
+                                    Add to Cart
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            </div>
+            <!-- NO TEXTBOOK SEARCHED -->
+            {% else %}
+                <h1 class="buy-error-msg">
+                    Please search a textbook in the search bar above to find listings
+                </h1>
+            {% endif %}
         </div>
     </div>
 </div>
