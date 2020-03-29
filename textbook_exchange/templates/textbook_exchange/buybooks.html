@@ -46,15 +46,16 @@
                                 </div>
                                 <hr>
                                 <div class="row mt-4">
-                                    <div class="col">
+                                    <div class="col">                                        
                                         <!-- slider show value source: https://stackoverflow.com/a/18936328 -->
                                         <h5 style="display: inline">Max Price</h5>
                                         <input class="form-control mt-2" type="number" min="0" max="500" value="500" id="maxPrice" oninput="maxPriceOutput.value = maxPrice.value" style="width:100px;">
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <button type="button" class="btn btn-danger mt-4" id="apply_filter" style="margin: 0 60px; border-radius: 0px;">Apply</button>
-                                    <!-- <input type="button" value="Update" id="selection-button" method="GET"> -->
+                                    <!-- <button type="button" class="btn btn-danger mt-4" id="apply_filter" style="margin: 0 60px; border-radius: 0px;">Apply</button> -->
+                                    <!-- <input type="button" value="Apply" id="apply_filter" method="GET" class="btn btn-danger mt-4" style="margin: 0 60px; border-radius: 0px;"> -->
+                                    <input type="button" value="Apply" id="apply_filter" onClick="applyClick()" method="GET" class="btn btn-danger mt-4" style="margin: 0 60px; border-radius: 0px;">
                                 </div>
                         </form>
                     </div>
@@ -123,18 +124,21 @@
 </div>
 
 <script>
-$(document).ready(function () {
-    $( "#apply_filter" ).click(function(event) {
-        event.preventDefault();
-        var likenew = $('#likenew');
-        console.log(likenew);
-        var verygood;
-        var good;
-        var acceptable;
-
-        
-    });
-});
+// $(document).ready(function () {
+    // event.preventDefault(); //prevents refresh
+    // $( "#apply_filter" ).click(function(event) {
+    function applyClick() {
+        event.preventDefault(); //prevents refresh
+        // var likenew = $('#likenew');
+        var likenew = document.getElementById('likenew').checked;
+        var verygood = document.getElementById('verygood').checked;
+        var good = document.getElementById('good').checked;
+        var acceptable = document.getElementById('acceptable').checked;
+        $.ajax({
+            
+        });        
+    };
+// });
 </script>
 
 {% endblock content %}
