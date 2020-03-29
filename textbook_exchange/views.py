@@ -1,8 +1,5 @@
-from django import forms
-from django.views import generic
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from django.utils import timezone
 from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
@@ -11,7 +8,6 @@ import functools
 
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook
-from .filters import ProductFilter
 from django.http import JsonResponse #for autocompletion response
 
 from textbook_exchange import models as textbook_exchange_models
@@ -158,10 +154,6 @@ class BuyProductListings(ListView):
     #         return queryset
     #     except ObjectDoesNotExist: # textbook doesn't exist (invalid ibsn)
     #         # display error msg on buybooks.html
-
-# def filter_product_listings(request):
-#     f = ProductFilter(request.GET, queryset=ProductListing.objects.all())
-#     return render(request, 'textbook_exchange/filter.html', {'filter': f})
 
 def autocomplete(request):
     search = request.GET['search']
