@@ -11,6 +11,7 @@ import functools
 
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook
+from .filters import ProductFilter
 from django.http import JsonResponse #for autocompletion response
 
 from textbook_exchange import models as textbook_exchange_models
@@ -130,19 +131,6 @@ class AccountPastListings(ListView):
         queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=True)
         return queryset
 
-# class BuyProductListings(ListView):
-#     model = ProductListing
-#     template_name = "textbook_exchange/buybooks.html"
-#     context_object_name = 'product_listings'
-#     ordering = ['price']
-
-#     def get_queryset(self, **kwargs):
-#         # https://stackoverflow.com/questions/34184046/how-to-get-all-objects-referenced-as-foreignkey-from-given-field-in-a-module-in
-#         textbook = Textbook.objects.get(isbn=self.kwargs['isbn'])
-#         product_listings = textbook.productlisting_set.all()
-#         product_listings = product_listings.filter(hasBeenSoldFlag=False)
-#         return product_listings
-
 class BuyProductListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/buybooks.html"
@@ -151,6 +139,7 @@ class BuyProductListings(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['textbook'] = Textbook.objects.get(isbn=self.kwargs['isbn'])
         context['num_textbooks'] = len(Textbook.objects.filter(isbn=self.kwargs['isbn']))
         context['num_product_listings'] = Textbook.objects.get(isbn=self.kwargs['isbn']).productlisting_set.all().count()
         return context
@@ -167,8 +156,12 @@ class BuyProductListings(ListView):
     #         product_listings = textbook.productlisting_set.all()
     #         queryset = product_listings.filter(hasBeenSoldFlag=False)
     #         return queryset
-    #     except ObjectDoesNotExist:
+    #     except ObjectDoesNotExist: # textbook doesn't exist (invalid ibsn)
     #         # display error msg on buybooks.html
+
+# def filter_product_listings(request):
+#     f = ProductFilter(request.GET, queryset=ProductListing.objects.all())
+#     return render(request, 'textbook_exchange/filter.html', {'filter': f})
 
 def autocomplete(request):
     search = request.GET['search']

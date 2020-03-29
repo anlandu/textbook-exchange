@@ -41,10 +41,6 @@ class Textbook(models.Model):
     author = models.CharField(max_length=200)
     edition = models.CharField(max_length=200)
     cover_photo = models.ImageField(upload_to='textbook_images')
-    
-    # def save(self, *args, **kwargs):
-    #     self.class_key = self.class_object.class_info
-    #     super(Textbook, self).save(*args, **kwargs)
 
     def __str__(self):
         textbook = '%s, Edition %s' % (self.title, self.edition)
@@ -55,7 +51,7 @@ class ProductListing(models.Model):
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     
     price = models.DecimalField(max_digits=7, decimal_places=2)
-    condition = models.CharField(max_length=10)
+    condition = models.CharField(max_length=10) # 'likenew', 'verygood', 'good', 'acceptable'
     picture = models.ImageField(upload_to='listing_images')
     comments = models.CharField(max_length=500, blank=True)
     hasBeenSoldFlag = models.BooleanField(default=False)

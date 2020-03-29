@@ -26,11 +26,12 @@
     <div class="grid">
         <!-- FILTERS -->
         <div class="col-1-10">
-            <div id="searchFilters">
-                <div class="card card-body mx-auto" style="border-radius: 0px;">
+            <div id="searchFilters" style="width: max-content;">
+                <div class="card card-body mx-auto" style="border-radius: 0px; margin-top: 0px;">
                     <div class="row mx-auto">
                         <div class="col mx-auto">
-                            <h6>Book Quality</h6>
+                            
+                            <h5>Condition</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="qualityNew" checked>
                                 <label class="form-check-label" for="qualityNew">New</label>
@@ -63,10 +64,12 @@
                            <div class="row">
                                 <div class="col">
                                     <!-- slider show value source: https://stackoverflow.com/a/18936328 -->
-                                    <h6 style="display: inline">Max Price:</h6> $<output id="maxPriceOutput">400</output>
-                                    <input class="form-control" type="range" min="0" max="400" value="400" id="maxPrice" oninput="maxPriceOutput.value = maxPrice.value">
-                            
+                                    <h5 style="display: inline">Max Price:</h5> $<output id="maxPriceOutput">1000</output>
+                                    <input class="form-control" type="range" min="0" max="1000" value="1000" id="maxPrice" oninput="maxPriceOutput.value = maxPrice.value">
                                 </div>
+                            </div>
+                            <div class="row">
+                                <button type="button" class="btn btn-danger mt-4" style="margin: 0 60px; border-radius: 0px;">Apply</button>
                             </div>
                         </div>
                     </div>
@@ -75,7 +78,7 @@
         </div>
 
         <!-- MAIN -->
-        <div class="col-9-10 right-container">
+        <div class="col-9-10 right-container" style="padding-left: 75px;">
             <!-- LISTINGS -->            
             {% if num_textbooks == 0 %}
                 <h1 class="buy-error-msg">
@@ -86,11 +89,12 @@
                     There are no listings for this textbook. Sorry :(
                 </h1>
             {% elif num_product_listings > 0 %}
+                <h6 style="margin-bottom: 20px; font-style: italic;">Showing results for "{{ textbook.title }}"</h6>
                 <div class="row">
                     {% for listing in product_listings %}
                         <div class="card" style="width: 15rem; border-radius: 0px;">
                             <div class="card-header">
-                                <img class="card-img-top" src="{{ listing.picture.url }}" alt="{{ listing.textbook.title }}" style="border-radius: 0px;">
+                                <img class="card-img-top" src="{{ listing.picture.url }}" alt="{{ listing.textbook.title }}" style="border-radius: 0px; margin-top: 10px;">
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author }}</h6>
                                 <h6 class="card-subtitle mb-3 text-muted">${{ listing.price }}</h6>

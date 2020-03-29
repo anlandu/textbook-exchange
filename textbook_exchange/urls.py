@@ -18,4 +18,6 @@ urlpatterns = [
     path('buy/', views.buy_books, name='buybooks'),
     path('buy/autocomplete/', views.autocomplete, name='ajax_autocomplete'),
     path('buy/<slug:isbn>/', views.BuyProductListings.as_view(), name='buy_product'),
+    # path('buy/<slug:list>/', views.filter_product_listings, name='product_list'),
+    # url(r'^list$', views.product_list),
 ]

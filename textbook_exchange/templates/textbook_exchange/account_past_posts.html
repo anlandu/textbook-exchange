@@ -9,7 +9,7 @@
         {% for post in past_posts %}
             <div class="card" style="width: 15rem; border-radius: 0px;">
                 <div class="card-header">
-                    <img class="card-img-top" src="{{ post.picture.url }}" alt="{{ post.textbook.title }}" style="border-radius: 0px;">
+                    <img class="card-img-top" src="{{ post.picture.url }}" alt="{{ post.textbook.title }}" style="border-radius: 0px; margin-top: 10px;">
                     <h5 class="card-title">{{ post.textbook.title }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author }}</h6>
                     <h6 class="card-subtitle mb-3 text-muted">${{ post.price }}</h6>
