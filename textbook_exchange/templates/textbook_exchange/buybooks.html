@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <button type="submit" class="btn btn-danger mt-4" style="margin: 0 60px; border-radius: 0px;">Apply</button>
+                                    <button type="button" class="btn btn-danger mt-4" id="apply_filter" style="margin: 0 60px; border-radius: 0px;">Apply</button>
                                     <!-- <input type="button" value="Update" id="selection-button" method="GET"> -->
                                 </div>
                         </form>
@@ -122,5 +122,28 @@
     </div>
 </div>
 
+<script>
+    $( "#apply_filter" ).click(function(event) {
+        event.preventDefault();
+        var likenew = $('#likenew');
+        console.log(likenew);
+        var verygood;
+        var good;
+        var acceptable;
+
+    //     $.ajax({
+    //         url: "{% url 'charts_data' %}",
+    //         method: 'GET',
+    //         filter_category: parseInt(airlineSelected),
+    //         success: function(data){
+    //         console.log(data)
+    //  },
+    //         error: function(error_data){
+    //         console.log("error")
+    //         console.log(error_data)
+    //  }
+    //     })
+    });
+</script>
 
 {% endblock content %}
