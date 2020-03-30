@@ -9,10 +9,8 @@ import itertools
 import functools
 
 from .forms import SellForm
-from .models import ProductListing, Class, Textbook
+from .models import ProductListing, Class, Textbook, Class
 from django.http import JsonResponse #for autocompletion response
-
-from textbook_exchange import models as textbook_exchange_models
 
 
 def get_logged_in(request):
@@ -134,32 +132,22 @@ def autocomplete(request):
     search = search.lower() 
     
     #these will search in our models for matches
-    books = textbook_exchange_models.Textbook.objects.filter(
-        isbn__contains = search, title__contains = search, author__contains = search)
-    courses = textbook_exchange_models.Class.objects.filter(course_code__contains = search.replace(" ", ""))
+    books = Textbook.objects.filter(title__contains = search) # TODO: Add other methods to search
+    courses = Class.objects.filter(course_code__contains = search.replace(" ", ""))
     
-    #using fake data for demo
-    some_courses = ['CS1110', 'CS2110', 'CS2102', 'CS2150','CS2330',
-    'CS3102', 'CS3330','APMA1110','APMA2120','APMA3100','CHEM1600',
-    'ENGR1620','PHYS1425','PHYS2415','ECON2010','ECON2020','ECON3010',
-    'HIUS2060','HIUS2051', 'COMM2010', 'STS1500', 'STS2500']
+    valid_books = []
+    valid_courses = []
 
-    some_books = [
-        {'isbn' : "1234567890123", 'author' : "Zane Alpher", 'title' : "Intro to CS", 'class_key' : "CS1110"},
-        {'isbn' : "5435678966577", 'author' : "Nick Winans", 'title' : "Object Oriented Programming",  'class_key' : "CS2110"},
-        {'isbn' : "8765434512356", 'author' : "Rohan Chandra", 'title' : "American Economic History", 'class_key' : "HIUS2060"},
-        {'isbn' : "2345673452898", 'author' : "Anlan Du", 'title' : "Physics for Engineers", 'class_key' : "PHYS2415"},
-        {'isbn' : "0318975198234", 'author' : "Zaeda Meherin", 'title' : "Intro to Microeconomics", 'class_key' : "ECON2010"},
-        {'isbn' : "7283916493821", 'author' : "Mark Sherriff", 'title' : "Software Engineering", 'class_key' : "CS3240"},
-    ]
+    for book in list(books):
+        valid_books.append(book.toJSON())
 
-    matched_classes = list(filter(lambda x: search in x.lower(), some_courses))
-    matched_books = list(filter(lambda x: search in x['isbn'] or search in x['author'].lower() or search in x['title'].lower(), some_books))
+    for course in list(courses):
+        valid_courses.append(course.toJSON())
 
     data = {
         'search' : search,
-        'books' : matched_books,
-        'courses' : matched_classes,
+        'books' : valid_books,
+        'courses' : valid_courses,
     }
 
     return JsonResponse(data)

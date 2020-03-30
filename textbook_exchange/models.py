@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+import json
 
 # Create your models here.
 class User(AbstractUser):
@@ -13,7 +14,7 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), primary_key=True, blank=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
-    balance = models.DecimalField(max_digits=9, decimal_places=2)
+    balance = models.DecimalField(max_digits=9, decimal_places=2, default=0.0)
 
     ACCOUNT_EMAIL_VERIFICATION = None
     USERNAME_FIELD = 'email'
@@ -22,7 +23,7 @@ class User(AbstractUser):
 class Class(models.Model):
     class_term = models.CharField(max_length=200, default="")
     department = models.CharField(max_length=200) #e.g. CS
-    course_code = models.IntegerField(default=0) #e.g. 1110
+    course_code = models.CharField(max_length=50, default=0) #e.g. 1110
     section_number = models.CharField(max_length=10) #e.g. 001
     professor = models.CharField(max_length=200)
     class_info = models.TextField(max_length=200, primary_key=True) #e.g. CS1110
@@ -41,6 +42,10 @@ class Class(models.Model):
 
     def __str__(self):
         return self.class_info
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
 
 class Textbook(models.Model):
     class_objects = models.ManyToManyField(Class) # on_delete for ManyToManyField?
@@ -86,6 +91,10 @@ class Textbook(models.Model):
     def __str__(self):
         textbook = '%s' % (self.title)
         return textbook.strip()
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
 
 class Cart(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # one cart per user

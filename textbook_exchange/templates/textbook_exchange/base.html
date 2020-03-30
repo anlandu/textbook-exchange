@@ -99,7 +99,7 @@
 
                                 for(var i = 0; i < searchResults['books'].length; i++){ //add new elements
                                     var entry = document.createElement('li');
-                                    entry.innerHTML = searchResults['books'][i]['title'] + ' <i>' + searchResults['books'][i]['author'] + '</i>';
+                                    entry.innerHTML = JSON.parse(searchResults['books'][i])['title'] + ' <i>' + JSON.parse(searchResults['books'][i])['author'] + '</i>';
                                     //entry.appendChild(document.createTextNode(
                                     //    searchResults['books'][i]['title'] +
                                     //    ' <i>' + searchResults['books'][i]['author'] + '</i>')); //simple text element (change to link)
@@ -120,7 +120,7 @@
 
                                 for(var i = 0; i < searchResults['courses'].length; i++){ //add new elements
                                     var entry = document.createElement('li');
-                                    entry.appendChild(document.createTextNode(searchResults['courses'][i])); //simple text element (change to link)
+                                    entry.innerHTML = JSON.parse(searchResults['courses'][i])['class_info'] + " <i>" + JSON.parse(searchResults['courses'][i])['professor'] + "</i>"; //simple text element (change to link)
                                     isbnList.appendChild(entry);
                                 }
                             }
