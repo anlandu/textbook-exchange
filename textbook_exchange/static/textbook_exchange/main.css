@@ -45,3 +45,9 @@ div.container {
 .form-control, .btn, .card {
     border-radius: 0;
 }
+
+.grid {
+    margin: 1em auto;
+    display: grid;
+    grid-template-columns: minmax(150px, 190px) 1fr;
+}

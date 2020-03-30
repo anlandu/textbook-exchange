@@ -9,11 +9,9 @@
     <!-- how to get foreign key (textbook title)? (rename h5 value) -->
     <h5 name="product_listing id="product_listing{{ forloop.counter }}" value="{{ product_listing.id }}"></h5>
     <ul>
-        <li>${{ product_listing.price }}</li><br>
-        <li>${{ product_listing.price }}</li><br>
-        <li>${{ product_listing.price }}</li><br>
-        <li>${{ product_listing.price }}</li><br>
+        <li>{{ product_listing.price }}</li><br>
         <li>{{ product_listing.condition }}</li><br>
+        <li>{{ product_listing.picture }}</li><br>
         <li>{{ product_listing.comments }}</li><br>
         <li>{{ product_listing.published_date }}</li><br>
     </ul>

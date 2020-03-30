@@ -1,0 +1,48 @@
+{% extends "textbook_exchange/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+    crossorigin="anonymous">
+</head>
+<body>
+	<div class="grid">
+		<!-- SIDEBAR -->
+		<div class="col col-4-bg">
+			<ul class="sidebar-align">
+				<br>
+				<li>
+					<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}" style="display: block; border-radius: 0;">
+						Dashboard
+					</a>
+				</li>
+				<br>
+				<li>
+					<a class="btn btn-uva side-btn" href="{% url 'exchange:past_posts' %}" style="display: block; border-radius: 0;">
+						Past Posts
+					</a>
+				</li>
+				<br>
+				<li>
+					<a class="btn btn-uva side-btn" href="{% url 'exchange:messages' %}" style="display: block; border-radius: 0;">
+						Messages
+					</a>
+				</li>
+				<br>
+				<li>
+					<a class="btn btn-uva side-btn"; href="{% url 'account_logout' %}" style="display: block; border-radius: 0;">
+						Sign Out
+					</a>
+				</li>
+				<br>
+			</ul>
+		</div>
+
+		<!-- MAIN -->
+		{% block inner-content %}
+		{% endblock inner-content %}
+	</div>
+</body>
+{% endblock content %}

@@ -1,0 +1,128 @@
+{% extends 'textbook_exchange/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-8">
+        <h2>Cart</h2>
+        <br>
+        <div class="row">
+            <div class="col-sm-2">
+                <p class="my-0">Picture</p>
+            </div>
+            <div class="col-sm-6">
+                <p class="my-0">Description</p>
+            </div>
+            <div class="col-sm-4">
+                <p class="text-right my-0">Price</p>
+            </div>
+        </div>
+        <hr>
+        {% for product in user.cart.productlisting_set.all %}
+        <div class="row">
+            <div class="col-sm-2">
+                <img class="img-fluid" src='{{ product.picture.url }}'>
+            </div>
+            <div class="col-sm-6">
+                <p><b>{{ product.textbook.title }}</b><br>ISBN: {{ product.textbook.isbn }}<br>(<a href="javascript:removeFromCart({{ product.id }});">remove</a>)</p>
+            </div>
+            <div class="col-sm-4">
+                <p class="text-right">${{ product.price}}</p>
+            </div>
+        </div>
+        <hr>
+        {% endfor %}
+        <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <p class="text-right"><b>Subtotal: ${{ subtotal }}<br>+ Tax: ${{ tax }}</b></p>
+                <hr>
+                <p class="text-right"><b>Total: ${{ total }}</b></p>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-4">
+        <h2>Checkout</h2>
+        <hr>
+        <div id="paypal"></div>
+    </div>
+</div>
+<script src="https://www.paypal.com/sdk/js?client-id=AcCaARG0gidap3Y0mCgZtbbdE3sDrYHyHSIBwJ20jwhyGk3MQSBLxpWggOwuOQphYKDLl87wRLek-qE8" data-namespace="paypal_sdk"></script>
+<script>
+paypal_sdk.Buttons({
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [
+                {
+                    amount: {
+                        value: (Math.round(105 * parseFloat('{{ subtotal }}'))/100).toString(),
+                        currency_code: 'USD',
+                        breakdown: {
+                            item_total: {
+                                currency_code: "USD",
+                                value: '{{ subtotal }}',
+                            },
+                            shipping: {
+                                currency_code: "USD",
+                                value: '0',
+                            },
+                            handling: {
+                                currency_code: "USD",
+                                value: '0',
+                            },
+                            tax_total: {
+                                currency_code: "USD",
+                                value: (Math.round(5 * parseFloat('{{ subtotal}}'))/100).toString(),
+                            },
+                        }
+                    },
+                    description: 'this is a description',
+                    items: [
+                        {% for product in user.cart.productlisting_set.all %}
+                            {
+                                name: '{{ product.textbook.title }}, Edition {{ product.textbook.edition }}',
+                                description: '{{ product.comments }}',
+                                quantity: '1',
+                                unit_amount: {
+                                    value: '{{ product.price }}',
+                                    currency_code: "USD",
+                                },
+                                //tax: (Math.round(({{ product.price }} * 0.05) * 100)/100).toString(),
+                            },
+                        {% endfor %}
+                    ]
+                }
+            ]
+        });
+    },
+    onApprove: function(data, actions) {
+      // This function captures the funds from the transaction.
+        return actions.order.capture().then(function(details) {
+            // This function shows a transaction success message to your buyer.
+            location.href="{% url 'payments:success' %}"
+        });
+    },
+    onError: function (err) {
+        console.log(err);
+    }
+}).render('#paypal');
+</script>
+<script>
+function removeFromCart(id) {
+    $.ajax({
+        url : "{% url 'payments:cart' %}",
+        type: "POST",
+        data: { 
+            id : id,
+            function: "remove",
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(json) {
+            window.location.href = {% url 'payments:cart' %};
+        },
+        error: function(xhr, errmsg, err) {
+            console.log("error");
+        },
+    });
+}
+</script>
+{% endblock %}

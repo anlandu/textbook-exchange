@@ -1,0 +1,50 @@
+{% extends 'textbook_exchange/account_base.html' %}
+{% load static %} 
+
+{% block inner-content %}
+<!-- Name/Email/Header -->
+<div class="right-container">
+    <div style="background-color: whitesmoke; padding: 10px 10px 10px 18px;">
+        <h1 style="margin-bottom: 10px;">{{ user.first_name }} {{ user.last_name }}</h1>
+        <h5>{{ user.email }}</h5>
+    </div>
+    <br/><br/>
+    <h1 class="custom-header">Current Posts</h1>
+
+    <!-- POSTS -->
+    <div class="row">
+        {% for post in current_posts %}
+            <div class="card" style="width: 15rem; border-radius: 0px;">
+                <div class="card-header">
+                    <img class="card-img-top" src="{{ post.picture.url }}" alt="{{ post.textbook.title }}" style="border-radius: 0px; margin-top: 10px;">
+                    <h5 class="card-title">{{ post.textbook.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author }}</h6>
+                    <h6 class="card-subtitle mb-3 text-muted">${{ post.price }}</h6>
+                    <a href="#" class="card-link">edit</a>
+                </div>
+                <div class="card-body">
+                    <p class="card-subtitle mb-2 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
+                    <p class="card-subtitle mt-3 mb-1">ISBN: {{ post.textbook.isbn }}</p>
+                    <p class="card-subtitle mb-1">Edition: {{ post.textbook.edition }}</p>
+                    <p class="card-subtitle mb-5">
+                        Condition:
+                        {% if post.condition == "likenew" %}
+                            Like new
+                        {% elif post.condition == "verygood" %}
+                            Very good
+                        {% elif post.condition == "good" %}
+                            Good
+                        {% elif post.condition == "acceptable" %}
+                            Acceptable
+                        {% endif %}
+                    </p>
+                    <p class="card-text mb-4">{{ post.comments }}</p>
+                    <a href="#" class="btn btn-primary" style="margin: auto; width: 40%; display: block; border-radius: 0px;">
+                        Sold
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock inner-content %}
