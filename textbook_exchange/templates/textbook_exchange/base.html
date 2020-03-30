@@ -147,7 +147,7 @@
                                     entry.appendChild(row);
 
                                     entry.addEventListener("click", function() {
-                                        window.location.href = '/buy/' + isbn13Format(book['isbn13'])
+                                        window.location.href = '/buy/' + book['isbn13'];
                                     });
 
                                     isbnList.appendChild(entry);

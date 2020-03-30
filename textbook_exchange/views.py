@@ -134,18 +134,18 @@ class BuyProductListings(ListView):
         url_ibsn = self.kwargs['isbn']
 
         context = super().get_context_data(**kwargs)
-        context['textbook'] = Textbook.objects.get(isbn=url_ibsn)
-        context['num_textbooks'] = len(Textbook.objects.filter(isbn=url_ibsn))
-        context['num_product_listings'] = Textbook.objects.get(isbn=url_ibsn).productlisting_set.all().count()
+        context['textbook'] = Textbook.objects.get(isbn13=url_ibsn)
+        context['num_textbooks'] = len(Textbook.objects.filter(isbn13=url_ibsn))
+        context['num_product_listings'] = Textbook.objects.get(isbn13=url_ibsn).productlisting_set.all().count()
         
         return context
 
     def get_queryset(self, *args, **kwargs):
         url_ibsn = self.kwargs['isbn']
 
-        textbook = Textbook.objects.get(isbn=url_ibsn)
+        textbook = Textbook.objects.get(isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
-        queryset = product_listings.filter(hasBeenSoldFlag=False)
+        queryset = product_listings.filter(hasBeenSoldFlag=False, cart=None)
 
         # url_maxprice = self.kwargs['maxprice']
         # url_likenew = self.kwargs['likenew']

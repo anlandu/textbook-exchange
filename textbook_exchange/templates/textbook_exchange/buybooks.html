@@ -107,7 +107,7 @@
                                     {% endif %}
                                 </p>
                                 <p class="card-text mb-4">{{ listing.comments }}</p>
-                                <a href="#" class="btn btn-primary" style="margin: auto; width: 55%; display: block; border-radius: 0px;">
+                                <a href="javascript:addtoCart({{ listing.id }});" class="btn btn-primary" style="margin: auto; width: 55%; display: block; border-radius: 0px;">
                                     Add to Cart
                                 </a>
                             </div>
@@ -150,6 +150,24 @@
     //     });
 
     // };
+
+    function addtoCart(id) {
+        console.log("add to cart working");
+        $.ajax({
+            url : "{% url 'payments:cart' %}",
+            type: "POST",
+            data: { 
+                id : id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(json) {
+                window.location.href = {% url 'payments:cart' %}
+            },
+            error: function(xhr, errmsg, err) {
+                console.log("error");
+            },
+        });
+    }
 
     function applyClick() {
         event.preventDefault(); //prevents refresh
