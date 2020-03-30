@@ -234,3 +234,6 @@ def autocomplete(request):
     }
 
     return JsonResponse(data)
+
+def chat_view(request):
+    return render(request, 'textbook_exchange/index.html')
