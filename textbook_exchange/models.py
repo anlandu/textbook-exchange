@@ -102,13 +102,13 @@ class Cart(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # one cart per user
 
     def __str__(self):
-        return str(self.items) + " items totaling $" + str(self.subtotal)
+        return str(self.user.email)
 
 class ProductListing(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True) # should prevent a product listing from being in multiple carts at once
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True) # should prevent a product listing from being in multiple carts at once
     price = models.DecimalField(max_digits=7, decimal_places=2)
     condition = models.CharField(max_length=10)
     picture = models.ImageField(upload_to='listing_images')

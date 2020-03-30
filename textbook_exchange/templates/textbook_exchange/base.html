@@ -32,9 +32,9 @@
                         <input type="text" class="form-control" id="search_text"
                             placeholder="Search for a book"
                             onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
-                        <span class="input-group-append" type='submit'>
+                        <span class="input-group-append" type='submit' style="-webkit-appearance: none;">
                             <button type="submit" class="btn btn-uva">
-                                <i class="fa fa-search"></i>
+                                <i class="fa fa-search my-auto"></i>
                             </button>
                         </span>
                         <div class="input-group-append" style="width: 100%;">
@@ -54,7 +54,7 @@
             </form>
             <ul class="navbar-nav mx-auto float-lg-right">
                 <li class="nav-item"><a class="uva ml-2" href="{% url 'exchange:sellbooks' %}" style="display: block; padding: .5rem 1rem; float:left;">Sell a book</a></li>
-                {% if user.cart %}<li class="nav-item"><a class="uva nav-link font-weight-bold" href="{% url 'payments:cart' %}">Cart</a></li>{% endif %}
+                {% if user.cart %}<li class="nav-item"><a class="uva nav-link" href="{% url 'payments:cart' %}">Cart{% if user.cart.productlisting_set.all|length >= 1 %} ({{ user.cart.productlisting_set.all|length }}){% endif %}</a></li>{% endif %}
                 {% block loginlink %}<li class="nav-item"><a class="uva nav-link font-weight-bold" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
             </ul>
         </div>
