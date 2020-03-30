@@ -125,6 +125,32 @@
 </div>
 
 <script>
+    // function applyClick() {
+    //     event.preventDefault(); //prevents refresh
+
+    //     // var isbn = "{{product_listings.0.textbook.isbn}}";
+    //     var likenew = document.getElementById('likenew').checked;
+    //     var verygood = document.getElementById('verygood').checked;
+    //     var good = document.getElementById('good').checked;
+    //     var acceptable = document.getElementById('acceptable').checked;
+    //     var maxprice = document.getElementById('maxPrice').value;
+        
+    //     if (maxprice > 500)
+    //         maxprice = 500;
+    //     else if (maxprice > 500)
+    //         maxprice = 0;
+
+    //     $('.card').each(function() {
+    //         if (maxprice != "") {
+    //             if (parseInt($(this).attr('price')) > maxprice) // (this) == i in for loop
+    //                 $(this).hide();	
+    //             if (parseInt($(this).attr('price')) <= maxprice)
+    //                 $(this).show();	
+    //         }
+    //     });
+
+    // };
+
     function applyClick() {
         event.preventDefault(); //prevents refresh
 
@@ -135,21 +161,43 @@
         var acceptable = document.getElementById('acceptable').checked;
         var maxprice = document.getElementById('maxPrice').value;
         
-        if (maxprice > 500)
+        if (maxprice === "") {
             maxprice = 500;
+        }
         else if (maxprice > 500)
+            maxprice = 500;
+        else if (maxprice < 0)
             maxprice = 0;
 
+        // var conditions_selected = [];
+
+            
+        // var condition_dict = {
+        //     "likenew": 4,
+        //     "verygood": 3,
+        //     "good": 2,
+        //     "acceptable": 1,
+        // };
+
         $('.card').each(function() {
-            if (maxprice != "") {
-                if (parseInt($(this).attr('price')) > maxprice) // (this) == i in for loop
-                    $(this).hide();	
-                if (parseInt($(this).attr('price')) <= maxprice)
-                    $(this).show();	
-            }
+            $(this).show();	
+            // console.log(maxprice);
+            // console.log(parseInt($(this).attr('price')));
+            // console.log(parseInt($(this).attr('price')) > maxprice);
+
+            if (parseInt($(this).attr('price')) > maxprice) // (this) == i in for loop
+                $(this).hide();	
+            
+            // if (likenew == true) {
+            //     if (parseInt($(this).attr('condition')) == "likenew") // (this) == i in for loop
+            //         $(this).show();	
+            //     else
+            //         $(this).hide();	
+            // }
         });
 
     };
+
 </script>
 
 {% endblock content %}
