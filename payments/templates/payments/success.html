@@ -1,0 +1,42 @@
+{% extends 'textbook_exchange/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <h2>Success! {{ user.first_name }}, your order was confirmed succesfully. Please save this page for your records.</h2>
+        <br>
+        <div class="row">
+            <div class="col-sm-2">
+                <p class="my-0">Picture</p>
+            </div>
+            <div class="col-sm-6">
+                <p class="my-0">Description</p>
+            </div>
+            <div class="col-sm-4">
+                <p class="text-right my-0">Price</p>
+            </div>
+        </div>
+        <hr>
+        {% for product in cart.productlisting_set.all %}
+        <div class="row">
+            <div class="col-sm-2">
+                <img class="img-fluid" src='{{ product.picture.url }}'>
+            </div>
+            <div class="col-sm-6">
+                <p><b>{{ product.textbook.title }}</b><br>ISBN: {{ product.textbook.isbn }}<br>(<a href="#">remove</a>)</p>
+            </div>
+            <div class="col-sm-4">
+                <p class="text-right">${{ product.price}}</p>
+            </div>
+        </div>
+        <hr>
+        {% endfor %}
+        <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-4">
+                <p class="text-right"><b>Total: ${{ subtotal }}</b></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
