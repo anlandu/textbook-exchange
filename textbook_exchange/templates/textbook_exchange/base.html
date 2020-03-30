@@ -98,12 +98,12 @@
                                 for(var i = 0; i < searchResults['books'].length; i++){ //add new elements
                                     var entry = document.createElement('li');
                                     var book = JSON.parse(searchResults['books'][i]);
-                                    entry.innerHTML = book['title'] + ' <i>' + book['author'] + '</i>';
+                                    entry.innerHTML = book['title'] + ' - <i>'+ book['author'].substring(1, book['author'].length - 2).replace(/'/g,"") + '</i>';
                                     entry.addEventListener("click", function() {
                                         window.location.href = '/buy/' + isbn13Format(book['isbn13'])
                                     });
                                     isbnList.appendChild(entry);
-                                    if (i >= 10) break; // only show 10 results
+                                    if (i >= 4) break; // only show 5 results
                                 }
                             }
                             else{
@@ -120,7 +120,7 @@
                                     var entry = document.createElement('li');
                                     entry.innerHTML = JSON.parse(searchResults['courses'][i])['class_info'] + " <i>" + JSON.parse(searchResults['courses'][i])['professor'] + "</i>"; //simple text element (change to link)
                                     isbnList.appendChild(entry);
-                                    if (i >= 10) break; // only show 10 results
+                                    if (i >= 4) break; // only show 5 results
                                 }
                             }
                             else{
