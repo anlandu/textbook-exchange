@@ -56,7 +56,8 @@ class LoginTest(TestCase):
             last_name="", 
             email="",
             is_staff=False,
-            date_joined = timezone.now()
+            date_joined = timezone.now(),
+            balance = 0.0
             )
         context = {
             'logged_in': self.client.login(username = test_user.email)
@@ -72,7 +73,8 @@ class UserModelTest(TestCase):
             last_name = "Chandra",
             email = "rc8yw@virginia.edu",
             is_staff = False,
-            date_joined = timezone.now()
+            date_joined = timezone.now(),
+            balance = 0.0,
         )
         self.assertEqual(test_user.username, "rc8yw")
         self.assertEqual(test_user.password, "12345")
@@ -80,6 +82,7 @@ class UserModelTest(TestCase):
         self.assertEqual(test_user.last_name, "Chandra")
         self.assertEqual(test_user.email, "rc8yw@virginia.edu")
         self.assertFalse(test_user.is_staff)
+        self.assertEqual(test_user.balance, 0.0)
     def test_user_charFields(self):
         test_user = User.objects.create(
             username = 1,
@@ -88,7 +91,8 @@ class UserModelTest(TestCase):
             last_name = "Chandra",
             email = "rc8yw@virginia.edu",
             is_staff = False,
-            date_joined = timezone.now()
+            date_joined = timezone.now(),
+            balance = 0.0,
         )
         self.assertEqual(type(test_user.username), int) 
         test_user.save() 
@@ -103,7 +107,8 @@ class UserModelTest(TestCase):
             last_name = "Chandra",
             email = "rc8yw@virginia.edu",
             is_staff = False,
-            date_joined = timezone.now()
+            date_joined = timezone.now(),
+            balance = 0.0,
         )
         test_user.save()
         test_user.username = 1.456
@@ -117,13 +122,14 @@ class UserModelTest(TestCase):
             last_name = "Chandra",
             email = "rc8yw@virginia.edu",
             is_staff = False,
-            date_joined = timezone.now()
+            date_joined = timezone.now(),
+            balance = 0.0,
         )
         test_user.save()
         c = Client()
         logged_in = c.login(username = test_user.email)
         self.assertTrue(test_user.is_authenticated)
-        response = self.client.get('/accounts/', secure = True, follow = True)
+        response = c.get('/accounts/', secure = True, follow = True)
         self.assertEqual(response.status_code, 200)
         self.assertInHTML(test_user.first_name + ' ' + test_user.last_name, response.content.decode()) #No work
         self.assertInHTML(test_user.email, response.content.decode()) #This doesn't work
