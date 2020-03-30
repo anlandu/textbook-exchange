@@ -20,35 +20,71 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
 class Class(models.Model):
-    class_name = models.CharField(max_length=200) #e.g. Intro to Programming
+    class_term = models.CharField(max_length=200, default="")
     department = models.CharField(max_length=200) #e.g. CS
     course_code = models.IntegerField(default=0) #e.g. 1110
     section_number = models.CharField(max_length=10) #e.g. 001
     professor = models.CharField(max_length=200)
     class_info = models.TextField(max_length=200, primary_key=True) #e.g. CS1110
-
-    def save(self, *args, **kwargs):
-        self.class_info = self.department + str(self.course_code)
-        super(Class, self).save(*args, **kwargs) 
+    
+    @classmethod
+    def create(cls, **kwargs):
+        class_obj = cls.objects.create(
+            class_term=kwargs['Term'],
+            department=kwargs['Dept'],
+            course_code=kwargs['Course'],
+            section_number=kwargs['Sect'],
+            professor=kwargs['Instructor'],
+            class_info=kwargs['Dept']+kwargs['Course']+"-"+kwargs['Sect']
+        )
+        return class_obj
 
     def __str__(self):
         return self.class_info
 
 class Textbook(models.Model):
-    class_object = models.ManyToManyField(Class) # on_delete for ManyToManyField?
-    class_key = models.CharField(max_length=200)
-    title = models.CharField(max_length=350)
-    isbn = models.CharField(primary_key=True, max_length=200)
-    author = models.CharField(max_length=200)
-    edition = models.CharField(max_length=200)
+    class_objects = models.ManyToManyField(Class) # on_delete for ManyToManyField?
+    bookstore_isbn =  models.CharField(primary_key=True, max_length=200, default="")
+    isbn13 = models.CharField(max_length=200, default="")
+    isbn10 = models.CharField(max_length=200, default="")
+
+    title = models.CharField(max_length=350, default="")
+    author = models.CharField(max_length=200, default="")
+    req_type = models.CharField(max_length=200, default="")
+    cover_photo_url = models.CharField(max_length=400, default="")
     cover_photo = models.ImageField(upload_to='textbook_images')
-    
-    # def save(self, *args, **kwargs):
-    #     self.class_key = self.class_object.class_info
-    #     super(Textbook, self).save(*args, **kwargs)
+    bookstore_new_price = models.FloatField(default=0, blank=True)
+    bookstore_used_price = models.FloatField(default=0, blank=True)
+    publisher = models.CharField(max_length=200, default="")
+    date=models.CharField(max_length=200, default="")
+    description = models.CharField(max_length=100000, default="")
+    page_count = models.IntegerField(default=0, blank=True)
+    google_rating = models.FloatField(default=0, blank=True)
+    num_reviews = models.IntegerField(default=0, blank=True)
+
+    @classmethod
+    def create(cls, **kwargs):
+        book = cls.objects.create(
+            bookstore_isbn=kwargs['ISBN'],
+            isbn13=kwargs['ISBN13'],
+            isbn10=kwargs['ISBN10'],
+            title=kwargs['Title'],
+            author=kwargs['Author'],
+            req_type=kwargs['Req Type'],
+            cover_photo_url=kwargs['Image Links'],
+            bookstore_new_price=float(kwargs['New'].replace('$', '').strip()),
+            bookstore_used_price=float(kwargs['Used'].replace('$', '').strip()),
+            publisher=kwargs['Publisher'],
+            date=kwargs ['Publish Year'],
+            description=kwargs['Description'],
+            page_count=mkint(kwargs['Page Count']),
+            google_rating=mkflt(kwargs['Google Rating']),
+            num_reviews=mkint(kwargs['Number of Ratings'])
+        )
+        return book
 
     def __str__(self):
-        textbook = '%s, Edition %s' % (self.title, self.edition)
+        textbook = '%s' % (self.title)
         return textbook.strip()
 
 class Cart(models.Model):
@@ -82,3 +118,15 @@ class PendingTransaction(models.Model):
 
     def __str__(self):
         return "Transaction for $" + str(self.balance) + " being settled on " + str(self.date_settled)
+   
+def mkflt(str_in):
+    if str_in:
+        return float(str_in)
+    else:
+        return 0
+
+def mkint(str_in):
+    if str_in:
+        return int(str_in)
+    else:
+        return 0
