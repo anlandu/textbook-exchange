@@ -134,16 +134,31 @@ class BuyProductListings(ListView):
     ordering = ['price']
     
     def get_context_data(self, **kwargs):
+        url_ibsn = self.kwargs['isbn']
+
         context = super().get_context_data(**kwargs)
-        context['textbook'] = Textbook.objects.get(isbn=self.kwargs['isbn'])
-        context['num_textbooks'] = len(Textbook.objects.filter(isbn=self.kwargs['isbn']))
-        context['num_product_listings'] = Textbook.objects.get(isbn=self.kwargs['isbn']).productlisting_set.all().count()
+        context['textbook'] = Textbook.objects.get(isbn=url_ibsn)
+        context['num_textbooks'] = len(Textbook.objects.filter(isbn=url_ibsn))
+        context['num_product_listings'] = Textbook.objects.get(isbn=url_ibsn).productlisting_set.all().count()
+        
         return context
 
-    def get_queryset(self):
-        textbook = Textbook.objects.get(isbn=self.kwargs['isbn'])
+    def get_queryset(self, *args, **kwargs):
+        url_ibsn = self.kwargs['isbn']
+        # url_maxprice = self.request.GET.get("maxprice")
+        url_maxprice = self.kwargs['maxprice']
+
+        textbook = Textbook.objects.get(isbn=url_ibsn)
         product_listings = textbook.productlisting_set.all()
         queryset = product_listings.filter(hasBeenSoldFlag=False)
+
+        if url_maxprice is not None:
+            if url_maxprice > 0:
+                queryset.filter(price__lte=url_maxprice)
+        # # add filters
+        # maxprice_filter = self.request.GET.get("maxprice_filter")
+        # queryset = queryset.filter(price__lte=maxprice_filter)
+        
         return queryset
 
     # def get_queryset(self):

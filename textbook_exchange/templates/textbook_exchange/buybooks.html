@@ -49,12 +49,13 @@
                                     <div class="col">                                        
                                         <!-- slider show value source: https://stackoverflow.com/a/18936328 -->
                                         <h5 style="display: inline">Max Price</h5>
-                                        <input class="form-control mt-2" type="number" min="0" max="500" value="500" id="maxPrice" oninput="maxPriceOutput.value = maxPrice.value" style="width:100px;">
+                                        <!-- <input class="form-control mt-2" type="number" min="0" max="500" value="500" id="maxPrice" oninput="maxPriceOutput.value = maxPrice.value" style="width:100px;"> -->
+                                        <br/>
+                                        <input type="number" id="maxPrice" name="quantity" min="0" max="500" class="form-control mt-3" style="width:100px;">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <!-- <button type="button" class="btn btn-danger mt-4" id="apply_filter" style="margin: 0 60px; border-radius: 0px;">Apply</button> -->
-                                    <!-- <input type="button" value="Apply" id="apply_filter" method="GET" class="btn btn-danger mt-4" style="margin: 0 60px; border-radius: 0px;"> -->
                                     <input type="button" value="Apply" id="apply_filter" onClick="applyClick()" method="GET" class="btn btn-danger mt-4" style="margin: 0 60px; border-radius: 0px;">
                                 </div>
                         </form>
@@ -124,19 +125,36 @@
 </div>
 
 <script>
-// $(document).ready(function () {
-    // event.preventDefault(); //prevents refresh
-    // $( "#apply_filter" ).click(function(event) {
     function applyClick() {
         event.preventDefault(); //prevents refresh
-        // var likenew = $('#likenew');
+
+        var isbn = "{{product_listings.0.textbook.isbn}}";
         var likenew = document.getElementById('likenew').checked;
         var verygood = document.getElementById('verygood').checked;
         var good = document.getElementById('good').checked;
         var acceptable = document.getElementById('acceptable').checked;
-        $.ajax({
-            
-        });        
+        var maxprice = document.getElementById('maxPrice').value;
+        
+        if (maxprice > 500)
+            maxprice = 500;
+        else if (maxprice > 500)
+            maxprice = 0;
+        
+            $.ajax({
+                url: "{% url 'exchange:buy_product' 'isbn' %}",
+                method: 'GET',
+                data : {
+                    maxprice: parseInt(maxprice),
+                },
+                success: function(data){
+                    console.log(data)
+                },
+                error: function(error_data){
+                    console.log("error")
+                    console.log(error_data)
+                }
+            })
+
     };
 // });
 </script>

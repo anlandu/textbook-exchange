@@ -17,7 +17,7 @@ urlpatterns = [
     path('accounts/messages', views.account_page_messages, name='messages'),
     path('buy/', views.buy_books, name='buybooks'),
     path('buy/autocomplete/', views.autocomplete, name='ajax_autocomplete'),
-    path('buy/<slug:isbn>/', views.BuyProductListings.as_view(), name='buy_product'),
-    # path('buy/<slug:list>/', views.filter_product_listings, name='product_list'),
+    path('buy/<slug:isbn>/', views.BuyProductListings.as_view(), kwargs={'maxprice':-1}, name='buy_product'), #https://stackoverflow.com/questions/14351048/django-optional-url-parameters
+    # path('buy/<slug:isbn>/<int:maxprice>/', views.BuyProductListings.as_view(), name='buy_product'),
     # url(r'^list$', views.product_list),
 ]
