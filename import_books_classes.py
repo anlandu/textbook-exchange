@@ -5,7 +5,7 @@ import os
 #keep this script in main directory (with manage.py) for this path to work;
 #else, you can update with your own path as needed
 script_dir = os.path.dirname("__file__")
-rel_path = "staticfiles/books_google_isbndb.json"
+rel_path = "books_google_isbndb.json"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 def mkflt(str_in):
