@@ -1,5 +1,12 @@
 import json
 from textbook_exchange.models import Textbook, Class
+import os
+
+#keep this script in main directory (with manage.py) for this path to work;
+#else, you can update with your own path as needed
+script_dir = os.path.dirname(__file__)
+rel_path = "staticfiles/books_google_isbndb.json"
+abs_file_path = os.path.join(script_dir, rel_path)
 
 def mkflt(str_in):
     if str_in:
@@ -13,8 +20,7 @@ def mkint(str_in):
     else:
         return 0
 
-# you can also keep this inside a view
-with open("C:\\Users\\anlan\\Documents\\School Stuff\\2nd Year\\3240\\books_with_isbndb.json", encoding='utf-8') as data_file:
+with open(abs_file_path, encoding='utf-8') as data_file:
     json_data = json.loads(data_file.read())
 
     for book_data in json_data:
