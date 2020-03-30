@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.files import File
 from django.urls import *
 from . import *
-from django.test import Client
+from django.test import Client, override_settings
 
 
 class HelloWord(TestCase):
@@ -64,6 +64,7 @@ class LoginTest(TestCase):
         }
         self.assertTrue(context)
 
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class UserModelTest(TestCase):
     def test_user_no_edge_cases(self):
         test_user = User.objects.create(
@@ -114,8 +115,21 @@ class UserModelTest(TestCase):
         test_user.username = 1.456
         test_user.save()
         self.assertEqual(type(test_user.username), float) #Originally was str instead of float
+    def test_login(self):
+        User.objects.create_user(
+            username = "rc8yw",
+            password='12345',
+            first_name = "Rohan",
+            last_name = "Chandra",
+            email = "rc8yw@virginia.edu",
+            is_staff = False,
+            date_joined = timezone.now(),
+            balance = 0.0,
+        )
+        c = Client()
+        self.assertTrue(c.login(username = "rc8yw@virginia.edu", password="12345"))
     def test_name_and_email_on_account_page(self):
-        test_user = User(
+        test_user = User.objects.create_user(
             username = "rc8yw",
             password = "12345",
             first_name = "Rohan",
@@ -125,15 +139,14 @@ class UserModelTest(TestCase):
             date_joined = timezone.now(),
             balance = 0.0,
         )
-        test_user.save()
         c = Client()
-        logged_in = c.login(username = test_user.email)
+        logged_in = c.login(username = "rc8yw@virginia.edu", password="12345")
+        self.assertTrue(logged_in)
         self.assertTrue(test_user.is_authenticated)
         response = c.get('/accounts/', secure = True, follow = True)
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML(test_user.first_name + ' ' + test_user.last_name, response.content.decode()) #No work
-        self.assertInHTML(test_user.email, response.content.decode()) #This doesn't work
-        self.assertInHTML('<h3>Any new messages? Updates?</h3>', response.content.decode()) #This does
+        self.assertInHTML(test_user.first_name + ' ' + test_user.last_name, response.content.decode())
+        self.assertInHTML(test_user.email, response.content.decode())
 
 class SellTest(TestCase): #Can't simulate a fake photo
     def test_sell_form_valid(self):
