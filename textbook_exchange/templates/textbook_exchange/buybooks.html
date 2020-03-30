@@ -158,10 +158,11 @@
             type: "POST",
             data: { 
                 id : id,
+                function: "add",
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success: function(json) {
-                window.location.href = {% url 'payments:cart' %}
+                window.location.href = {% url 'payments:cart' %};
             },
             error: function(xhr, errmsg, err) {
                 console.log("error");

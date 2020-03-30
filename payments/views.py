@@ -37,8 +37,13 @@ def cart(request):
         if context['logged_in'] is False:
             return HttpResponse("failed")
         listing = textbook_exchange_models.ProductListing.objects.get(pk=request.POST.get("id"))
-        listing.cart = request.user.cart
-        listing.save()
+        if request.POST.get("function") == "add":
+            listing.cart = request.user.cart
+            listing.save()
+        elif request.POST.get("function") == "remove":
+            print("remove")
+            listing.cart = None
+            listing.save()
         return HttpResponse("success")
 
 def one_week_in_future():

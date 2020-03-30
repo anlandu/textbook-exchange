@@ -22,7 +22,7 @@
                 <img class="img-fluid" src='{{ product.picture.url }}'>
             </div>
             <div class="col-sm-6">
-                <p><b>{{ product.textbook.title }}</b><br>ISBN: {{ product.textbook.isbn }}<br>(<a href="#">remove</a>)</p>
+                <p><b>{{ product.textbook.title }}</b><br>ISBN: {{ product.textbook.isbn }}<br>(<a href="javascript:removeFromCart({{ product.id }});">remove</a>)</p>
             </div>
             <div class="col-sm-4">
                 <p class="text-right">${{ product.price}}</p>
@@ -46,12 +46,9 @@
         <div id="paypal"></div>
     </div>
 </div>
-
-
-
-
 <script src="https://www.paypal.com/sdk/js?client-id=AcCaARG0gidap3Y0mCgZtbbdE3sDrYHyHSIBwJ20jwhyGk3MQSBLxpWggOwuOQphYKDLl87wRLek-qE8" data-namespace="paypal_sdk"></script>
-<script>paypal_sdk.Buttons({
+<script>
+paypal_sdk.Buttons({
     createOrder: function(data, actions) {
         return actions.order.create({
             purchase_units: [
@@ -107,5 +104,25 @@
     onError: function (err) {
         console.log(err);
     }
-}).render('#paypal');</script>
+}).render('#paypal');
+</script>
+<script>
+function removeFromCart(id) {
+    $.ajax({
+        url : "{% url 'payments:cart' %}",
+        type: "POST",
+        data: { 
+            id : id,
+            function: "remove",
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(json) {
+            window.location.href = {% url 'payments:cart' %};
+        },
+        error: function(xhr, errmsg, err) {
+            console.log("error");
+        },
+    });
+}
+</script>
 {% endblock %}
