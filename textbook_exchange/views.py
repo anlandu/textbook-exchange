@@ -128,12 +128,9 @@ class AccountPastListings(ListView):
 def autocomplete(request):
     search = request.GET['search']
 
-    #normalize search -- we'll add more as we understand our data better
-    search = search.lower() 
-    
     #these will search in our models for matches
-    books = Textbook.objects.filter(title__contains = search) # TODO: Add other methods to search
-    courses = Class.objects.filter(course_code__contains = search.replace(" ", ""))
+    books = Textbook.objects.filter(title__icontains = search) # TODO: Add other methods to search
+    courses = Class.objects.filter(course_code__icontains = search.replace(" ", ""))
     
     valid_books = []
     valid_courses = []
