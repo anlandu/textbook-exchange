@@ -129,7 +129,7 @@ def autocomplete(request):
 
     #these will search in our models for matches
     books = Textbook.objects.filter(title__icontains=search) | Textbook.objects.filter(author__icontains=search) | Textbook.objects.filter(isbn13__icontains=search) | Textbook.objects.filter(isbn10__icontains=search) | Textbook.objects.filter(bookstore_isbn__icontains=search) # TODO: Add other methods to search
-    courses = Class.objects.filter(course_code__icontains=search.replace(" ", ""))
+    courses = Class.objects.filter(class_info__icontains=search.replace(" ", ""))
     
     valid_books = []
     valid_courses = []

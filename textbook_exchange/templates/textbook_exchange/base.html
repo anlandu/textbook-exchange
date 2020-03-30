@@ -38,19 +38,15 @@
                             </button>
                         </span>
                         <div class="input-group-append" style="width: 100%;">
-                            <ul style="width:100%;" id="results_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <ul style="width:100%;" id="results_dropdown" class="dropdown-menu  px-2" aria-labelledby="dropdownMenu1">
                                 <li id="results_books">
-                                    Books
-                                    <ul>
-                                    </ul>
+                                    <div id="book_results"></div>
                                 </li>
                                 <li id="results_courses">
-                                    Courses
-                                    <ul>
-                                    </ul>
+                                    <div id="course_results"></div>
                                 </li>
                                 <div id="noresults">
-                                    <i>No Results Found</i>
+                                    <b>No Results Found</b>
                                 </div>
                             </ul>
                         </div>
@@ -77,7 +73,7 @@
     <script>
         function updateSearch(search){
             if(search.length >= 2){
-                console.log(search);
+                //console.log(search);
 
                 var xmlhttp = new XMLHttpRequest();
 
@@ -86,41 +82,106 @@
                         if (xmlhttp.status == 200) {
                             $('.dropdown-menu').show(); //open the dropdown menu
                             var searchResults = JSON.parse(xmlhttp.responseText);
-                            console.log(searchResults);
+                            //console.log(searchResults);
+
+                            //calculate number of dropdown items per section
+                            let book_display_count = Math.round(4.0 * (parseFloat(searchResults['books'].length) / (searchResults['books'].length + searchResults['courses'].length)));
+                            let course_display_count = Math.round(4.0 * (parseFloat(searchResults['courses'].length) / (searchResults['books'].length + searchResults['courses'].length)));
 
                             //update dropdown with availible results
                             if(searchResults['books'].length > 0){
                                 document.getElementById("results_books").style.display = 'inline'; //show header
-                                var isbnList = document.getElementById("results_books").getElementsByTagName("ul")[0];
-
+                                var isbnList = document.getElementById("book_results");
                                 isbnList.innerHTML = ''; //remove old list elements
-
                                 for(var i = 0; i < searchResults['books'].length; i++){ //add new elements
-                                    var entry = document.createElement('li');
+                                    var entry = document.createElement('div');
                                     var book = JSON.parse(searchResults['books'][i]);
-                                    entry.innerHTML = book['title'] + ' - <i>'+ book['author'].substring(1, book['author'].length - 2).replace(/'/g,"") + '</i>';
+
+                                    let row = document.createElement('div');
+                                    row.classList = 'row';
+
+                                    let pictureCol = document.createElement('div');
+                                    pictureCol.classList = "col-1 my-auto";
+
+                                    let picture = document.createElement('img');
+                                    try {
+                                        //create valid json from the array
+                                        jsonURL = book['cover_photo_url'];
+                                        jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
+                                        jsonURL = jsonURL.replace(/'/g, "\"");
+                                        picture.src = JSON.parse(jsonURL)["smallThumbnail"];
+                                    } catch (e) {
+                                        picture.src = book['cover_photo_url'];
+                                    }
+                                    picture.classList = 'img-fluid my-auto';
+
+                                    let dataCol = document.createElement('div');
+                                    dataCol.classList = "col-11";
+
+                                    let oneLineStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+
+                                    let title = document.createElement("p");
+                                    title.innerHTML = "<b>" + book['title']  + "</b>";
+                                    title.classList = 'my-0';
+                                    title.style = oneLineStyle;
+
+                                    let author = document.createElement("p");
+                                    author.innerHTML = book['author'].substring(1, book['author'].length - 2).replace(/'/g,"");
+                                    author.classList = 'my-0';
+                                    author.style = oneLineStyle;
+
+                                    let isbnP = document.createElement('p');
+                                    isbnP.classList = "text-muted my-0";
+                                    isbnP.innerHTML = "ISBN: " + book['bookstore_isbn'];
+
+                                    pictureCol.appendChild(picture);
+                                    dataCol.appendChild(title);
+                                    dataCol.appendChild(author);
+                                    dataCol.appendChild(isbnP);
+
+                                    row.appendChild(pictureCol);
+                                    row.appendChild(dataCol);
+
+                                    entry.appendChild(row);
+
                                     entry.addEventListener("click", function() {
                                         window.location.href = '/buy/' + isbn13Format(book['isbn13'])
                                     });
+
                                     isbnList.appendChild(entry);
-                                    if (i >= 4) break; // only show 5 results
+                                    if (i >= book_display_count) break; // only show 5 results
                                 }
                             }
-                            else{
-                                document.getElementById("results_books").style.display = 'none'; //hide header
+                            else {
+                                document.getElementById("results_books").style.display = 'none'; //hide section
                             }
 
                             if(searchResults['courses'].length > 0){
                                 document.getElementById("results_courses").style.display = 'inline'; //show header
-                                var isbnList = document.getElementById("results_courses").getElementsByTagName("ul")[0];
+                                var isbnList = document.getElementById("course_results");
 
                                 isbnList.innerHTML = ''; //remove old list elements
 
                                 for(var i = 0; i < searchResults['courses'].length; i++){ //add new elements
-                                    var entry = document.createElement('li');
-                                    entry.innerHTML = JSON.parse(searchResults['courses'][i])['class_info'] + " <i>" + JSON.parse(searchResults['courses'][i])['professor'] + "</i>"; //simple text element (change to link)
+                                    var entry = document.createElement('div');
+
+                                    let oneLineStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+
+                                    var class_info_p = document.createElement('p');
+                                    class_info_p.innerHTML = "<b>" + JSON.parse(searchResults['courses'][i])['class_info'] + "</b>";
+                                    class_info_p.classList = 'my-0';
+                                    class_info_p.style = oneLineStyle;
+
+                                    var professor_p = document.createElement('p');
+                                    professor_p.innerHTML = JSON.parse(searchResults['courses'][i])['professor'];
+                                    professor_p.classList = 'my-0';
+                                    professor_p.style = oneLineStyle;
+
+                                    entry.appendChild(class_info_p);
+                                    entry.appendChild(professor_p);
+
                                     isbnList.appendChild(entry);
-                                    if (i >= 4) break; // only show 5 results
+                                    if (i >= course_display_count) break; // only show 5 results
                                 }
                             }
                             else{
