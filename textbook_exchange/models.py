@@ -21,14 +21,13 @@ class User(AbstractUser):
 class Class(models.Model):
     class_term = models.CharField(max_length=200, default="")
     department = models.CharField(max_length=200, default="") #e.g. CS
-    course_code = models.IntegerField(default=0) #e.g. 1110
+    course_code = models.CharField(max_length=50, default=0) #e.g. 1110
     section_number = models.CharField(max_length=10, default="") #e.g. 001
     professor = models.CharField(max_length=200, default="")
     class_info = models.TextField(max_length=200, primary_key=True, default="") #e.g. CS1110
 
     @classmethod
     def create(cls, **kwargs):
-        print(kwargs['Term'])
         class_obj = cls.objects.create(
             class_term=kwargs['Term'],
             department=kwargs['Dept'],

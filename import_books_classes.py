@@ -34,6 +34,7 @@ with open("C:\\Users\\anlan\\Documents\\School Stuff\\2nd Year\\3240\\books_with
             setattr(book_obj, "page_count", mkint(book_data['Page Count']))
             setattr(book_obj, "google_rating", mkflt(book_data['Google Rating']))
             setattr(book_obj, "num_reviews", mkint(book_data['Number of Ratings']))
+            book_obj.save()
         except:
             book_obj = Textbook.create(**book_data)
 
@@ -44,6 +45,7 @@ with open("C:\\Users\\anlan\\Documents\\School Stuff\\2nd Year\\3240\\books_with
             setattr(class_obj, "course_code", book_data['Course'])
             setattr(class_obj, "section_number", book_data['Sect'])
             setattr(class_obj, "professor", book_data['Instructor'])
+            class_obj.save()
         except:
             class_obj = Class.create(**book_data)
 
