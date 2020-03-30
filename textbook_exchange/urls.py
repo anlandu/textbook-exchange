@@ -13,4 +13,5 @@ urlpatterns = [
     path('sell/', views.sell_books, name='sellbooks'),
     path('accounts/', views.account_page, name='account_page'),
     path('buy/autocomplete/', views.autocomplete, name='ajax_autocomplete'),
+    path('messaging/', views.chat_view, name='twilio'),
 ]

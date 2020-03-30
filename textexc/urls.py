@@ -22,5 +22,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('textbook_exchange.urls')),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^', include('django_private_chat.urls')),
 ]
