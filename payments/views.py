@@ -25,6 +25,8 @@ def get_cart(request):
     return context
 
 def cart(request):
+    if len(request.user.cart.productlisting_set.all()) is 0:
+        return render(request, 'payments/empty_cart.html')
     context=get_cart(request)
     if context['logged_in'] is False:
         return render(request, 'payments/log_in.html')

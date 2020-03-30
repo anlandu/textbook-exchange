@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 import json
 
 # Create your models here.
@@ -98,8 +100,6 @@ class Textbook(models.Model):
 
 class Cart(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # one cart per user
-    subtotal = models.DecimalField(max_digits=6, decimal_places=2) # total without tax of books
-    items = models.IntegerField() # number of items in cart
 
     def __str__(self):
         return str(self.items) + " items totaling $" + str(self.subtotal)
@@ -139,3 +139,8 @@ def mkint(str_in):
         return int(str_in)
     else:
         return 0
+
+@receiver(post_save, sender=User)
+def create_cart(sender, instance, created, **kwargs):
+    if created:
+        cart, new = Cart.objects.get_or_create(user=instance)
