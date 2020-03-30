@@ -145,19 +145,39 @@ class BuyProductListings(ListView):
 
     def get_queryset(self, *args, **kwargs):
         url_ibsn = self.kwargs['isbn']
-        # url_maxprice = self.request.GET.get("maxprice")
-        url_maxprice = self.kwargs['maxprice']
 
         textbook = Textbook.objects.get(isbn=url_ibsn)
         product_listings = textbook.productlisting_set.all()
         queryset = product_listings.filter(hasBeenSoldFlag=False)
 
-        if url_maxprice is not None:
-            if url_maxprice > 0:
-                queryset.filter(price__lte=url_maxprice)
-        # # add filters
-        # maxprice_filter = self.request.GET.get("maxprice_filter")
-        # queryset = queryset.filter(price__lte=maxprice_filter)
+        # url_maxprice = self.kwargs['maxprice']
+        # url_likenew = self.kwargs['likenew']
+        # url_verygood = self.kwargs['verygood']
+        # url_good = self.kwargs['good']
+        # url_acceptable = self.kwargs['acceptable']
+
+        url_maxprice = self.request.GET.get("maxprice")
+        url_likenew = self.request.GET.get('likenew')
+        url_verygood = self.request.GET.get('verygood')
+        url_good = self.request.GET.get('good')
+        url_acceptable = self.request.GET.get('acceptable')
+
+        # add filters
+        if url_maxprice is not None and url_maxprice > 0:
+            queryset.filter(price__lte=url_maxprice)
+            print("mxprice")
+        if url_likenew is not None and not url_likenew:
+            queryset.exclude(condition="likenew")
+            print("likenew")
+        if url_verygood is not None and not url_verygood:
+            queryset.exclude(condition="verygood")
+            print("vgood")
+        if url_good is not None and not url_good:
+            queryset.exclude(condition="good")
+            print("good")
+        if url_acceptable is not None and not url_acceptable:
+            queryset.exclude(condition="acceptable")
+            print("ok")
         
         return queryset
 

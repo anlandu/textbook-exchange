@@ -79,7 +79,7 @@
                 <h6 style="margin-bottom: 20px; font-style: italic;">Showing results for "{{ textbook.title }}"</h6>
                 <div class="row">
                     {% for listing in product_listings %}
-                        <div class="card" style="width: 15rem; border-radius: 0px;">
+                        <div class="card" style="width: 15rem; border-radius: 0px;" price="{{ listing.price }}" condition="{{ listing.condition }}">
                             <div class="card-header">
                                 <img class="card-img-top" src="{{ listing.picture.url }}" alt="{{ listing.textbook.title }}" style="border-radius: 0px; margin-top: 10px;">
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>
@@ -128,7 +128,7 @@
     function applyClick() {
         event.preventDefault(); //prevents refresh
 
-        var isbn = "{{product_listings.0.textbook.isbn}}";
+        // var isbn = "{{product_listings.0.textbook.isbn}}";
         var likenew = document.getElementById('likenew').checked;
         var verygood = document.getElementById('verygood').checked;
         var good = document.getElementById('good').checked;
@@ -139,24 +139,17 @@
             maxprice = 500;
         else if (maxprice > 500)
             maxprice = 0;
-        
-            $.ajax({
-                url: "{% url 'exchange:buy_product' 'isbn' %}",
-                method: 'GET',
-                data : {
-                    maxprice: parseInt(maxprice),
-                },
-                success: function(data){
-                    console.log(data)
-                },
-                error: function(error_data){
-                    console.log("error")
-                    console.log(error_data)
-                }
-            })
+
+        $('.card').each(function() {
+            if (maxprice != "") {
+                if (parseInt($(this).attr('price')) > maxprice) // (this) == i in for loop
+                    $(this).hide();	
+                if (parseInt($(this).attr('price')) <= maxprice)
+                    $(this).show();	
+            }
+        });
 
     };
-// });
 </script>
 
 {% endblock content %}
