@@ -31,7 +31,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="search_text"
                             placeholder="Search for a book"
-                            onkeyup="updateSearch(this.value)" autofocus autocomplete="off" onfocusout="hideAutocomplete()" onfocus="updateSearch(this.value)">
+                            onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
                         <span class="input-group-append" type='submit'>
                             <button type="submit" class="btn btn-uva">
                                 <i class="fa fa-search"></i>
@@ -90,8 +90,6 @@
 
                             //update dropdown with availible results
                             if(searchResults['books'].length > 0){
-                                //console.log("books: " + searchResults['books']);
-
                                 document.getElementById("results_books").style.display = 'inline'; //show header
                                 var isbnList = document.getElementById("results_books").getElementsByTagName("ul")[0];
 
@@ -99,11 +97,13 @@
 
                                 for(var i = 0; i < searchResults['books'].length; i++){ //add new elements
                                     var entry = document.createElement('li');
-                                    entry.innerHTML = JSON.parse(searchResults['books'][i])['title'] + ' <i>' + JSON.parse(searchResults['books'][i])['author'] + '</i>';
-                                    //entry.appendChild(document.createTextNode(
-                                    //    searchResults['books'][i]['title'] +
-                                    //    ' <i>' + searchResults['books'][i]['author'] + '</i>')); //simple text element (change to link)
+                                    var book = JSON.parse(searchResults['books'][i]);
+                                    entry.innerHTML = book['title'] + ' <i>' + book['author'] + '</i>';
+                                    entry.addEventListener("click", function() {
+                                        window.location.href = '/buy/' + isbn13Format(book['isbn13'])
+                                    });
                                     isbnList.appendChild(entry);
+                                    if (i >= 10) break; // only show 10 results
                                 }
                             }
                             else{
@@ -111,8 +111,6 @@
                             }
 
                             if(searchResults['courses'].length > 0){
-                                //console.log("courses: " + searchResults['courses']);
-
                                 document.getElementById("results_courses").style.display = 'inline'; //show header
                                 var isbnList = document.getElementById("results_courses").getElementsByTagName("ul")[0];
 
@@ -122,6 +120,7 @@
                                     var entry = document.createElement('li');
                                     entry.innerHTML = JSON.parse(searchResults['courses'][i])['class_info'] + " <i>" + JSON.parse(searchResults['courses'][i])['professor'] + "</i>"; //simple text element (change to link)
                                     isbnList.appendChild(entry);
+                                    if (i >= 10) break; // only show 10 results
                                 }
                             }
                             else{
@@ -152,9 +151,24 @@
         function hideAutocomplete() {
             $('.dropdown-menu').hide();
         }
+        function isbn13Format(isbn) {
+            return isbn.substring(0, 3) + "-" + isbn.substring(3, 6) + "-" + isbn.substring(6, 9) + "-" + isbn.substring(9, 13);
+        }
+
+        $(document).on("click touchstart", function(e) {
+            var t = $(e.target).closest('.dropdown-menu');
+            var exceptDiv = $('.dropdown-menu');
+            var s = $(e.target).closest('#search_text');
+            var searchDiv = $('#search_text');
+            if (!exceptDiv.is(t) && !searchDiv.is(s)) hideAutocomplete();
+            else if (searchDiv.is(s)) updateSearch(searchDiv.val());
+        });
+
         {% if search %}
         updateSearch("{{ search }}");
         document.getElementById("search_text").value = "{{ search }}";
         {% endif %}
+
+
     </script>
 </body>
