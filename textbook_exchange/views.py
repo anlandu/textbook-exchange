@@ -191,18 +191,28 @@ def autocomplete(request):
     search = request.GET['search']
 
     #these will search in our models for matches
+    b_starts_with = Textbook.objects.filter(title__istartswith=search)
     books = Textbook.objects.filter(title__icontains=search) | Textbook.objects.filter(author__icontains=search) | Textbook.objects.filter(isbn13__icontains=search) | Textbook.objects.filter(isbn10__icontains=search) | Textbook.objects.filter(bookstore_isbn__icontains=search) # TODO: Add other methods to search
     courses = Class.objects.filter(class_info__icontains=search.replace(" ", ""))
     
     valid_books = []
     valid_courses = []
 
+    for book in list(b_starts_with):
+        if len(valid_books) >= 6:
+            break
+        valid_books.append(book.toJSON())
+
     for book in list(books):
+        if len(valid_books) >= 6:
+            break
         valid_books.append(book.toJSON())
 
     for course in list(courses):
+        if len(valid_courses) >= 6:
+            break
         valid_courses.append(course.toJSON())
-
+        
     data = {
         'search' : search,
         'books' : valid_books,
