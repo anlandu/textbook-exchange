@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import itertools
 import functools
@@ -36,6 +37,7 @@ def buy_books(request):
         context['search'] = request.GET.get('search')
     return render(request, 'textbook_exchange/buybooks.html', context=context)
 
+@login_required(redirect_field_name='my_redirect_field', login_url="/accounts/google/login/")
 def sell_books(request):
     context = get_logged_in(request) 
     context['title'] = 'Sell Books'

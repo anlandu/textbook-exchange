@@ -3,172 +3,176 @@
 
 {% block content %}
 
-{% if submitted %}
-    <h1 style="text-align: center; padding: 150px 0;">Your post was successfully posted!</h1>
-{% else %}
+<div class="container">
 
-{% if not_logged_in %}
-<script>
-    alert('Please log in');
-</script>
-{% endif %}
 
-<div class="row">
-    <div class="d-flex align-items-center justify-content-center">
-        <div class="col-xs-12 text-center">
-            <h1>Step 1 - Find the Book</h1>
-        </div>
-    </div>
-</div>
-<br>
-<div class="row">
-    <div class="col-sm-5">
-        <div class="card d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#scanModalCenter">
-            <div class="text-center p-4">
-                <h3>Scan the barcode</h3>
-                <img src="{% static 'textbook_exchange/images/barcode.png' %}" style="height: 10em;">
-            </div> 
-        </div>
-    </div>
-    <div class="col-sm-2">
+    {% if submitted %}
+        <h1 style="text-align: center; padding: 150px 0;">Your post was successfully posted!</h1>
+    {% else %}
+
+    {% if not_logged_in %}
+    <script>
+        alert('Please log in');
+    </script>
+    {% endif %}
+
+    <div class="row">
         <div class="d-flex align-items-center justify-content-center">
-            <h3>OR</h3>
-        </div>
-    </div>
-    <div class="col-sm-5">
-        <div class="card d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#searchModalCenter">
-            <div class="text-center p-4">
-                <h3>Search for a book</h3>
-                <img src="{% static 'textbook_exchange/images/search.png' %}" style="height: 10em;">
+            <div class="col-xs-12 text-center">
+                <h1>Step 1 - Find the Book</h1>
             </div>
         </div>
     </div>
-</div>
-<br>
-<hr>
-<br>
-<div class="row">
-    <div class="d-flex align-items-center justify-content-center">
-        <div class="col-xs-12 text-center">
-            <h1>Step 2 - Fill out listing</h1>
+    <br>
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="card d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#scanModalCenter">
+                <div class="text-center p-4">
+                    <h3>Scan the barcode</h3>
+                    <img src="{% static 'textbook_exchange/images/barcode.png' %}" style="height: 10em;">
+                </div> 
+            </div>
         </div>
-    </div>
-</div>
-<br>
-<div class="row">
-    <div class="col-sm-12">
-        <!-- FORM -->
-        <form action="" method="post" novalidate enctype="multipart/form-data">
-            {% csrf_token %}
-{{ form.non_field_errors }}
-            <div class="card">
-                <div class="card-content p-3">
-                    <h3 class="card-title">Book Info</h3>
-                    <hr>
-                    <fieldset>
-                        <div class="form-group row">
-{{ form.book_title.errors }}
-                            <div class="col-md-2 col-form-label">{{ form.book_title.label_tag }}</div>
-                            <div class="col-md-10">{{ form.book_title }}</div>
-                        </div>
-{{ form.book_author.errors }}
-                        <div class="form-group row">
-                            <div class="col-md-2 col-form-label">{{ form.book_author.label_tag }}</div>
-                            <div class="col-md-10">{{ form.book_author }}</div>
-                        </div>
-{{ form.isbn.errors }}
-                        <div class="form-group row">
-                            <div class="col-md-2 col-form-label">{{ form.isbn.label_tag }}</div>
-                            <div class="col-md-10">{{ form.isbn }}</div>
-                        </div>
-                    </fieldset>
+        <div class="col-sm-2">
+            <div class="d-flex align-items-center justify-content-center">
+                <h3>OR</h3>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="card d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#searchModalCenter">
+                <div class="text-center p-4">
+                    <h3>Search for a book</h3>
+                    <img src="{% static 'textbook_exchange/images/search.png' %}" style="height: 10em;">
                 </div>
             </div>
-            <br>
-            <div class="card">
-                <div class="card-content p-3">
-                    <h3 class="card-title">Listing Info</h3>
-                    <hr>
-                    <fieldset>
-                        <div class="form-group row">
-{{ form.picture.errors }}
-                            <div class="col-md-2 col-form-label">{{ form.picture.label_tag }}</div>
-                            <div class="col-md-10">{{ form.picture }}</div>
-                        </div>
-                        <div class="form-group row">
-{{ form.price.errors }}
-                            <div class="col-md-2 col-form-label">{{ form.price.label_tag }}</div>
-                            <div class="col-md-10">{{ form.price }}</div>
-                        </div>
-                        <div class="form-group row">
-{{ form.book_condition.errors }}
-                            <div class="col-md-2 col-form-label">{{ form.book_condition.label_tag }}</div>
-                            <div class="col-md-10">
-                                {% for choice in form.book_condition %}
-                                    <div class="form-check">
-                                        {{ choice.tag }}
-                                        <label class="form-check-label" style="margin-left: 10px;" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
-                                    </div>
-                                {% endfor %}
+        </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="row">
+        <div class="d-flex align-items-center justify-content-center">
+            <div class="col-xs-12 text-center">
+                <h1>Step 2 - Fill out listing</h1>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- FORM -->
+            <form action="" method="post" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+    {{ form.non_field_errors }}
+                <div class="card">
+                    <div class="card-content p-3">
+                        <h3 class="card-title">Book Info</h3>
+                        <hr>
+                        <fieldset>
+                            <div class="form-group row">
+    {{ form.book_title.errors }}
+                                <div class="col-md-2 col-form-label">{{ form.book_title.label_tag }}</div>
+                                <div class="col-md-10">{{ form.book_title }}</div>
                             </div>
-                        </div>
-                    
-                        <div class="form-group row">
-                            <div class="col-md-2 col-form-label">{{ form.comments.label_tag }}</div>
-                            <div class="col-md-10">{{ form.comments }}</div>
-                        </div>
-                    </fieldset>
-                    <div class="form-group row">
-                        <div class="col-12 text-center">
-                            <button type="submit" value="Submit" class="btn btn-lg btn-uva">Sell</button>
-                        </div>
+    {{ form.book_author.errors }}
+                            <div class="form-group row">
+                                <div class="col-md-2 col-form-label">{{ form.book_author.label_tag }}</div>
+                                <div class="col-md-10">{{ form.book_author }}</div>
+                            </div>
+    {{ form.isbn.errors }}
+                            <div class="form-group row">
+                                <div class="col-md-2 col-form-label">{{ form.isbn.label_tag }}</div>
+                                <div class="col-md-10">{{ form.isbn }}</div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
-            </div>  
-            {% csrf_token %}     
-        </form>
+                <br>
+                <div class="card">
+                    <div class="card-content p-3">
+                        <h3 class="card-title">Listing Info</h3>
+                        <hr>
+                        <fieldset>
+                            <div class="form-group row">
+    {{ form.picture.errors }}
+                                <div class="col-md-2 col-form-label">{{ form.picture.label_tag }}</div>
+                                <div class="col-md-10">{{ form.picture }}</div>
+                            </div>
+                            <div class="form-group row">
+    {{ form.price.errors }}
+                                <div class="col-md-2 col-form-label">{{ form.price.label_tag }}</div>
+                                <div class="col-md-10">{{ form.price }}</div>
+                            </div>
+                            <div class="form-group row">
+    {{ form.book_condition.errors }}
+                                <div class="col-md-2 col-form-label">{{ form.book_condition.label_tag }}</div>
+                                <div class="col-md-10">
+                                    {% for choice in form.book_condition %}
+                                        <div class="form-check">
+                                            {{ choice.tag }}
+                                            <label class="form-check-label" style="margin-left: 10px;" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        
+                            <div class="form-group row">
+                                <div class="col-md-2 col-form-label">{{ form.comments.label_tag }}</div>
+                                <div class="col-md-10">{{ form.comments }}</div>
+                            </div>
+                        </fieldset>
+                        <div class="form-group row">
+                            <div class="col-12 text-center">
+                                <button type="submit" value="Submit" class="btn btn-lg btn-uva">Sell</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                {% csrf_token %}     
+            </form>
+        </div>
     </div>
-</div>
 
-<div class="modal fade" id="scanModalCenter" tabindex="-1" role="dialog" aria-labelledby="scanModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="scanModalLongTitle">Scan a barcode</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                scanner
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-uva-secondary" data-dismiss="modal">Close</button>
-                <!--<button type="button" class="btn btn-uva">Select</button>-->
-            </div>
-        </div>   
+    <div class="modal fade" id="scanModalCenter" tabindex="-1" role="dialog" aria-labelledby="scanModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scanModalLongTitle">Scan a barcode</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    scanner
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-uva-secondary" data-dismiss="modal">Close</button>
+                    <!--<button type="button" class="btn btn-uva">Select</button>-->
+                </div>
+            </div>   
+        </div>
     </div>
-</div>
-  
-<div class="modal fade" id="searchModalCenter" tabindex="-1" role="dialog" aria-labelledby="searchModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLongTitle">Search for a textbook</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input class="form-control" type="text" placeholder="Search by ISBN, title, author or class code" aria-label="Search">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-uva-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-uva">Select</button>
-            </div>
-        </div>   
+    
+    <div class="modal fade" id="searchModalCenter" tabindex="-1" role="dialog" aria-labelledby="searchModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchModalLongTitle">Search for a textbook</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" type="text" placeholder="Search by ISBN, title, author or class code" aria-label="Search">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-uva-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-uva">Select</button>
+                </div>
+            </div>   
+        </div>
     </div>
+    {% endif %}
 </div>
-{% endif %}
 
 {% endblock content %}
