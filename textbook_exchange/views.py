@@ -203,10 +203,14 @@ def autocomplete(request):
             break
         valid_books.append(book.toJSON())
 
+    if len(valid_books) < 6:
+            books = books.difference(b_starts_with)
+
     for book in list(books):
         if len(valid_books) >= 6:
             break
-        valid_books.append(book.toJSON())
+        if book not in valid_books:
+            valid_books.append(book.toJSON())
 
     for course in list(courses):
         if len(valid_courses) >= 6:

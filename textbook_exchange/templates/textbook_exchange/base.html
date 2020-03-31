@@ -127,9 +127,11 @@
                                         } catch (e) {
                                             picture.src = book['cover_photo_url'];
                                         }
-                                        picture.classList = 'img-thumbnail mx-auto';
-                                        picture.style.maxHeight = '50px';
+                                    } else {
+                                        picture.src = 'https://isbndb.com/modules/isbndb/img/default-book-cover.jpg';
                                     }
+                                    picture.classList = 'img-thumbnail mx-auto';
+                                    picture.style.maxHeight = '50px';
 
                                     let dataCol = document.createElement('div');
                                     dataCol.classList = "col-11";
