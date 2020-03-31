@@ -104,7 +104,7 @@
                                 var isbnList = document.getElementById("book_results");
                                 isbnList.innerHTML = ''; //remove old list elements
                                 for(var i = 0; i < searchResults['books'].length; i++){ //add new elements
-                                    var book = JSON.parse(searchResults['books'][i]);
+                                    let book = JSON.parse(searchResults['books'][i]);
 
                                     var entry = document.createElement('div');
                                     entry.classList = "py-2 search-entry";
@@ -163,7 +163,7 @@
                                     entry.appendChild(row);
 
                                     entry.addEventListener("click", function() {
-                                        window.location.href = '/buy/' + book['isbn13'];
+                                        window.location.href = '/buy/' + book['isbn13'] + "/" + book['title'].replace(/\W/g, "");
                                     });
 
                                     isbnList.appendChild(entry);
