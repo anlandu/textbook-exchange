@@ -46,9 +46,17 @@
                                 <li id="results_courses">
                                     <div id="course_results"></div>
                                 </li>
-                                <div id="noresults">
-                                    <b>No Results Found</b>
-                                </div>
+                                <li id="noresults">
+                                    <div>
+                                        <div class="py-2 search-entry" style="height: 65px;">
+                                            <div class="row px-0 mx-0 pl-2" style="height: 100%;">
+                                                <div class="col-12 align-self-center" style="height: 100%; display: flex; align-items: center;">
+                                                    <p class="my-auto"><b><i>No Results Found</i></b></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -106,7 +114,7 @@
                                     row.classList = 'row mx-0';
 
                                     let pictureCol = document.createElement('div');
-                                    pictureCol.classList = "col-1 my-auto mx-auto";
+                                    pictureCol.classList = "col-1 my-0 text-center align-self-center d-none d-lg-block px-0";
 
                                     let picture = document.createElement('img');
                                     if (book['cover_photo_url'] != '') {
@@ -119,7 +127,7 @@
                                         } catch (e) {
                                             picture.src = book['cover_photo_url'];
                                         }
-                                        picture.classList = 'img-fluid img-thumbnail my-auto';
+                                        picture.classList = 'img-thumbnail mx-auto';
                                         picture.style.maxHeight = '50px';
                                     }
 
