@@ -51,3 +51,7 @@ div.container {
     display: grid;
     grid-template-columns: minmax(150px, 190px) 1fr;
 }
+
+.search-entry:hover {
+    background-color: lightgray;
+}

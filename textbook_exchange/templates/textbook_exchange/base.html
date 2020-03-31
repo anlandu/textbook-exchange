@@ -38,8 +38,8 @@
                                 <i class="fa fa-search my-auto"></i>
                             </button>
                         </span>
-                        <div class="input-group-append" style="width: 100%;">
-                            <ul style="width:100%;" id="results_dropdown" class="dropdown-menu  px-2" aria-labelledby="dropdownMenu1">
+                        <div class="input-group-append" style="width: 100%; border-radius: 0%;">
+                            <ul style="width:100%; border-radius: 0%;" id="results_dropdown" class="dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
                                 <li id="results_books">
                                     <div id="book_results"></div>
                                 </li>
@@ -53,8 +53,8 @@
                         </div>
                     </div>
             </form>
-            <ul class="navbar-nav mx-auto float-lg-right">
-                <li class="nav-item"><a class="uva ml-2" href="{% url 'exchange:sellbooks' %}" style="display: block; padding: .5rem 1rem; float:left;">Sell a book</a></li>
+            <ul class="navbar-nav mx-auto mx-lg-0 float-lg-right">
+                <li class="nav-item"><a class="uva nav-link" href="{% url 'exchange:sellbooks' %}">Sell a book</a></li>
                 {% if user.cart %}<li class="nav-item"><a class="uva nav-link" href="{% url 'payments:cart' %}"><i class="fa fa-shopping-cart"></i> ({{ user.cart.productlisting_set.all|length }})</a></li>{% endif %}
                 {% block loginlink %}<li class="nav-item"><a class="uva nav-link" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
             </ul>
@@ -96,26 +96,32 @@
                                 var isbnList = document.getElementById("book_results");
                                 isbnList.innerHTML = ''; //remove old list elements
                                 for(var i = 0; i < searchResults['books'].length; i++){ //add new elements
-                                    var entry = document.createElement('div');
                                     var book = JSON.parse(searchResults['books'][i]);
 
+                                    var entry = document.createElement('div');
+                                    entry.classList = "py-2 search-entry";
+                                    entry.style.height = '65px';
+
                                     let row = document.createElement('div');
-                                    row.classList = 'row';
+                                    row.classList = 'row mx-0';
 
                                     let pictureCol = document.createElement('div');
-                                    pictureCol.classList = "col-1 my-auto";
+                                    pictureCol.classList = "col-1 my-auto mx-auto";
 
                                     let picture = document.createElement('img');
-                                    try {
-                                        //create valid json from the array
-                                        jsonURL = book['cover_photo_url'];
-                                        jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
-                                        jsonURL = jsonURL.replace(/'/g, "\"");
-                                        picture.src = JSON.parse(jsonURL)["smallThumbnail"];
-                                    } catch (e) {
-                                        picture.src = book['cover_photo_url'];
+                                    if (book['cover_photo_url'] != '') {
+                                        try {
+                                            //create valid json from the array
+                                            jsonURL = book['cover_photo_url'];
+                                            jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
+                                            jsonURL = jsonURL.replace(/'/g, "\"");
+                                            picture.src = JSON.parse(jsonURL)["smallThumbnail"];
+                                        } catch (e) {
+                                            picture.src = book['cover_photo_url'];
+                                        }
+                                        picture.classList = 'img-fluid img-thumbnail my-auto';
+                                        picture.style.maxHeight = '50px';
                                     }
-                                    picture.classList = 'img-fluid my-auto';
 
                                     let dataCol = document.createElement('div');
                                     dataCol.classList = "col-11";
@@ -139,7 +145,7 @@
                                     pictureCol.appendChild(picture);
                                     dataCol.appendChild(title);
                                     dataCol.appendChild(author);
-                                    dataCol.appendChild(isbnP);
+                                    //dataCol.appendChild(isbnP);
 
                                     row.appendChild(pictureCol);
                                     row.appendChild(dataCol);
@@ -167,20 +173,37 @@
                                 for(var i = 0; i < searchResults['courses'].length; i++){ //add new elements
                                     var entry = document.createElement('div');
 
+                                    entry.classList = "py-2 search-entry";
+                                    entry.style.height = '65px';
+
+                                    let row = document.createElement('div');
+                                    row.classList = 'row mx-0';
+
+                                    let pictureCol = document.createElement('div');
+                                    pictureCol.classList = "col-1 my-auto mx-auto";
+
+                                    let dataCol = document.createElement('div');
+                                    dataCol.classList = "col-11";
+
                                     let oneLineStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
 
                                     var class_info_p = document.createElement('p');
-                                    class_info_p.innerHTML = "<b>" + JSON.parse(searchResults['courses'][i])['class_info'] + "</b>";
+                                    class_info_p.innerHTML = "<b>" + JSON.parse(searchResults['courses'][i])['department'] + " " + JSON.parse(searchResults['courses'][i])['course_code'] + "</b>";
                                     class_info_p.classList = 'my-0';
                                     class_info_p.style = oneLineStyle;
 
                                     var professor_p = document.createElement('p');
-                                    professor_p.innerHTML = JSON.parse(searchResults['courses'][i])['professor'];
+                                    professor_p.innerHTML = "Section " + JSON.parse(searchResults['courses'][i])['section_number'] + " - " + JSON.parse(searchResults['courses'][i])['professor'];
                                     professor_p.classList = 'my-0';
                                     professor_p.style = oneLineStyle;
 
-                                    entry.appendChild(class_info_p);
-                                    entry.appendChild(professor_p);
+                                    dataCol.appendChild(class_info_p);
+                                    dataCol.appendChild(professor_p);
+
+                                    row.appendChild(pictureCol);
+                                    row.appendChild(dataCol);
+
+                                    entry.appendChild(row);
 
                                     isbnList.appendChild(entry);
                                     if (i >= course_display_count) break; // only show 5 results
