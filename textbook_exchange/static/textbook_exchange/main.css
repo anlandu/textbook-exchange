@@ -5,6 +5,7 @@ body {
     --uva-blue: rgb(35, 45, 75);
     --uva-orange: rgb(229, 114, 0);
     --uva-white: rgb(255, 255, 255);
+    --uva-darkblue: rgb(27, 34, 56);
 }
 
 div.container {
