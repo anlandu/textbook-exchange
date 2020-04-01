@@ -29,14 +29,13 @@
         </button>
         <!-- Logo -->
         <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">
-            <img src="{% static 'textbook_exchange/images/Logo/Logo7White.png' %}" alt="TextEx" style="height: 50px;"/>
-            <!-- 1, 2, 6 -->
+            <img src="{% static 'textbook_exchange/images/Logo3White.png' %}" alt="TextEx" style="height: 55px;"/>
         </a> 
         <!-- Login/Username -->
         <div class="collapse navbar-collapse text-center" id="navbarResponsive">
             <form class="my-2 my-lg-0 mx-auto" action="/buy/" style="width: 70%;" method="GET">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="search_text" style="border-radius: 0px;"
+                        <input type="text" class="form-control" id="search_text" style="border-radius: 0px; line-height:0.5;"
                             placeholder="Search for a book"
                             onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
                         <span class="input-group-append" type='submit' style="-webkit-appearance: none;">
