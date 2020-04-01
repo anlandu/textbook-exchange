@@ -9,6 +9,13 @@
             padding: 90px 25px;
             font-size: 3vw;
         }
+        .top {
+            width: 100%; 
+            margin-bottom: 20px; 
+        }
+        .showing-results {
+            font-style: italic;
+        }
     </style>
 </head>
 <div class="container">
@@ -66,11 +73,25 @@
                     This textbook does not exist. 
                 </h1>
             {% elif num_product_listings == 0 %}
+                <div class="top" style="display: inline-block;">
+                    <div class="showing-results">Showing results for  "{{ textbook.title }}"</div>
+                </div>
                 <h1 class="buy-error-msg">
                     There are no listings for this textbook. Sorry :(
                 </h1>
             {% elif num_product_listings > 0 %}
-                <h6 style="margin-bottom: 20px; font-style: italic;">Showing results for "{{ textbook.title }}"</h6>
+                <div class="top" style="display: inline-block;">
+                    <div class="showing-results">Showing results for "{{ textbook.title }}"</div>
+                    <div class="btn-group" style="float: right;">
+                        <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sort by:
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Price</a>
+                            <a class="dropdown-item" href="#">Date posted</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     {% for listing in product_listings %}
                         <div class="card" id="listing" style="width: 15rem; border-radius: 0px;" price="{{ listing.price }}" condition="{{ listing.condition }}">
