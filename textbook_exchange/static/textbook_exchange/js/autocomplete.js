@@ -7,7 +7,7 @@ function updateSearch(search){
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
                 if (xmlhttp.status == 200) {
-                    $('.dropdown-menu').show(); //open the dropdown menu
+                    $('#results_dropdown').show(); //open the dropdown menu
                     var searchResults = JSON.parse(xmlhttp.responseText);
                     //console.log(searchResults);
 
@@ -149,7 +149,7 @@ function updateSearch(search){
                 }
                 else {
                     console.error("Search autocomplete not availible");
-                    $('.dropdown-menu').hide();
+                    $('#results_dropdown').hide();
                 }
             }
         };
@@ -158,19 +158,19 @@ function updateSearch(search){
         xmlhttp.send();
     }
     else{
-        $('.dropdown-menu').hide();
+        $('#results_dropdown').hide();
     }
 };
 function hideAutocomplete() {
-    $('.dropdown-menu').hide();
+    $('#results_dropdown').hide();
 }
 function isbn13Format(isbn) {
     return isbn.substring(0, 3) + "-" + isbn.substring(3, 6) + "-" + isbn.substring(6, 9) + "-" + isbn.substring(9, 13);
 }
 
 $(document).on("click touchstart", function(e) {
-    var t = $(e.target).closest('.dropdown-menu');
-    var exceptDiv = $('.dropdown-menu');
+    var t = $(e.target).closest('#results_dropdown');
+    var exceptDiv = $('#results_dropdown');
     var s = $(e.target).closest('#search_text');
     var searchDiv = $('#search_text');
     if (!exceptDiv.is(t) && !searchDiv.is(s)) hideAutocomplete();
