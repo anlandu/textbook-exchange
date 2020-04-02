@@ -176,9 +176,3 @@ $(document).on("click touchstart", function(e) {
     if (!exceptDiv.is(t) && !searchDiv.is(s)) hideAutocomplete();
     else if (searchDiv.is(s)) updateSearch(searchDiv.val());
 });
-
-/*{% if search %}
-    updateSearch("{{ search }}");
-    document.getElementById("search_text").value = "{{ search }}";
-{% endif %}*/
-
