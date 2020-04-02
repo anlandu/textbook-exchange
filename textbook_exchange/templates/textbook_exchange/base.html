@@ -58,9 +58,9 @@
             </button>
             <!-- Logo -->
             <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">
-                <img src="{% static 'textbook_exchange/images/Logo3White.png' %}" alt="TextEx" style="height: 55px;"/>
+                <img src="{% static 'textbook_exchange/images/Logo3White.png' %}" alt="TextEx" style="height: 55px; margin-right: 25px;"/>
             </a> 
-            <!-- Login/Username -->
+            <!-- Search Bar -->
             <div class="collapse navbar-collapse text-center" id="navbarResponsive">
                 <form class="my-2 my-lg-0 mx-auto" action="/buy/" style="width: 70%;" method="GET">
                         <div class="input-group">
@@ -95,6 +95,7 @@
                             </div>
                         </div>
                 </form>
+                <!-- Sell, Cart, Login Buttons -->
                 <ul class="navbar-nav mx-auto mx-lg-0 float-lg-right">
                     <li class="nav-item"><a class="uva nav-link" href="{% url 'exchange:sellbooks' %}">Sell a book</a></li>
                     {% if user.cart %}<li class="nav-item"><a class="uva nav-link" href="{% url 'payments:cart' %}"><i class="fa fa-shopping-cart"></i> ({{ user.cart.productlisting_set.all|length }})</a></li>{% endif %}
