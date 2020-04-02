@@ -23,9 +23,7 @@
                     <a href="#" class="card-link">edit</a>
                 </div>
                 <div class="card-body">
-                    <p class="card-subtitle mb-2 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
-                    <p class="card-subtitle mt-3 mb-1">ISBN: {{ post.textbook.isbn }}</p>
-                    <p class="card-subtitle mb-1">Edition: {{ post.textbook.edition }}</p>
+                    <p class="card-subtitle mb-2 mb-4 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
                     <p class="card-subtitle mb-5">
                         Condition:
                         {% if post.condition == "likenew" %}

@@ -21,8 +21,4 @@ urlpatterns = [
     path('buy/<slug:isbn>/', views.BuyProductListings.as_view(), name='buy_product'), 
     path('buy/<slug:isbn>/<slug:slug>/', views.BuyProductListings.as_view(), name='buy_product'), 
     path('buy/<slug:isbn>/<slug:slug>/<slug:sort>/', views.BuyProductListings.as_view(), name='buy_product'), 
-
-    # https://stackoverflow.com/questions/14351048/django-optional-url-parameters
-    # path('buy/<slug:isbn>/<int:maxprice>/', views.BuyProductListings.as_view(), name='buy_product'),
-    # url(r'^list$', views.product_list),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

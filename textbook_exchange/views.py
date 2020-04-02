@@ -28,6 +28,7 @@ def landing(request):
     return render(request, 'textbook_exchange/landing.html', context=context)
 
 def error_404(request):
+    context['title'] ='404 Error: Not Found'
     return render(request, 'textbook_exchange/404_error.html')
 
 def buy_books(request):    
@@ -64,7 +65,7 @@ def sell_books(request):
                 
                 # finding textbook using isbn
                 isbn = cleaned_data['isbn']
-                txtbk = Textbook.objects.get(pk=isbn)
+                txtbk = Textbook.objects.get(pk=isbn) # takes in bookstore_isbn
                 listing_obj.textbook = txtbk
                 
                 listing_obj.save()
@@ -110,6 +111,18 @@ class AccountCurrentListings(ListView):
     context_object_name = 'current_posts'
     ordering = ['-published_date']
 
+    # def get_context_data(self, **kwargs):
+    #     context['textbook'] = Textbook.objects.get(isbn13=url_ibsn)
+    #     context['num_product_listings'] = Textbook.objects.get(isbn13=url_ibsn).productlisting_set.all().count()
+        
+    #     # cleaning author(s) list
+    #     author_clean = context['textbook'].author
+    #     author_clean = author_clean[1:-1]
+    #     author_clean = author_clean.replace("'", "")
+    #     context['author'] = author_clean
+
+    #     return context
+
     def get_queryset(self):
         queryset = super(AccountCurrentListings, self).get_queryset()
         queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
@@ -120,6 +133,8 @@ class AccountPastListings(ListView):
     template_name = "textbook_exchange/account_past_posts.html"
     context_object_name = 'past_posts'
     ordering = ['-published_date']
+
+    
 
     def get_queryset(self):
         queryset = super(AccountPastListings, self).get_queryset()
@@ -134,10 +149,16 @@ class BuyProductListings(ListView):
     def get_context_data(self, **kwargs):
         url_ibsn = self.kwargs['isbn']
         context = super().get_context_data(**kwargs)
+        context['title'] = self.kwargs['slug']
         context['textbook'] = Textbook.objects.get(isbn13=url_ibsn)
-        context['num_textbooks'] = len(Textbook.objects.filter(isbn13=url_ibsn))
         context['num_product_listings'] = Textbook.objects.get(isbn13=url_ibsn).productlisting_set.all().count()
         
+        # cleaning author(s) list
+        author_clean = context['textbook'].author
+        author_clean = author_clean[1:-1]
+        author_clean = author_clean.replace("'", "")
+        context['author'] = author_clean
+
         return context
 
     def get_queryset(self, *args, **kwargs):
@@ -152,6 +173,7 @@ class BuyProductListings(ListView):
             queryset = queryset.order_by(url_ordering)
         else:
             queryset = queryset.order_by('price')
+            
         return queryset
 
 def autocomplete(request):

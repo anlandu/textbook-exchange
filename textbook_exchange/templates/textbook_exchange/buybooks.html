@@ -80,15 +80,14 @@
                     <div class="showing-results">Showing results for "{{ textbook.title }}"</div>
                     <div class="btn-group" style="float: right;">
                         <!-- SORT BY -->
-                        <form method="GET">
-                            <button class="btn btn-light btn-sm dropdown-toggle"  id="selection-button"
-                            type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Sort by:
-                            </button>
+                        </button>
+                        <form method="GET">
                             <div class="dropdown-menu">
-                                <button class="dropdown-item" name="sort" id="sort" value="price">Price: Low to High</button>
-                                <button class="dropdown-item" name="sort" id="sort" value="-price">Price: High to Low</button>
-                                <button class="dropdown-item" name="sort" id="sort" value="-published_date">Most recent</button>
+                                <a href="?sort=price" class="dropdown-item">Price: Low to High</a>
+                                <a href="?sort=-price" class="dropdown-item">Price: High to Low</a>
+                                <a href="?sort=-published_date" class="dropdown-item">Most recent</a>
                             </div>
                         </form>
                     </div>
@@ -99,17 +98,14 @@
                             <div class="card-header">
                                 <img class="card-img-top" src="{{ listing.picture.url }}" alt="{{ listing.textbook.title }}" style="border-radius: 0px; margin-top: 10px;">
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author }}</h6>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    {{ author }}
                                 <h6 class="card-subtitle mb-3 text-muted">${{ listing.price }}</h6>
                             </div>
                             <div class="card-body">
                                 <h6 class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
                                 <button type="button" class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;">Message</button>
-
-                                <p class="card-subtitle mt-2 text-muted" style="font-size: smaller;">{{ listing.published_date }}</p>
-                                <p class="card-subtitle mb-4 mt-1 text-muted" style="font-size: smaller;">ISBN: {{ listing.textbook.isbn }}</p>
-                                
-                                <p class="card-subtitle mb-1">Edition: {{ listing.textbook.edition }}</p>
+                                <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">{{ listing.published_date }}</p>                                
                                 <p class="card-subtitle mb-3">
                                     Condition:
                                     {% if listing.condition == "likenew" %}
