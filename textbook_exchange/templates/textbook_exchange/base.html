@@ -41,6 +41,16 @@
             color: var(--uva-white);
             text-align: center;
         }
+
+        @media  only screen and (max-width: 770px){
+            .grid {
+                width: 90vw;
+            }
+            #content-wrap {
+                margin: 0;
+                width: 100vw;
+            }
+        }
     </style>
     {% if title %}
         <title>TextEx: {{ title }}</title>
