@@ -132,8 +132,8 @@ class BuyProductListings(ListView):
         url_ibsn = self.kwargs['isbn']
         context = super().get_context_data(**kwargs)
         context['title'] = self.kwargs['slug']
-        context['textbook'] = Textbook.objects.get(isbn13=url_ibsn)
-        context['num_product_listings'] = Textbook.objects.get(isbn13=url_ibsn).productlisting_set.all().count()
+        context['textbook'] = get_object_or_404(Textbook, isbn13=url_ibsn)
+        context['num_product_listings'] = len(get_object_or_404(Textbook, isbn13=url_ibsn).productlisting_set.all())
         
         context['ordering'] = self.request.GET.get('sort')
         if context['ordering'] == "price":
@@ -149,7 +149,7 @@ class BuyProductListings(ListView):
         url_ibsn = self.kwargs['isbn']
         url_ordering = self.request.GET.get('sort')
 
-        textbook = Textbook.objects.get(isbn13=url_ibsn)
+        textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
         queryset = product_listings.filter(hasBeenSoldFlag=False, cart=None)
 
