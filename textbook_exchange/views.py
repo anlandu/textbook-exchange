@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import itertools
 import functools
+from rest_framework import serializers
+
 
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook, Class
@@ -104,37 +106,18 @@ def account_page_past_posts(request):
     if not context['logged_in']:
         return HttpResponseRedirect('/404_error')
     return render(request, 'textbook_exchange/account_current_posts.html', context=context)
-    
+
 class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
     ordering = ['-published_date']
 
-    # def get_context_data(self, **kwargs):
-    #     context['textbook'] = Textbook.objects.get(isbn13=url_ibsn)
-    #     context['num_product_listings'] = Textbook.objects.get(isbn13=url_ibsn).productlisting_set.all().count()
-        
-    #     # cleaning author(s) list
-    #     author_clean = context['textbook'].author
-    #     author_clean = author_clean[1:-1]
-    #     author_clean = author_clean.replace("'", "")
-    #     context['author'] = author_clean
-
-    #     return context
-
-    def get_queryset(self):
-        queryset = super(AccountCurrentListings, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
-        return queryset
-
 class AccountPastListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_past_posts.html"
     context_object_name = 'past_posts'
     ordering = ['-published_date']
-
-    
 
     def get_queryset(self):
         queryset = super(AccountPastListings, self).get_queryset()
@@ -153,12 +136,6 @@ class BuyProductListings(ListView):
         context['textbook'] = Textbook.objects.get(isbn13=url_ibsn)
         context['num_product_listings'] = Textbook.objects.get(isbn13=url_ibsn).productlisting_set.all().count()
         
-        # cleaning author(s) list
-        author_clean = context['textbook'].author
-        author_clean = author_clean[1:-1]
-        author_clean = author_clean.replace("'", "")
-        context['author'] = author_clean
-
         return context
 
     def get_queryset(self, *args, **kwargs):
