@@ -136,7 +136,7 @@ class BuyProductListings(ListView):
         context['num_product_listings'] = len(get_object_or_404(Textbook, isbn13=url_ibsn).productlisting_set.all())
         
         context['ordering'] = self.request.GET.get('sort')
-        if context['ordering'] == "price":
+        if context['ordering'] == "-price":
             context['ordering'] = "Price High to Low"
         elif context['ordering'] == "-published_date":
             context['ordering'] = "Most Recent"
