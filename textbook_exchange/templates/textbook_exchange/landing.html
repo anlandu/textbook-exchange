@@ -2,8 +2,21 @@
 {% load static %} 
 
 {% block content %}
+<style>
+    .row {
+        padding-top: 100px;
+    }
+    @media only screen and (max-width: 770px){
+        .container {
+            margin-top: 0;
+        }
+        .row {
+            padding-top: 0;
+        }
+    }
+</style>
 
-<div class="row" style="padding-top: 100px;">
+<div class="row">
     <div class="col-sm-8">
         <h1 class="bigblurb">Welcome to UVA TextEx!</h1>
         <h3 class="smallblurb">Click one of these buttons to get started on your journey, or just start searching at the top! We offer every textbook available from the bookstore.</h3>

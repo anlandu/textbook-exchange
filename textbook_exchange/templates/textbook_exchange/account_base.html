@@ -3,15 +3,18 @@
 
 {% block content %}
 <style>
-	@media  only screen and (max-width: 770px){
-            .grid {
-                width: 90vw;
-            }
-            #content-wrap {
-                margin: 0;
-                width: 100vw;
-            }
+	#page-container {
+        min-width: 615px;
+    }
+	@media only screen and (max-width: 770px){
+        .grid {
+			width: 90vw;
         }
+        #content-wrap {
+            margin: 0;
+            width: 100vw;
+        }
+    }
 </style>
 <div class="container">
 	<div class="grid">
