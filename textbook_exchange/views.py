@@ -130,11 +130,9 @@ class BuyProductListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/buybooks.html"
     context_object_name = 'product_listings'
-    ordering = ['price']
     
     def get_context_data(self, **kwargs):
         url_ibsn = self.kwargs['isbn']
-
         context = super().get_context_data(**kwargs)
         context['textbook'] = Textbook.objects.get(isbn13=url_ibsn)
         context['num_textbooks'] = len(Textbook.objects.filter(isbn13=url_ibsn))
@@ -144,50 +142,17 @@ class BuyProductListings(ListView):
 
     def get_queryset(self, *args, **kwargs):
         url_ibsn = self.kwargs['isbn']
+        url_ordering = self.request.GET.get('sort')
 
         textbook = Textbook.objects.get(isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
         queryset = product_listings.filter(hasBeenSoldFlag=False, cart=None)
 
-        # url_maxprice = self.kwargs['maxprice']
-        # url_likenew = self.kwargs['likenew']
-        # url_verygood = self.kwargs['verygood']
-        # url_good = self.kwargs['good']
-        # url_acceptable = self.kwargs['acceptable']
-
-        url_maxprice = self.request.GET.get("maxprice")
-        url_likenew = self.request.GET.get('likenew')
-        url_verygood = self.request.GET.get('verygood')
-        url_good = self.request.GET.get('good')
-        url_acceptable = self.request.GET.get('acceptable')
-
-        # add filters
-        if url_maxprice is not None and url_maxprice > 0:
-            queryset.filter(price__lte=url_maxprice)
-            print("mxprice")
-        if url_likenew is not None and not url_likenew:
-            queryset.exclude(condition="likenew")
-            print("likenew")
-        if url_verygood is not None and not url_verygood:
-            queryset.exclude(condition="verygood")
-            print("vgood")
-        if url_good is not None and not url_good:
-            queryset.exclude(condition="good")
-            print("good")
-        if url_acceptable is not None and not url_acceptable:
-            queryset.exclude(condition="acceptable")
-            print("ok")
-        
+        if url_ordering is not None:
+            queryset = queryset.order_by(url_ordering)
+        else:
+            queryset = queryset.order_by('price')
         return queryset
-
-    # def get_queryset(self):
-    #     try: # textbook exists
-    #         textbook = Textbook.objects.get(isbn=self.kwargs['isbn'])
-    #         product_listings = textbook.productlisting_set.all()
-    #         queryset = product_listings.filter(hasBeenSoldFlag=False)
-    #         return queryset
-    #     except ObjectDoesNotExist: # textbook doesn't exist (invalid ibsn)
-    #         # display error msg on buybooks.html
 
 def autocomplete(request):
     search = request.GET['search']
