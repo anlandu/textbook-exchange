@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import itertools
 import functools
-from rest_framework import serializers
 
 
 from .forms import SellForm
@@ -30,7 +29,7 @@ def landing(request):
     return render(request, 'textbook_exchange/landing.html', context=context)
 
 def error_404(request):
-    context['title'] ='404 Error: Not Found'
+    # context['title'] ='404 Error: Not Found'
     return render(request, 'textbook_exchange/404_error.html')
 
 def buy_books(request):    
@@ -111,13 +110,13 @@ class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
-    ordering = ['-published_date']
+    ordering = ['published_date']
 
 class AccountPastListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_past_posts.html"
     context_object_name = 'past_posts'
-    ordering = ['-published_date']
+    ordering = ['published_date']
 
     def get_queryset(self):
         queryset = super(AccountPastListings, self).get_queryset()
