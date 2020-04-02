@@ -20,7 +20,8 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         
         <!--Autocomplete urls, cant access template tags from external js, so we pass the only one we used-->
-        <script>let auto_url = "{% url 'exchange:ajax_autocomplete' %}"</script>
+        <script>let auto_url = "{% url 'exchange:ajax_autocomplete' %}"
+        </script>
         <script src="{% static 'textbook_exchange/js/autocomplete.js' %}"></script>
 
         {% if title %}
@@ -78,9 +79,9 @@
                         </form>
                         <!-- Sell, Cart, Login Buttons -->
                         <ul class="navbar-nav mx-auto mx-lg-0 float-lg-right">
-                            <li class="nav-item"><a class="uva nav-link" href="{% url 'exchange:sellbooks' %}">Sell a book</a></li>
-                            {% if user.cart %}<li class="nav-item"><a class="uva nav-link" href="{% url 'payments:cart' %}"><i class="fa fa-shopping-cart"></i> ({{ user.cart.productlisting_set.all|length }})</a></li>{% endif %}
-                            {% block loginlink %}<li class="nav-item"><a class="uva nav-link" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
+                            <li class="nav-item uva-nav"><a class="uva nav-link" href="{% url 'exchange:sellbooks' %}">Sell a book</a></li>
+                            {% if user.cart %}<li class="nav-item uva-nav"><a class="uva nav-link" href="{% url 'payments:cart' %}"><i class="fa fa-shopping-cart"></i> ({{ user.cart.productlisting_set.all|length }})</a></li>{% endif %}
+                            {% block loginlink %}<li class="nav-item uva-nav"><a class="uva nav-link uva-nav" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
                         </ul>
                     </div>
                 </div>

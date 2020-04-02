@@ -5,7 +5,8 @@ body {
     --uva-blue: rgb(35, 45, 75);
     --uva-orange: rgb(229, 114, 0);
     --uva-white: rgb(255, 255, 255);
-    --uva-darkblue: rgb(27, 34, 56);
+    --uva-darkblue: rgb(20, 30, 60);
+    --uva-darkorange: rgb(235, 95, 12);
 }
 
 div.container {
@@ -21,6 +22,10 @@ div.container {
     color: var(--uva-white);
 }
 
+.uva-nav:hover {
+    background-color: var(--uva-darkblue);
+}
+
 .btn-uva {
     background-color: var(--uva-orange);
     color: var(--uva-white);
@@ -28,6 +33,7 @@ div.container {
 
 .btn-uva:hover {
     color: var(--uva-white);
+    background-color: var(--uva-darkorange);
 }
 
 .btn-uva-secondary {
@@ -37,6 +43,7 @@ div.container {
 
 .btn-uva-secondary:hover {
     color: var(--uva-white);
+    background-color: var(--uva-darkblue);
 }
 
 .li-bottom {
