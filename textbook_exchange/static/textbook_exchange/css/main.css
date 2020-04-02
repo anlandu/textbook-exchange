@@ -1,18 +1,14 @@
-body {
-    border-radius: 0;
-}
 :root {
     --uva-blue: rgb(35, 45, 75);
     --uva-orange: rgb(229, 114, 0);
     --uva-white: rgb(255, 255, 255);
+    --uva-lightgray: rgb(241, 241, 239);
+    --uva-mediumgray: rgb(218, 218, 218);
+    --uva-textgray: rgb(102, 102, 102);
     --uva-darkblue: rgb(20, 30, 60);
     --uva-darkorange: rgb(235, 95, 12);
 }
-
-div.container {
-    margin-top: 50px;
-}
-
+/* UVA THEMING */
 .uva {
     background-color: var(--uva-blue);
     color: var(--uva-white);
@@ -23,7 +19,7 @@ div.container {
 }
 
 .uva-nav:hover {
-    background-color: var(--uva-darkblue);
+    color: var(--uva-mediumgray);
 }
 
 .btn-uva {
@@ -46,11 +42,17 @@ div.container {
     background-color: var(--uva-darkblue);
 }
 
+/* Standard HTML Tag Theming */
+
+div.container {
+    margin-top: 50px;
+}
+
 .li-bottom {
     padding-bottom: 30em;
 }
 
-.form-control, .btn, .card {
+body, .form-control, .btn, .card {
     border-radius: 0;
 }
 
@@ -73,12 +75,12 @@ div.container {
     padding-bottom: 7em; /* Footer height */
 }
 
-#footer {
+footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     /* background-color: rgb(25, 35, 55); */
-    background-color: var(--uva-darkblue);
+    background-color: var(--uva-blue);
     color: var(--uva-white);
     text-align: center;
 }
