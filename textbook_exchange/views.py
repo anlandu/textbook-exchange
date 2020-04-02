@@ -66,7 +66,7 @@ def sell_books(request):
                 
                 # finding textbook using isbn
                 isbn = cleaned_data['isbn']
-                txtbk = Textbook.objects.get(pk=isbn) # takes in bookstore_isbn
+                txtbk = get_object_or_404(Textbook, isbn13=isbn) # takes in bookstore_isbn
                 listing_obj.textbook = txtbk
                 
                 listing_obj.save()
