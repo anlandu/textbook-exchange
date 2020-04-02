@@ -138,12 +138,10 @@ class BuyProductListings(ListView):
         context['ordering'] = self.request.GET.get('sort')
         if context['ordering'] == "price":
             context['ordering'] = "Price High to Low"
-        elif context['ordering'] == "-price":
-            context['ordering'] = "Price Low to High"
         elif context['ordering'] == "-published_date":
             context['ordering'] = "Most Recent"
         else:
-            context['ordering'] = ""
+            context['ordering'] = "Price Low to High"
 
         return context
 
