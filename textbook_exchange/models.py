@@ -71,7 +71,7 @@ class Textbook(models.Model):
 
     @property
     def author_clean(self):
-        author = self.author[1:-1].replace("'", "")
+        author = self.author[1:-1].replace("'", "") # removes the brackets and apostrophes from author field
         return author
 
     @classmethod
