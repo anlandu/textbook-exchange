@@ -24,7 +24,7 @@ with open(abs_file_path, encoding='utf-8') as data_file:
     json_data = json.loads(data_file.read())
 
     for book_data in json_data:
-        if "**" not in book_data['Title'] and "(eBook" not in book_data['Title']:
+        if "**" not in book_data['Title'] and "(eBook" not in book_data['Title'] and "Access Card" not in book_data['Title'] and "access code" not in book_data['Title'].lower():
             try:
                 book_obj = Textbook.objects.get(bookstore_isbn=book_data['ISBN'])
                 setattr(book_obj, "isbn13", book_data['ISBN13'])
