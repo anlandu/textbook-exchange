@@ -135,6 +135,16 @@ class BuyProductListings(ListView):
         context['textbook'] = Textbook.objects.get(isbn13=url_ibsn)
         context['num_product_listings'] = Textbook.objects.get(isbn13=url_ibsn).productlisting_set.all().count()
         
+        context['ordering'] = self.request.GET.get('sort')
+        if context['ordering'] == "price":
+            context['ordering'] = "Price High to Low"
+        elif context['ordering'] == "-price":
+            context['ordering'] = "Price Low to High"
+        elif context['ordering'] == "-published_date":
+            context['ordering'] = "Most Recent"
+        else:
+            context['ordering'] = ""
+
         return context
 
     def get_queryset(self, *args, **kwargs):
