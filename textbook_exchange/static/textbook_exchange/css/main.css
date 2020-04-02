@@ -56,3 +56,20 @@ div.container {
 .search-entry:hover {
     background-color: lightgray;
 }
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+#content-wrap {
+    padding-bottom: 7em; /* Footer height */
+}
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* background-color: rgb(25, 35, 55); */
+    background-color: var(--uva-darkblue);
+    color: var(--uva-white);
+    text-align: center;
+}
