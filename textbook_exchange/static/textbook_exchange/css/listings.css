@@ -9,7 +9,6 @@
 }
 .buy-error-msg {
 	height: 287px;
-    text-align: center;
     padding: 90px 25px;
     font-size: 3vw;
 }
@@ -36,7 +35,6 @@
 	height: fit-content;
 }
 .sidebar-align {
-  display: inline;
   list-style-type:none;
 }
 .side-btn {
