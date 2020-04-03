@@ -50,6 +50,9 @@ body {
     color: var(--uva-white);
     background-color: var(--uva-darkblue);
 }
+#results_dropdown {
+    cursor: pointer;
+}
 
 /* Standard HTML Tag Theming */
 
