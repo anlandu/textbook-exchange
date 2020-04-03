@@ -2,9 +2,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import itertools
 import functools
+
 
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook, Class
@@ -26,16 +28,24 @@ def landing(request):
     context=get_logged_in(request)
     return render(request, 'textbook_exchange/landing.html', context=context)
 
+def faq(request):
+    context = {}
+    context['title'] ='FAQ'
+    return render(request, 'textbook_exchange/faq.html', context=context)
+
 def error_404(request):
+    context = {}
+    context['title'] ='404 Error: Not Found'
     return render(request, 'textbook_exchange/404_error.html')
 
 def buy_books(request):    
     context = get_logged_in(request)
     context['title'] ='Buy Books'
-    if (request.GET.get("search")):
+    if request.GET.get("search"):
         context['search'] = request.GET.get('search')
     return render(request, 'textbook_exchange/buybooks.html', context=context)
 
+@login_required(redirect_field_name='my_redirect_field', login_url="/accounts/google/login/")
 def sell_books(request):
     context = get_logged_in(request) 
     context['title'] = 'Sell Books'
@@ -62,7 +72,7 @@ def sell_books(request):
                 
                 # finding textbook using isbn
                 isbn = cleaned_data['isbn']
-                txtbk = Textbook.objects.get(pk=isbn)
+                txtbk = get_object_or_404(Textbook, isbn13=isbn) # takes in bookstore_isbn
                 listing_obj.textbook = txtbk
                 
                 listing_obj.save()
@@ -101,23 +111,18 @@ def account_page_past_posts(request):
     if not context['logged_in']:
         return HttpResponseRedirect('/404_error')
     return render(request, 'textbook_exchange/account_current_posts.html', context=context)
-    
+
 class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
-    ordering = ['-published_date']
-
-    def get_queryset(self):
-        queryset = super(AccountCurrentListings, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
-        return queryset
+    ordering = ['published_date']
 
 class AccountPastListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_past_posts.html"
     context_object_name = 'past_posts'
-    ordering = ['-published_date']
+    ordering = ['published_date']
 
     def get_queryset(self):
         queryset = super(AccountPastListings, self).get_queryset()
@@ -128,81 +133,71 @@ class BuyProductListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/buybooks.html"
     context_object_name = 'product_listings'
-    ordering = ['price']
     
     def get_context_data(self, **kwargs):
         url_ibsn = self.kwargs['isbn']
-
         context = super().get_context_data(**kwargs)
-        context['textbook'] = Textbook.objects.get(isbn13=url_ibsn)
-        context['num_textbooks'] = len(Textbook.objects.filter(isbn13=url_ibsn))
-        context['num_product_listings'] = Textbook.objects.get(isbn13=url_ibsn).productlisting_set.all().count()
+        context['title'] = self.kwargs['slug']
+        context['textbook'] = get_object_or_404(Textbook, isbn13=url_ibsn)
+        context['num_product_listings'] = len(get_object_or_404(Textbook, isbn13=url_ibsn).productlisting_set.all())
         
+        context['ordering'] = self.request.GET.get('sort')
+        if context['ordering'] == "-price":
+            context['ordering'] = "Price High to Low"
+        elif context['ordering'] == "-published_date":
+            context['ordering'] = "Most Recent"
+        else:
+            context['ordering'] = "Price Low to High"
+
         return context
 
     def get_queryset(self, *args, **kwargs):
         url_ibsn = self.kwargs['isbn']
+        url_ordering = self.request.GET.get('sort')
 
-        textbook = Textbook.objects.get(isbn13=url_ibsn)
+        textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
         queryset = product_listings.filter(hasBeenSoldFlag=False, cart=None)
 
-        # url_maxprice = self.kwargs['maxprice']
-        # url_likenew = self.kwargs['likenew']
-        # url_verygood = self.kwargs['verygood']
-        # url_good = self.kwargs['good']
-        # url_acceptable = self.kwargs['acceptable']
-
-        url_maxprice = self.request.GET.get("maxprice")
-        url_likenew = self.request.GET.get('likenew')
-        url_verygood = self.request.GET.get('verygood')
-        url_good = self.request.GET.get('good')
-        url_acceptable = self.request.GET.get('acceptable')
-
-        # add filters
-        if url_maxprice is not None and url_maxprice > 0:
-            queryset.filter(price__lte=url_maxprice)
-            print("mxprice")
-        if url_likenew is not None and not url_likenew:
-            queryset.exclude(condition="likenew")
-            print("likenew")
-        if url_verygood is not None and not url_verygood:
-            queryset.exclude(condition="verygood")
-            print("vgood")
-        if url_good is not None and not url_good:
-            queryset.exclude(condition="good")
-            print("good")
-        if url_acceptable is not None and not url_acceptable:
-            queryset.exclude(condition="acceptable")
-            print("ok")
-        
+        if url_ordering is not None:
+            queryset = queryset.order_by(url_ordering)
+        else:
+            queryset = queryset.order_by('price')
+            
         return queryset
-
-    # def get_queryset(self):
-    #     try: # textbook exists
-    #         textbook = Textbook.objects.get(isbn=self.kwargs['isbn'])
-    #         product_listings = textbook.productlisting_set.all()
-    #         queryset = product_listings.filter(hasBeenSoldFlag=False)
-    #         return queryset
-    #     except ObjectDoesNotExist: # textbook doesn't exist (invalid ibsn)
-    #         # display error msg on buybooks.html
 
 def autocomplete(request):
     search = request.GET['search']
 
     #these will search in our models for matches
+    b_starts_with = Textbook.objects.filter(title__istartswith=search) # first we want searches that start with the search term, then we want everything else
     books = Textbook.objects.filter(title__icontains=search) | Textbook.objects.filter(author__icontains=search) | Textbook.objects.filter(isbn13__icontains=search) | Textbook.objects.filter(isbn10__icontains=search) | Textbook.objects.filter(bookstore_isbn__icontains=search) # TODO: Add other methods to search
     courses = Class.objects.filter(class_info__icontains=search.replace(" ", ""))
     
     valid_books = []
     valid_courses = []
 
+    # add books that start with the search query first, up to a max of 6 books
+    # we only display up to 6 search items, so dont send more than we can view, thats a waste of data
+    for book in list(b_starts_with):
+        if len(valid_books) >= 6:
+            break
+        valid_books.append(book.toJSON())
+
+    # if we need more books than just ones that start with the query, we first need to filter out any books that have already been added to the return list
+    if len(valid_books) < 6:
+            books = books.difference(b_starts_with)
+
     for book in list(books):
+        if len(valid_books) >= 6:
+            break
         valid_books.append(book.toJSON())
 
     for course in list(courses):
+        if len(valid_courses) >= 6:
+            break
         valid_courses.append(course.toJSON())
-
+        
     data = {
         'search' : search,
         'books' : valid_books,

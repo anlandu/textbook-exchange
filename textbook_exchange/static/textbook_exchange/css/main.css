@@ -1,0 +1,105 @@
+body {
+    font-family: 'Raleway' !important;
+}
+.text-font {
+    font-family: 'Lato' !important;
+}
+.p-font {
+    font-family: 'Nunito Sans', sans-serif;
+}
+:root {
+    --uva-blue: rgb(32, 44, 80);
+    --uva-orange: rgb(245, 121, 0);
+    --uva-white: rgb(255, 255, 255);
+    --uva-lightgray: rgb(241, 241, 239);
+    --uva-mediumgray: rgb(218, 218, 218);
+    --uva-textgray: rgb(102, 102, 102);
+    --uva-darkblue: rgb(57, 73, 121);
+    --uva-darkorange: rgb(255,139,25);
+}
+/* UVA THEMING */
+.uva {
+    background-color: var(--uva-blue);
+    color: var(--uva-white);
+}
+
+.uva:hover {
+    color: var(--uva-white);
+}
+
+.uva-nav:hover {
+    color: var(--uva-mediumgray);
+}
+
+.btn-uva {
+    background-color: var(--uva-orange);
+    color: var(--uva-white);
+}
+
+.btn-uva:hover {
+    color: var(--uva-white);
+    background-color: var(--uva-darkorange);
+}
+
+.btn-uva-secondary {
+    background-color: var(--uva-blue);
+    color: var(--uva-white);
+}
+
+.btn-uva-secondary:hover {
+    color: var(--uva-white);
+    background-color: var(--uva-darkblue);
+}
+.cursor-pointer, #cursor-pointer {
+    cursor: pointer;
+}
+
+/* Standard HTML Tag Theming */
+
+div.container {
+    margin-top: 50px;
+}
+
+.li-bottom {
+    padding-bottom: 30em;
+}
+
+body, .form-control, .btn, .card {
+    border-radius: 0;
+}
+
+.grid {
+    margin: 1em auto;
+    display: grid;
+    grid-template-columns: minmax(150px, 190px) 1fr;
+}
+
+.search-entry:hover {
+    background-color: lightgray;
+}
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+#content-wrap {
+    padding-bottom: 7em; /* Footer height */
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* background-color: rgb(25, 35, 55); */
+    background-color: var(--uva-blue);
+    color: var(--uva-white);
+    text-align: center;
+}
+
+.padding-top50 {
+    padding-top: 50px;
+}
+.padding-top30 {
+    padding-top: 30px;
+}

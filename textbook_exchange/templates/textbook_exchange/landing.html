@@ -2,25 +2,26 @@
 {% load static %} 
 
 {% block content %}
+<style>
+    @media only screen and (max-width: 770px){
+        .container {
+            margin-top: 0;
+        }
+    }
+</style>
 
-<div class="row" style="margin-top: 100px;">
+<div class="row padding-top50">
     <div class="col-sm-8">
-        <h1 class="bigblurb">Landing page!</h1>
-        <h3 class="smallblurb">This is the awesome textbook exchange site where you can buy or sell your textbooks to 
-                other UVA students!</h3>
+        <h1 class="mb-5">Welcome to UVA TextEx!</h1>
+        <h4 class="p-font" style="width: 75%">
+            Click one of these buttons to get started on your journey, or just start searching at the top!
+            <br/>
+            We offer every physical textbook needed for this semester's classes!
+        </h4>
     </div>
     <div class="col-sm-4">
-        <p class="btn btn-uva btn-lg d-flex text-center" style="margin: 5px 10%;">
-            <a class="mx-auto btn-uva"  href="{% url 'exchange:buybooks' %}">
-                Buy Books
-            </a>
-        </p>
-        <p class="btn btn-uva-secondary btn-lg d-flex text-center" style="margin: 5px 10%;">
-            <a class="mx-auto btn-uva-secondary"  href="{% url 'exchange:sellbooks' %}">
-                Sell Books 
-            </a>
-        </p>
+        <div style="margin: 50px 10%;"><a class="btn btn-uva btn-lg d-flex justify-content-center" style="border-radius: 0px;" href="{% url 'exchange:buybooks' %}">Buy Books</a></div>
+        <div style="margin: 0px 10%;"><a class="btn btn-uva-secondary btn-lg d-flex justify-content-center" style="border-radius: 0px;" href="{% url 'exchange:sellbooks' %}">Sell Books</a></div>
     </div>
-    
- </div>
- {% endblock %}
+</div>
+{% endblock %}

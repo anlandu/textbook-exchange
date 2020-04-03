@@ -2,25 +2,67 @@
 
 {% block content %}
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
-    crossorigin="anonymous">
     <style>
+        #page-container {
+            min-width: 530px;
+        }
         .buy-error-msg {
             height: 287px;
             text-align: center;
             padding: 90px 25px;
             font-size: 3vw;
         }
+        .top {
+            width: 100%; 
+            margin-bottom: 20px; 
+        }
+        .showing-results {
+            font-style: italic;
+        }
     </style>
 </head>
 <div class="container">
     <div class="row d-lg-none">
         <div class="input-group">
-            <input type="text" class="form-control" id="search_text"
+            <!-- <input type="text" class="form-control" id="search_text"
                 placeholder="Search for a book"
                 onkeyup="updateSearch(this.value)" autofocus>
                 <span class="input-group-append"><button type="button" class="btn btn-uva"><i class="fa fa-search"></i></button></span>
+            
+            <form action="/buy/" style="width: 100%; margin: 0 15px 15px 15px;" method="GET">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search_text" style="border-radius: 0px; line-height:0.5;"
+                        placeholder="Search for a book"
+                        onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
+                    <span class="input-group-append" type='submit' style="-webkit-appearance: none;">
+                        <button type="submit" class="btn btn-uva">
+                            <i class="fa fa-search my-auto"></i>
+                        </button>
+                    </span>
+                    <div class="input-group-append" style="width: 100%; border-radius: 0%;">
+                        <ul style="width:100%; border-radius: 0%;" id="results_dropdown cursor-pointer" class="dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
+                            <li id="results_books">
+                                <div id="book_results"></div>
+                            </li>
+                            <li id="results_courses">
+                                <div id="course_results"></div>
+                            </li>
+                            <li id="noresults">
+                                <div>
+                                    <div class="py-2 search-entry" style="height: 65px;">
+                                        <div class="row px-0 mx-0 pl-2" style="height: 100%;">
+                                            <div class="col-12 align-self-center" style="height: 100%; display: flex; align-items: center;">
+                                                <p class="my-auto"><b><i>No Results Found</i></b></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        -->
         </div>
     </div>
     <div class="grid">
@@ -63,34 +105,44 @@
 
         <!-- MAIN -->
         <div class="col-9-10 right-container" style="padding-left: 75px;">
-            <!-- LISTINGS -->            
-            {% if num_textbooks == 0 %}
-                <h1 class="buy-error-msg">
-                    This textbook does not exist. 
-                </h1>
-            {% elif num_product_listings == 0 %}
+            <!-- LISTINGS -->
+            {% if num_product_listings == 0 %}
+                <div class="top" style="display: inline-block;">
+                    <div class="showing-results">Showing results for  "{{ textbook.title }}"</div>
+                </div>
                 <h1 class="buy-error-msg">
                     There are no listings for this textbook. Sorry :(
                 </h1>
             {% elif num_product_listings > 0 %}
-                <h6 style="margin-bottom: 20px; font-style: italic;">Showing results for "{{ textbook.title }}"</h6>
+                <div class="top" style="display: inline-block;">
+                    <div class="showing-results">Showing results for "{{ textbook.title }}"</div>
+                    <div class="btn-group" style="float: right; margin-top: 15px;">
+                        <!-- SORT BY -->
+                        <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Sort by: {{ ordering }}
+                        </button>
+                        <form method="GET">
+                            <div class="dropdown-menu">
+                                <a href="?sort=price" class="dropdown-item">Price: Low to High</a>
+                                <a href="?sort=-price" class="dropdown-item">Price: High to Low</a>
+                                <a href="?sort=-published_date" class="dropdown-item">Most recent</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <div class="row">
                     {% for listing in product_listings %}
-                        <div class="card" id="listing" style="width: 15rem; border-radius: 0px;" price="{{ listing.price }}" condition="{{ listing.condition }}">
+                        <div class="card text-font" id="listing" style="width: 15rem; border-radius: 0px;" price="{{ listing.price }}" condition="{{ listing.condition }}">
                             <div class="card-header">
                                 <img class="card-img-top" src="{{ listing.picture.url }}" alt="{{ listing.textbook.title }}" style="border-radius: 0px; margin-top: 10px;">
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author }}</h6>
-                                <h6 class="card-subtitle mb-3 text-muted">${{ listing.price }}</h6>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author_clean }}</h6> 
+                                <h5 class="card-subtitle mt-4 mb-2">${{ listing.price }}</h5>
                             </div>
                             <div class="card-body">
                                 <h6 class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
                                 <button type="button" class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;">Message</button>
-
-                                <p class="card-subtitle mt-2 text-muted" style="font-size: smaller;">{{ listing.published_date }}</p>
-                                <p class="card-subtitle mb-4 mt-1 text-muted" style="font-size: smaller;">ISBN: {{ listing.textbook.isbn }}</p>
-                                
-                                <p class="card-subtitle mb-1">Edition: {{ listing.textbook.edition }}</p>
+                                <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">{{ listing.published_date }}</p>                                
                                 <p class="card-subtitle mb-3">
                                     Condition:
                                     {% if listing.condition == "likenew" %}
@@ -104,7 +156,8 @@
                                     {% endif %}
                                 </p>
                                 <p class="card-text mb-4">{{ listing.comments }}</p>
-                                <a href="javascript:addtoCart({{ listing.id }});" class="btn btn-primary" style="margin: auto; width: 55%; display: block; border-radius: 0px;">
+                                <a href="javascript:addtoCart({{ listing.id }});" id="add{{listing.id}}"
+                                class="btn btn-primary" style="margin: auto; width: 55%; display: block; border-radius: 0px;">
                                     Add to Cart
                                 </a>
                             </div>
@@ -122,6 +175,11 @@
 </div>
 
 <script>
+{% if search %}
+    //updateSearch("{{ search }}");
+    document.getElementById("search_text").value = "{{ search }}";
+{% endif %}
+
 function addtoCart(id) {
     console.log("add to cart working");
     $.ajax({
@@ -133,7 +191,7 @@ function addtoCart(id) {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(json) {
-            window.location.href = {% url 'payments:cart' %};
+            window.location.href = "{% url 'payments:cart' %}";
         },
         error: function(xhr, errmsg, err) {
             console.log("error");
@@ -178,6 +236,7 @@ function applyClick() {
     });
 
 };
+
 </script>
 
 {% endblock content %}

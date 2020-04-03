@@ -1,0 +1,45 @@
+{% extends 'textbook_exchange/account_base.html' %}
+{% load static %} 
+
+{% block content %}
+<style>
+    h4, p {
+        max-width: 600px;
+    }
+    @media only screen and (max-width: 770px){
+        .container {
+            margin-top: 0;
+        }
+    }
+</style>
+<div class="container padding-top30">
+    <h1 class="mb-5">FAQ</h1>
+    <br/>
+    <div>
+        <h4 class="mb-4">Why won't my textbook appear in the searchbar?</h3>
+        <p class="mb-5">
+            To stay up-to-date and help students quickly find the textbooks they need,
+            our site only sells textbooks taught at UVA for the current semester.
+            If your textbook does not appear in the searchbar, it may not be used in this semester's classes.
+        </p>
+        <br/>
+    </div>
+    <div>
+        <h4 class="mb-4">I just saw a book in the buy page! Where did it go?</h3>
+        <p class="mb-5">
+            When someone adds a book to their cart, it is removed from the available book listings. Someone 
+            else might have bought it first. Sorry!
+        </p>
+        <br/>
+    </div>
+    <div>
+        <h4 class="mb-4">The cart does not include shipping. How would I receive the book?</h3>
+        <p class="mb-5">
+            Based off comprehensive feedback, we found that most UVA students preferred to meet with 
+            the other student face to face when buying and selling the textbook. 
+            Just message the seller to decide when and where to meet to exchange the textbook!
+        </p>
+        <br/>
+    </div>
+</div>
+{% endblock %}
