@@ -18,6 +18,11 @@
         .showing-results {
             font-style: italic;
         }
+        @media only screen and (max-width: 767px){
+            .sidefilter-padding {
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <div class="container">
@@ -30,7 +35,7 @@
         <!-- FILTERS -->
         <div class="col-1-10">
             <div id="searchFilters" style="width: max-content;">
-                <div class="card card-body mx-auto" style="margin-top: 0px;">
+                <div class="card card-body mx-auto sidefilter-padding" style="margin-top: 0px;">
                     <div class="row mx-auto" style="padding: 10px;">
                         <form method="GET">
                                 <h5>Condition</h5>
