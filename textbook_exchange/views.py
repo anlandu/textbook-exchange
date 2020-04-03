@@ -28,8 +28,14 @@ def landing(request):
     context=get_logged_in(request)
     return render(request, 'textbook_exchange/landing.html', context=context)
 
+def faq(request):
+    context = {}
+    context['title'] ='FAQ'
+    return render(request, 'textbook_exchange/faq.html', context=context)
+
 def error_404(request):
-    # context['title'] ='404 Error: Not Found'
+    context = {}
+    context['title'] ='404 Error: Not Found'
     return render(request, 'textbook_exchange/404_error.html')
 
 def buy_books(request):    

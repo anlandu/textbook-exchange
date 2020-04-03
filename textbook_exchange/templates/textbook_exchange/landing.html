@@ -3,9 +3,9 @@
 
 {% block content %}
 <style>
-    /*.row {
-        padding-top: 100px;
-    }*/
+    .row {
+        margin-top: 80px;
+    }
     @media only screen and (max-width: 770px){
         .container {
             margin-top: 0;
@@ -18,14 +18,16 @@
 
 <div class="row">
     <div class="col-sm-8">
-        <h1 class="bigblurb">Welcome to UVA TextEx!</h1>
-        <h3 class="smallblurb">Click one of these buttons to get started on your journey, or just start searching at the top!</h3>
-        <h3 class="smallblurb">We offer every physical textbook needed for this semester's classes!</h3>
+        <h1 class="mb-5">Welcome to UVA TextEx!</h1>
+        <h4 class="p-font" style="width: 75%">
+            Click one of these buttons to get started on your journey, or just start searching at the top!
+            <br/>
+            We offer every physical textbook needed for this semester's classes!
+        </h4>
     </div>
     <div class="col-sm-4">
-        <div style="margin: 5px 10%;"><a class="btn btn-uva btn-lg d-flex justify-content-center" style="border-radius: 0px;" href="{% url 'exchange:buybooks' %}">Buy Books</a></div>
-        <div style="margin: 5px 10%;"><a class="btn btn-uva-secondary btn-lg d-flex justify-content-center" style="border-radius: 0px;" href="{% url 'exchange:sellbooks' %}">Sell Books</a></div>
+        <div style="margin: 50px 10%;"><a class="btn btn-uva btn-lg d-flex justify-content-center" style="border-radius: 0px;" href="{% url 'exchange:buybooks' %}">Buy Books</a></div>
+        <div style="margin: 0px 10%;"><a class="btn btn-uva-secondary btn-lg d-flex justify-content-center" style="border-radius: 0px;" href="{% url 'exchange:sellbooks' %}">Sell Books</a></div>
     </div>
-    
- </div>
- {% endblock %}
+</div>
+{% endblock %}

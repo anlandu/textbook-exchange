@@ -11,6 +11,7 @@ app_name = "exchange"
 
 urlpatterns = [
     path('', views.landing, name='landing'),
+    path('faq', views.faq, name='faq'),
     path('404_error', views.error_404, name='404_error'),
     path('sell/', views.sell_books, name='sellbooks'),
     path('accounts/', views.AccountCurrentListings.as_view(), name='account_page'),

@@ -5,6 +5,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+        <!-- Font: Raleway, Lato, Nunito Sans -->
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Lato&family=Raleway&display=swap" rel="stylesheet">
+
         <!-- My CSS -->
         <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/main.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/listings.css' %}">
@@ -82,7 +85,10 @@
 
             <!-- FOOTER -->
             <footer>
-                <p style="margin-top: 1rem; margin-bottom: 1rem;">© 2020 UVA TextEx &bull; <a href="#" class="uva uva-nav">FAQ</a></p>
+                <p style="margin-top: 1rem; margin-bottom: 1rem;">
+                    © 2020 UVA TextEx &bull; 
+                    <a href="{% url 'exchange:faq' %}" class="uva uva-nav">FAQ</a>
+                </p>
             </footer>
         </div>
     </body>

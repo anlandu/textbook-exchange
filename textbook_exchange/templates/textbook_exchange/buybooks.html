@@ -132,7 +132,7 @@
                 </div>
                 <div class="row">
                     {% for listing in product_listings %}
-                        <div class="card" id="listing" style="width: 15rem; border-radius: 0px;" price="{{ listing.price }}" condition="{{ listing.condition }}">
+                        <div class="card text-font" id="listing" style="width: 15rem; border-radius: 0px;" price="{{ listing.price }}" condition="{{ listing.condition }}">
                             <div class="card-header">
                                 <img class="card-img-top" src="{{ listing.picture.url }}" alt="{{ listing.textbook.title }}" style="border-radius: 0px; margin-top: 10px;">
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>

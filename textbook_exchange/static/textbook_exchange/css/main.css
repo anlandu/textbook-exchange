@@ -1,12 +1,21 @@
+body {
+    font-family: 'Raleway' !important;
+}
+.text-font {
+    font-family: 'Lato' !important;
+}
+.p-font {
+    font-family: 'Nunito Sans', sans-serif;
+}
 :root {
-    --uva-blue: rgb(35, 45, 75);
-    --uva-orange: rgb(229, 114, 0);
+    --uva-blue: rgb(32, 44, 80);
+    --uva-orange: rgb(245, 121, 0);
     --uva-white: rgb(255, 255, 255);
     --uva-lightgray: rgb(241, 241, 239);
     --uva-mediumgray: rgb(218, 218, 218);
     --uva-textgray: rgb(102, 102, 102);
-    --uva-darkblue: rgb(20, 30, 60);
-    --uva-darkorange: rgb(235, 95, 12);
+    --uva-darkblue: rgb(57, 73, 121);
+    --uva-darkorange: rgb(255,139,25);
 }
 /* UVA THEMING */
 .uva {
