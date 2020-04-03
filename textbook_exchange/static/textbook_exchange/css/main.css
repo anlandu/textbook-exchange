@@ -96,3 +96,10 @@ footer {
     color: var(--uva-white);
     text-align: center;
 }
+
+.padding-top50 {
+    padding-top: 50px;
+}
+.padding-top30 {
+    padding-top: 30px;
+}
