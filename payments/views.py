@@ -26,6 +26,7 @@ def get_cart(request):
 
 def cart(request):
     context=get_cart(request)
+    context['title'] = "Cart"
     if request.method == "GET":
         if len(request.user.cart.productlisting_set.all()) == 0:
             return render(request, 'payments/empty_cart.html')
