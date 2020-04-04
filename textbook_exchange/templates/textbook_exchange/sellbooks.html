@@ -7,12 +7,6 @@
         <h1 class="text-center" style="padding: 150px 0;">Your post was successfully posted!</h1>
     {% else %}
 
-    {% if not_logged_in %}
-    <script>
-        alert('Please log in');
-    </script>
-    {% endif %}
-
     <div class="row">
         <div class="d-flex align-items-center justify-content-center">
             <div class="col-xs-12 text-center">
@@ -154,16 +148,32 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="searchModalLongTitle">Search for a textbook</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearSelection()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input class="form-control" type="text" placeholder="Search by ISBN, title, author or class code" aria-label="Search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="sell_search_text" style="background-clip: unset;" placeholder="Search for a book" onkeyup="sellUpdateSearch(this.value)" autofocus autocomplete="off">
+                        <div class="input-group-append" style="width: 100%;">
+                            <ul style="width:100%;" id="sell_results_dropdown" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
+                                <li id="sell_results_books"><div id="sell_book_results"></div></li>
+                                <li id="sell_noresults">
+                                    <div class="py-2" style="height: 65px;">
+                                        <div class="row px-0 mx-0 pl-2" style="height: 100%;">
+                                            <div class="col-12 align-self-center" style="height: 100%; display: flex; align-items: center;">
+                                                <p class="my-auto"><b><i>No Results Found</i></b></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="selected-book" class="p-2"><p>No book selected</p></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-uva-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-uva">Select</button>
+                    <button type="button" class="btn btn-uva" data-dismiss="modal" onclick="passBookSelection()">Select</button>
                 </div>
             </div>   
         </div>

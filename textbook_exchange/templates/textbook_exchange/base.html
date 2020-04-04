@@ -27,6 +27,14 @@
         <!--Autocomplete urls, cant access template tags from external js, so we pass the only one we used-->
         <script>let auto_url = "{% url 'exchange:ajax_autocomplete' %}";</script>
         <script src="{% static 'textbook_exchange/js/autocomplete.js' %}"></script>
+        {% if title == "Sell Books" %}
+            <script>
+                let book_title_id = "{{ form.book_title.id_for_label }}";
+                let book_author_id ="{{ form.book_author.id_for_label }}";
+                let book_isbn_id = "{{ form.isbn.id_for_label }}";
+            </script>
+            <script src="{% static 'textbook_exchange/js/sell-autocomplete.js' %}"></script>
+        {% endif %}
 
         {% if title %}
             <title>UVA TextEx: {{ title }}</title>

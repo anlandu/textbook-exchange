@@ -83,13 +83,12 @@ def sell_books(request):
                 # raise forms.ValidationError("Please fill in all fields in red.")
 
     else:
-        form = SellForm()
         if 'submitted' in request.GET:
-            submitted = True
+            context['submitted'] = True
         if 'not_logged_in' in request.GET:
-            not_logged_in = True
+            context['not_logged_in'] = True
 
-    return render(request, 'textbook_exchange/sellbooks.html', {'form': form, 'submitted': submitted, 'not_logged_in': not_logged_in})
+    return render(request, 'textbook_exchange/sellbooks.html', context=context)
 
 def account_page(request):
     context = get_logged_in(request)
