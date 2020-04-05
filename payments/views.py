@@ -4,7 +4,7 @@ from textbook_exchange import models as textbook_exchange_models
 from django.utils import timezone
 import requests
 
-def get_cart(request):        
+def get_cart(request):      
     if request.user.is_authenticated:
         subtotal = 0
         for pl in request.user.cart.productlisting_set.all():
@@ -26,6 +26,8 @@ def get_cart(request):
 
 def cart(request):
     context=get_cart(request)
+    context['title'] = "Cart"  
+
     if request.method == "GET":
         if len(request.user.cart.productlisting_set.all()) == 0:
             return render(request, 'payments/empty_cart.html')
