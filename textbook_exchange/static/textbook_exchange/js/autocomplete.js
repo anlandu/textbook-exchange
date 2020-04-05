@@ -161,11 +161,9 @@ function updateSearch(search){
         $('#results_dropdown').hide();
     }
 };
+
 function hideAutocomplete() {
     $('#results_dropdown').hide();
-}
-function isbn13Format(isbn) {
-    return isbn.substring(0, 3) + "-" + isbn.substring(3, 6) + "-" + isbn.substring(6, 9) + "-" + isbn.substring(9, 13);
 }
 
 $(document).on("click touchstart", function(e) {

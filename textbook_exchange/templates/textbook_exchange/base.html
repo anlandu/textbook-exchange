@@ -5,8 +5,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Font: Raleway, Lato, Nunito Sans -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Lato&family=Raleway&display=swap" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'textbook_exchange/images/favicon.png' %}" />
+        
+        <!-- Font: Raleway, Lato:400,700, Nunito Sans -->
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Lato:wght@400;700&family=Raleway&display=swap" rel="stylesheet">
 
         <!-- My CSS -->
         <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/main.css' %}">
@@ -25,11 +27,19 @@
         <!--Autocomplete urls, cant access template tags from external js, so we pass the only one we used-->
         <script>let auto_url = "{% url 'exchange:ajax_autocomplete' %}";</script>
         <script src="{% static 'textbook_exchange/js/autocomplete.js' %}"></script>
+        {% if title == "Sell Books" %}
+            <script>
+                let book_title_id = "{{ form.book_title.id_for_label }}";
+                let book_author_id ="{{ form.book_author.id_for_label }}";
+                let book_isbn_id = "{{ form.isbn.id_for_label }}";
+            </script>
+            <script src="{% static 'textbook_exchange/js/sell-autocomplete.js' %}"></script>
+        {% endif %}
 
         {% if title %}
-            <title>TextEx: {{ title }}</title>
+            <title>UVA TextEx: {{ title }}</title>
         {% else %}
-            <title>TextEx</title>
+            <title>UVA TextEx</title>
         {% endif %}
     </head>
     <body>
@@ -42,16 +52,16 @@
                     </button>
                     <!-- Logo -->
                     <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">
-                        <img src="{% static 'textbook_exchange/images/Logo3White.png' %}" alt="TextEx" style="height: 55px; margin-right: 25px;"/>
+                        <img src="{% static 'textbook_exchange/images/Logo1White.png' %}" alt="TextEx" style="height: 55px; margin-right: 25px;"/>
                     </a> 
                     <!-- Search Bar -->
                     <div class="collapse navbar-collapse text-center" id="navbarResponsive">
                         <form class="my-2 my-lg-0 mx-auto" action="{% url 'exchange:buybooks' %}" style="width: 70%;" method="GET">
                             <div class="input-group">
-                                <input name="search" type="text" class="form-control" id="search_text" style="border-radius: 0px; background-clip: unset;" placeholder="Search for a book" onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
+                                <input name="search" type="text" class="form-control" id="search_text" style="background-clip: unset;" placeholder="Search for a book" onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
                                 <span class="input-group-append" type='submit' style="-webkit-appearance: none;"><button type="submit" class="btn btn-uva"><i class="fa fa-search my-auto"></i></button></span>
-                                <div class="input-group-append" style="width: 100%; border-radius: 0%;">
-                                    <ul style="width:100%; border-radius: 0%;" id="results_dropdown" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
+                                <div class="input-group-append" style="width: 100%;">
+                                    <ul style="width:100%;" id="results_dropdown" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
                                         <li id="results_books"><div id="book_results"></div></li>
                                         <li id="results_courses"><div id="course_results"></div></li>
                                         <li id="noresults">
@@ -85,9 +95,12 @@
 
             <!-- FOOTER -->
             <footer>
-                <p style="margin-top: 1rem; margin-bottom: 1rem;">
-                    © 2020 UVA TextEx &bull; 
-                    <a href="{% url 'exchange:faq' %}" class="uva uva-nav">FAQ</a>
+                <p class="mx-auto" style="margin-top: 1rem !important; margin-bottom: 1rem !important;">
+                    © 2020 UVA TextEx 
+                    &nbsp;&nbsp; <!-- tab -->
+                    &bull;       <!-- dot -->
+                    &nbsp;&nbsp; <!-- tab -->
+                    <a href="{% url 'exchange:faq' %}" class="uva uva-nav text-font" style="font-weight: 700; text-decoration: none;">FAQ</a>
                 </p>
             </footer>
         </div>
