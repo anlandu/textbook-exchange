@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import json
+import re
 
 # Create your models here.
 class User(AbstractUser):
@@ -23,12 +24,12 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
 class Class(models.Model):
-    class_term = models.CharField(max_length=200, default="")
-    department = models.CharField(max_length=200) #e.g. CS
-    course_code = models.CharField(max_length=50, default=0) #e.g. 1110
-    section_number = models.CharField(max_length=10) #e.g. 001
+    class_term = models.CharField(max_length=200, default="") #e.g. 2020BUVA
+    department = models.CharField(max_length=200)             #e.g. CS
+    course_code = models.CharField(max_length=50, default=0)  #e.g. 1110
+    section_number = models.CharField(max_length=10)          #e.g. 001
     professor = models.CharField(max_length=200)
-    class_info = models.TextField(max_length=200, primary_key=True) #e.g. CS1110
+    class_info = models.TextField(max_length=200, primary_key=True) #e.g. CS1110-001
     
     @classmethod
     def create(cls, **kwargs):
@@ -73,6 +74,11 @@ class Textbook(models.Model):
     def author_clean(self):
         author = self.author[1:-1].replace("'", "") # removes the brackets and apostrophes from author field
         return author
+
+    @property
+    def title_clean(self):
+        title = re.sub(r'\W+', '', self.title)
+        return title
 
     @classmethod
     def create(cls, **kwargs):
