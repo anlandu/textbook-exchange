@@ -5,7 +5,7 @@ import os
 #keep this script in main directory (with manage.py) for this path to work;
 #else, you can update with your own path as needed
 script_dir = os.path.dirname("__file__")
-rel_path = "books_google_isbndb.json"
+rel_path = "class_data.json"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 def mkflt(str_in):
@@ -31,6 +31,7 @@ with open(abs_file_path, encoding='utf-8') as data_file:
             setattr(class_obj, "course_code", book_data['Course'])
             setattr(class_obj, "section_number", book_data['Sect'])
             setattr(class_obj, "professor", book_data['Instructor'])
+            setattr(class_obj, 'class_title', book_data['ClassTitle'])
             class_obj.save()
         except:
             class_obj = Class.create(**book_data)

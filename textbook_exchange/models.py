@@ -30,6 +30,7 @@ class Class(models.Model):
     section_number = models.CharField(max_length=10)          #e.g. 001
     professor = models.CharField(max_length=200)
     class_info = models.TextField(max_length=200, primary_key=True) #e.g. CS1110-001
+    class_title = models.TextField(max_length=200)
     
     @classmethod
     def create(cls, **kwargs):
@@ -39,7 +40,8 @@ class Class(models.Model):
             course_code=kwargs['Course'],
             section_number=kwargs['Sect'],
             professor=kwargs['Instructor'],
-            class_info=kwargs['Dept']+kwargs['Course']+"-"+kwargs['Sect']
+            class_info=kwargs['Dept']+kwargs['Course']+"-"+kwargs['Sect'],
+            class_title=kwargs['ClassTitle'],
         )
         return class_obj
 
