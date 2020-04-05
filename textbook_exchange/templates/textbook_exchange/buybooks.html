@@ -29,11 +29,20 @@
     <div class="row d-lg-none">
         <div class="input-group">
             <!-- Searchbar? -->
+            <!-- TODO: Add searchbar on mobile only, and change behavior from search in menu -->
         </div>
     </div>
-    <div class="grid">
-        <!-- FILTERS -->
-        <div class="col-1-10">
+    <div class="row">
+        <div class="showing-results">
+            <h3><b>{{ textbook.title }}</b></h3>
+            <p>{{ textbook.author_clean }}</p>
+            <div class="cursor-pointer align-items-center justify-content-center" data-toggle="modal" data-target="#moreInfoModalCenter">
+                <p class="btn btn-uva-secondary">More info</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3" style="padding-left: 0px;">
             <div id="searchFilters" style="width: max-content;">
                 <div class="card card-body mx-auto sidefilter-padding" style="margin-top: 0px;">
                     <div class="row mx-auto" style="padding: 10px;">
@@ -61,41 +70,19 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <input type="button" value="Apply" id="apply_filter" onClick="applyClick()" method="GET" class="btn btn-danger mt-4" style="margin: 0 60px;">
+                                    <input type="button" value="Apply" id="apply_filter" onClick="applyClick()" method="GET" class="btn btn-uva mt-4" style="margin: 0 60px;">
                                 </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- MAIN -->
-        <div class="col-9-10 right-container" style="padding-left: 75px;">
-            <!-- LISTINGS -->
+        <div class="col-md-9">
             {% if num_product_listings == 0 %}
-                <div class="top">
-                    <div class="showing-results">Showing results for  "{{ textbook.title }}"</div>
-                </div>
-                <h1 class="buy-error-msg text-center">
-                    There are no listings for this textbook. Sorry :(
-                </h1>
+                <h3 class="text-center">
+                    There are currently no listings for this textbook. Please try again later.
+                </h3>
             {% elif num_product_listings > 0 %}
-                <div class="top d-inline-block">
-                    <div class="showing-results">Showing results for "{{ textbook.title }}"</div>
-                    <div class="btn-group pull-right" style="margin-top: 15px;">
-                        <!-- SORT BY -->
-                        <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Sort by: {{ ordering }}
-                        </button>
-                        <form method="GET">
-                            <div class="dropdown-menu">
-                                <a href="?sort=price" class="dropdown-item">Price: Low to High</a>
-                                <a href="?sort=-price" class="dropdown-item">Price: High to Low</a>
-                                <a href="?sort=-published_date" class="dropdown-item">Most recent</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
                 <div class="row">
                     {% for listing in product_listings %}
                         <div class="card text-font" id="listing" style="width: 15rem;" price="{{ listing.price }}" condition="{{ listing.condition }}">
@@ -205,5 +192,56 @@ function applyClick() {
 };
 
 </script>
+
+<div class="modal fade" id="moreInfoModalCenter" tabindex="-1" role="dialog" aria-labelledby="scanModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moreInfoModalLongTitle">More Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Bookstore ISBN</th>
+                            <td>{{ textbook.bookstore_isbn }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">ISBN-10</th>
+                            <td>{{ textbook.isbn10 }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">ISBN-13</th>
+                            <td>{{ textbook.isbn13 }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Bookstore New</th>
+                            <td>{% if textbook.bookstore_new_price == 0.0 %}Not available{% else %}${{ textbook.bookstore_new_price }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Bookstore Used</th>
+                            <td>{% if textbook.bookstore_used_price == 0.0 %}Not available{% else %}${{ textbook.bookstore_used_price }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Page Count</th>
+                            <td>{{ textbook.page_count }} pages</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Publisher</th>
+                            <td>{{ textbook.publisher }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Date Published</th>
+                            <td>{{ textbook.date }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>   
+    </div>
+</div>
 
 {% endblock content %}
