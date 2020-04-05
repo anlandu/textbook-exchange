@@ -26,5 +26,6 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 =======
     path('messaging/', views.chat_view, name='twilio'),
+    path(r'^token', views.token, name='token'),
 ]
 >>>>>>> Moving from django-private-chat to Twilio
