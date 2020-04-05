@@ -14,4 +14,5 @@ urlpatterns = [
     path('accounts/', views.account_page, name='account_page'),
     path('buy/autocomplete/', views.autocomplete, name='ajax_autocomplete'),
     path('messaging/', views.chat_view, name='twilio'),
+    path(r'^token', views.token, name='token'),
 ]
