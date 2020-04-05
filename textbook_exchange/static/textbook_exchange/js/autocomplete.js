@@ -164,15 +164,20 @@ $(document).on("click touchstart", function(e) {
 });
 
 function translateURL(url) {
+    console.log(url);
     if (url != '') {
-        try {
-            //create valid json from the array
-            jsonURL = url;
-            jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
-            jsonURL = jsonURL.replace(/'/g, "\"");
-            return JSON.parse(jsonURL)["smallThumbnail"];
+        try{
+            return jsonURL['smallThumbnail'];
         } catch (e) {
-            return url;
+            try {
+                //create valid json from the array
+                jsonURL = url;
+                jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
+                jsonURL = jsonURL.replace(/'/g, "\"");
+                return JSON.parse(jsonURL)["smallThumbnail"];
+            } catch (e2) {
+                return url;
+            }
         }
     } else {
         return 'https://isbndb.com/modules/isbndb/img/default-book-cover.jpg';
