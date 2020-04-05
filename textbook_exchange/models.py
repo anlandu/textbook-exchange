@@ -69,6 +69,11 @@ class Textbook(models.Model):
     google_rating = models.FloatField(default=0, blank=True)
     num_reviews = models.IntegerField(default=0, blank=True)
 
+    @property
+    def author_clean(self):
+        author = self.author[1:-1].replace("'", "") # removes the brackets and apostrophes from author field
+        return author
+
     @classmethod
     def create(cls, **kwargs):
         book = cls.objects.create(

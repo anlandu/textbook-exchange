@@ -1,237 +1,108 @@
 {% load static %} 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    
-    <!-- My CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/main.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/listings.css' %}">
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'textbook_exchange/images/favicon.png' %}" />
+        
+        <!-- Font: Raleway, Lato:400,700, Nunito Sans -->
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Lato:wght@400;700&family=Raleway&display=swap" rel="stylesheet">
 
-    {% if title %}
-        <title>TextEx: {{ title }}</title>
-    {% else %}
-        <title>TextEx</title>
-    {% endif %}
-</head>
+        <!-- My CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/main.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/listings.css' %}">
 
-<nav class="uva navbar navbar-expand-lg shadow" id="mainNav" role='navigation'>
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="uva fa fa-bars"></span>          
-        </button>
-        <!-- Logo -->
-        <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">(UVA) TextEx</a>
-        <!-- Login/Username -->
-        <div class="collapse navbar-collapse text-center" id="navbarResponsive">
-            <form class="my-2 my-lg-0 mx-auto" action="/buy/" style="width: 70%;" method="GET">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="search_text" style="border-radius: 0px;"
-                            placeholder="Search for a book"
-                            onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
-                        <span class="input-group-append" type='submit' style="-webkit-appearance: none;">
-                            <button type="submit" class="btn btn-uva">
-                                <i class="fa fa-search my-auto"></i>
-                            </button>
-                        </span>
-                        <div class="input-group-append" style="width: 100%;">
-                            <ul style="width:100%;" id="results_dropdown" class="dropdown-menu  px-2" aria-labelledby="dropdownMenu1">
-                                <li id="results_books">
-                                    <div id="book_results"></div>
-                                </li>
-                                <li id="results_courses">
-                                    <div id="course_results"></div>
-                                </li>
-                                <div id="noresults">
-                                    <b>No Results Found</b>
-                                </div>
-                            </ul>
-                        </div>
-                    </div>
-            </form>
-            <ul class="navbar-nav mx-auto float-lg-right">
-                <li class="nav-item"><a class="uva ml-2" href="{% url 'exchange:sellbooks' %}" style="display: block; padding: .5rem 1rem; float:left;">Sell a book</a></li>
-                {% if user.cart %}<li class="nav-item"><a class="uva nav-link" href="{% url 'payments:cart' %}"><i class="fa fa-shopping-cart"></i> ({{ user.cart.productlisting_set.all|length }})</a></li>{% endif %}
-                {% block loginlink %}<li class="nav-item"><a class="uva nav-link" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
-            </ul>
-        </div>
-    </div>
-</nav>
+        <!-- Bootstrap CSS For Cards/Panels -->
+        <!-- (THIS MUST BE BELOW "MY CSS" IMPORTS) -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<body>
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="http://code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script>
-        function updateSearch(search){
-            if(search.length >= 2){
-                //console.log(search);
-
-                var xmlhttp = new XMLHttpRequest();
-
-                xmlhttp.onreadystatechange = function() {
-                    if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
-                        if (xmlhttp.status == 200) {
-                            $('.dropdown-menu').show(); //open the dropdown menu
-                            var searchResults = JSON.parse(xmlhttp.responseText);
-                            //console.log(searchResults);
-
-                            //calculate number of dropdown items per section
-                            let book_display_count = Math.round(4.0 * (parseFloat(searchResults['books'].length) / (searchResults['books'].length + searchResults['courses'].length)));
-                            let course_display_count = Math.round(4.0 * (parseFloat(searchResults['courses'].length) / (searchResults['books'].length + searchResults['courses'].length)));
-
-                            //update dropdown with availible results
-                            if(searchResults['books'].length > 0){
-                                document.getElementById("results_books").style.display = 'inline'; //show header
-                                var isbnList = document.getElementById("book_results");
-                                isbnList.innerHTML = ''; //remove old list elements
-                                for(var i = 0; i < searchResults['books'].length; i++){ //add new elements
-                                    var entry = document.createElement('div');
-                                    var book = JSON.parse(searchResults['books'][i]);
-
-                                    let row = document.createElement('div');
-                                    row.classList = 'row';
-
-                                    let pictureCol = document.createElement('div');
-                                    pictureCol.classList = "col-1 my-auto";
-
-                                    let picture = document.createElement('img');
-                                    try {
-                                        //create valid json from the array
-                                        jsonURL = book['cover_photo_url'];
-                                        jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
-                                        jsonURL = jsonURL.replace(/'/g, "\"");
-                                        picture.src = JSON.parse(jsonURL)["smallThumbnail"];
-                                    } catch (e) {
-                                        picture.src = book['cover_photo_url'];
-                                    }
-                                    picture.classList = 'img-fluid my-auto';
-
-                                    let dataCol = document.createElement('div');
-                                    dataCol.classList = "col-11";
-
-                                    let oneLineStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
-
-                                    let title = document.createElement("p");
-                                    title.innerHTML = "<b>" + book['title']  + "</b>";
-                                    title.classList = 'my-0';
-                                    title.style = oneLineStyle;
-
-                                    let author = document.createElement("p");
-                                    author.innerHTML = book['author'].substring(1, book['author'].length - 2).replace(/'/g,"");
-                                    author.classList = 'my-0';
-                                    author.style = oneLineStyle;
-
-                                    let isbnP = document.createElement('p');
-                                    isbnP.classList = "text-muted my-0";
-                                    isbnP.innerHTML = "ISBN: " + book['bookstore_isbn'];
-
-                                    pictureCol.appendChild(picture);
-                                    dataCol.appendChild(title);
-                                    dataCol.appendChild(author);
-                                    dataCol.appendChild(isbnP);
-
-                                    row.appendChild(pictureCol);
-                                    row.appendChild(dataCol);
-
-                                    entry.appendChild(row);
-
-                                    entry.addEventListener("click", function() {
-                                        window.location.href = '/buy/' + book['isbn13'];
-                                    });
-
-                                    isbnList.appendChild(entry);
-                                    if (i >= book_display_count) break; // only show 5 results
-                                }
-                            }
-                            else {
-                                document.getElementById("results_books").style.display = 'none'; //hide section
-                            }
-
-                            if(searchResults['courses'].length > 0){
-                                document.getElementById("results_courses").style.display = 'inline'; //show header
-                                var isbnList = document.getElementById("course_results");
-
-                                isbnList.innerHTML = ''; //remove old list elements
-
-                                for(var i = 0; i < searchResults['courses'].length; i++){ //add new elements
-                                    var entry = document.createElement('div');
-
-                                    let oneLineStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
-
-                                    var class_info_p = document.createElement('p');
-                                    class_info_p.innerHTML = "<b>" + JSON.parse(searchResults['courses'][i])['class_info'] + "</b>";
-                                    class_info_p.classList = 'my-0';
-                                    class_info_p.style = oneLineStyle;
-
-                                    var professor_p = document.createElement('p');
-                                    professor_p.innerHTML = JSON.parse(searchResults['courses'][i])['professor'];
-                                    professor_p.classList = 'my-0';
-                                    professor_p.style = oneLineStyle;
-
-                                    entry.appendChild(class_info_p);
-                                    entry.appendChild(professor_p);
-
-                                    isbnList.appendChild(entry);
-                                    if (i >= course_display_count) break; // only show 5 results
-                                }
-                            }
-                            else{
-                                document.getElementById("results_courses").style.display = 'none'; //hide header
-                            }
-
-                            if(searchResults['courses'].length > 0 || searchResults['books'].length > 0){
-                                document.getElementById("noresults").style.display = 'none'; //hide no results message
-                            }
-                            else{
-                                document.getElementById("noresults").style.display = 'inline'; //show no results message
-                            }
-                        }
-                        else {
-                            console.error("Search autocomplete not availible");
-                            $('.dropdown-menu').hide();
-                        }
-                    }
-                };
-
-                xmlhttp.open("GET", "{% url 'exchange:ajax_autocomplete' %}?search="+search, true);
-                xmlhttp.send();
-            }
-            else{
-                $('.dropdown-menu').hide();
-            }
-        };
-        function hideAutocomplete() {
-            $('.dropdown-menu').hide();
-        }
-        function isbn13Format(isbn) {
-            return isbn.substring(0, 3) + "-" + isbn.substring(3, 6) + "-" + isbn.substring(6, 9) + "-" + isbn.substring(9, 13);
-        }
-
-        $(document).on("click touchstart", function(e) {
-            var t = $(e.target).closest('.dropdown-menu');
-            var exceptDiv = $('.dropdown-menu');
-            var s = $(e.target).closest('#search_text');
-            var searchDiv = $('#search_text');
-            if (!exceptDiv.is(t) && !searchDiv.is(s)) hideAutocomplete();
-            else if (searchDiv.is(s)) updateSearch(searchDiv.val());
-        });
-
-        {% if search %}
-        updateSearch("{{ search }}");
-        document.getElementById("search_text").value = "{{ search }}";
+        <!-- jS Scripts -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        
+        <!--Autocomplete urls, cant access template tags from external js, so we pass the only one we used-->
+        <script>let auto_url = "{% url 'exchange:ajax_autocomplete' %}";</script>
+        <script src="{% static 'textbook_exchange/js/autocomplete.js' %}"></script>
+        {% if title == "Sell Books" %}
+            <script>
+                let book_title_id = "{{ form.book_title.id_for_label }}";
+                let book_author_id ="{{ form.book_author.id_for_label }}";
+                let book_isbn_id = "{{ form.isbn.id_for_label }}";
+            </script>
+            <script src="{% static 'textbook_exchange/js/sell-autocomplete.js' %}"></script>
         {% endif %}
 
+        {% if title %}
+            <title>UVA TextEx: {{ title }}</title>
+        {% else %}
+            <title>UVA TextEx</title>
+        {% endif %}
+    </head>
+    <body>
+        <div id="page-container">
+            <!-- NAVBAR -->
+            <nav class="uva navbar navbar-expand-lg shadow" id="mainNav" role='navigation'>
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="uva fa fa-bars"></span>
+                    </button>
+                    <!-- Logo -->
+                    <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">
+                        <img src="{% static 'textbook_exchange/images/Logo1White.png' %}" alt="TextEx" style="height: 55px; margin-right: 25px;"/>
+                    </a> 
+                    <!-- Search Bar -->
+                    <div class="collapse navbar-collapse text-center" id="navbarResponsive">
+                        <form class="my-2 my-lg-0 mx-auto" action="{% url 'exchange:buybooks' %}" style="width: 70%;" method="GET">
+                            <div class="input-group">
+                                <input name="search" type="text" class="form-control" id="search_text" style="background-clip: unset;" placeholder="Search for a book" onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
+                                <span class="input-group-append" type='submit' style="-webkit-appearance: none;"><button type="submit" class="btn btn-uva"><i class="fa fa-search my-auto"></i></button></span>
+                                <div class="input-group-append" style="width: 100%;">
+                                    <ul style="width:100%;" id="results_dropdown" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
+                                        <li id="results_books"><div id="book_results"></div></li>
+                                        <li id="results_courses"><div id="course_results"></div></li>
+                                        <li id="noresults">
+                                            <div class="py-2" style="height: 65px;">
+                                                <div class="row px-0 mx-0 pl-2" style="height: 100%;">
+                                                    <div class="col-12 align-self-center" style="height: 100%; display: flex; align-items: center;">
+                                                        <p class="my-auto"><b><i>No Results Found</i></b></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- Sell, Cart, Login Buttons -->
+                        <ul class="navbar-nav mx-auto mx-lg-0 float-lg-right">
+                            <li class="nav-item"><a class="uva nav-link uva-nav" href="{% url 'exchange:sellbooks' %}">Sell a book</a></li>
+                            {% if user.cart %}<li class="nav-item"><a class="uva nav-link uva-nav" href="{% url 'payments:cart' %}"><i class="fa fa-shopping-cart"></i> ({{ user.cart.productlisting_set.all|length }})</a></li>{% endif %}
+                            {% block loginlink %}<li class="nav-item"><a class="uva nav-link uva-nav" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
 
-    </script>
-</body>
+            <!-- MAIN CONTENT -->
+            <div class="container" id="content-wrap">
+                {% block content %}
+                {% endblock %}
+            </div>
+
+            <!-- FOOTER -->
+            <footer>
+                <p class="mx-auto" style="margin-top: 1rem !important; margin-bottom: 1rem !important;">
+                    © 2020 UVA TextEx 
+                    &nbsp;&nbsp; <!-- tab -->
+                    &bull;       <!-- dot -->
+                    &nbsp;&nbsp; <!-- tab -->
+                    <a href="{% url 'exchange:faq' %}" class="uva uva-nav text-font" style="font-weight: 700; text-decoration: none;">FAQ</a>
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

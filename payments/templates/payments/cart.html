@@ -1,49 +1,51 @@
 {% extends 'textbook_exchange/base.html' %}
 {% block content %}
-<div class="row">
-    <div class="col-sm-8">
-        <h2>Cart</h2>
-        <br>
-        <div class="row">
-            <div class="col-sm-2">
-                <p class="my-0">Picture</p>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <h2>Cart</h2>
+            <br>
+            <div class="row">
+                <div class="col-sm-2">
+                    <p class="my-0">Picture</p>
+                </div>
+                <div class="col-sm-6">
+                    <p class="my-0">Description</p>
+                </div>
+                <div class="col-sm-4">
+                    <p class="text-right my-0">Price</p>
+                </div>
             </div>
-            <div class="col-sm-6">
-                <p class="my-0">Description</p>
+            <hr>
+            {% for product in user.cart.productlisting_set.all %}
+            <div class="row">
+                <div class="col-sm-2">
+                    <img class="img-fluid" src='{{ product.picture.url }}'>
+                </div>
+                <div class="col-sm-6">
+                    <p><b>{{ product.textbook.title }}</b><br><span class="text-muted">{{ product.textbook.author_clean }}</span><br><a href="javascript:removeFromCart({{ product.id }});" style="position:absolute; bottom:0;">remove</a></p>
+                </div>
+                <div class="col-sm-4">
+                    <p class="text-right font-weight-bold">${{ product.price}}</p>
+                </div>
             </div>
-            <div class="col-sm-4">
-                <p class="text-right my-0">Price</p>
+            <hr>
+            {% endfor %}
+            <div class="row">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-6">
+                    <p class="text-right"><b>Subtotal: ${{ subtotal }}<br>+ Tax: ${{ tax }}</b></p>
+                    <hr>
+                    <p class="text-right"><b>Total: ${{ total }}</b></p>
+                </div>
             </div>
-        </div>
-        <hr>
-        {% for product in user.cart.productlisting_set.all %}
-        <div class="row">
-            <div class="col-sm-2">
-                <img class="img-fluid" src='{{ product.picture.url }}'>
-            </div>
-            <div class="col-sm-6">
-                <p><b>{{ product.textbook.title }}</b><br>ISBN: {{ product.textbook.isbn }}<br>(<a href="javascript:removeFromCart({{ product.id }});">remove</a>)</p>
-            </div>
-            <div class="col-sm-4">
-                <p class="text-right">${{ product.price}}</p>
-            </div>
-        </div>
-        <hr>
-        {% endfor %}
-        <div class="row">
-            <div class="col-sm-6"></div>
-            <div class="col-sm-6">
-                <p class="text-right"><b>Subtotal: ${{ subtotal }}<br>+ Tax: ${{ tax }}</b></p>
-                <hr>
-                <p class="text-right"><b>Total: ${{ total }}</b></p>
-            </div>
-        </div>
 
-    </div>
-    <div class="col-sm-4">
-        <h2>Checkout</h2>
-        <hr>
-        <div id="paypal"></div>
+        </div>
+        <div class="col-sm-4">
+            <h2>Checkout</h2>
+            <hr>
+            <div id="paypal"></div>
+        </div>
     </div>
 </div>
 <script src="https://www.paypal.com/sdk/js?client-id=AcCaARG0gidap3Y0mCgZtbbdE3sDrYHyHSIBwJ20jwhyGk3MQSBLxpWggOwuOQphYKDLl87wRLek-qE8" data-namespace="paypal_sdk"></script>

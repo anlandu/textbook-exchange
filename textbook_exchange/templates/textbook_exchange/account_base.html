@@ -2,37 +2,46 @@
 {% load static %}
 
 {% block content %}
-<head>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
-    crossorigin="anonymous">
-</head>
-<body>
+<style>
+	#page-container {
+        min-width: 500px;
+    }
+	@media only screen and (max-width: 770px){
+        .grid {
+			width: 90vw;
+        }
+        #content-wrap {
+            margin: 0;
+            width: 100vw;
+        }
+    }
+</style>
+<div class="container">
 	<div class="grid">
 		<!-- SIDEBAR -->
 		<div class="col col-4-bg">
-			<ul class="sidebar-align">
+			<ul class="sidebar-align d-inline">
 				<br>
 				<li>
-					<a class="btn btn-uva side-btn" href="{% url 'exchange:account_page' %}" style="display: block; border-radius: 0;">
+					<a class="btn btn-uva side-btn d-block" href="{% url 'exchange:account_page' %}">
 						Dashboard
 					</a>
 				</li>
 				<br>
 				<li>
-					<a class="btn btn-uva side-btn" href="{% url 'exchange:past_posts' %}" style="display: block; border-radius: 0;">
+					<a class="btn btn-uva side-btn d-block" href="{% url 'exchange:past_posts' %}">
 						Past Posts
 					</a>
 				</li>
 				<br>
 				<li>
-					<a class="btn btn-uva side-btn" href="{% url 'exchange:messages' %}" style="display: block; border-radius: 0;">
+					<a class="btn btn-uva side-btn d-block" href="{% url 'exchange:messages' %}">
 						Messages
 					</a>
 				</li>
 				<br>
 				<li>
-					<a class="btn btn-uva side-btn"; href="{% url 'account_logout' %}" style="display: block; border-radius: 0;">
+					<a class="btn btn-uva side-btn d-block"; href="{% url 'account_logout' %}">
 						Sign Out
 					</a>
 				</li>
@@ -44,5 +53,5 @@
 		{% block inner-content %}
 		{% endblock inner-content %}
 	</div>
-</body>
+</div>
 {% endblock content %}
