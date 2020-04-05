@@ -26,7 +26,7 @@
     <div class="input-group">
         <!-- Searchbar? -->
     </div>
-    <div class="col-9-10 right-container" style="padding-left: 75px;">
+    <div>
         <!-- LISTINGS -->
         {% if num_textbooks == 0 %}
             <div class="top">
@@ -35,9 +35,9 @@
                     <p>{{ class.department }}{{ class.course_code }}, Section {{ class.section_number }}</p>
                 </div>
             </div>
-            <h1 class="buy-error-msg text-center">
-                There are no physical textbooks required for this class
-            </h1>
+            <div>
+                <h3>There are no physical textbooks required for this class</h3>
+            </div>
         {% elif num_textbooks > 0 %}
             <div class="top d-inline-block">
                 <div class="showing-results">
