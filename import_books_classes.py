@@ -45,15 +45,15 @@ with open(abs_file_path, encoding='utf-8') as data_file:
             except:
                 book_obj = Textbook.create(**book_data)
 
-        try:    
-            class_obj = Class.objects.get(class_info=book_data['Dept']+book_data['Course']+"-"+book_data['Sect'])
-            setattr(class_obj, "class_term", book_data['Term'])
-            setattr(class_obj, "department", book_data['Dept'])
-            setattr(class_obj, "course_code", book_data['Course'])
-            setattr(class_obj, "section_number", book_data['Sect'])
-            setattr(class_obj, "professor", book_data['Instructor'])
-            class_obj.save()
-        except:
-            class_obj = Class.create(**book_data)
+            try:    
+                class_obj = Class.objects.get(class_info=book_data['Dept']+book_data['Course']+"-"+book_data['Sect'])
+                setattr(class_obj, "class_term", book_data['Term'])
+                setattr(class_obj, "department", book_data['Dept'])
+                setattr(class_obj, "course_code", book_data['Course'])
+                setattr(class_obj, "section_number", book_data['Sect'])
+                setattr(class_obj, "professor", book_data['Instructor'])
+                class_obj.save()
+            except:
+                class_obj = Class.create(**book_data)
 
-        book_obj.class_objects.add(class_obj)
+            book_obj.class_objects.add(class_obj)

@@ -34,19 +34,7 @@ function updateSearch(search){
                             pictureCol.classList = "col-1 my-0 text-center align-self-center d-none d-lg-block px-0";
 
                             let picture = document.createElement('img');
-                            if (book['cover_photo_url'] != '') {
-                                try {
-                                    //create valid json from the array
-                                    jsonURL = book['cover_photo_url'];
-                                    jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
-                                    jsonURL = jsonURL.replace(/'/g, "\"");
-                                    picture.src = JSON.parse(jsonURL)["smallThumbnail"];
-                                } catch (e) {
-                                    picture.src = book['cover_photo_url'];
-                                }
-                            } else {
-                                picture.src = 'https://isbndb.com/modules/isbndb/img/default-book-cover.jpg';
-                            }
+                            picture.src = translateURL(book['cover_photo_url']);
                             picture.classList = 'img-thumbnail mx-auto';
                             picture.style.maxHeight = '50px';
 
@@ -174,3 +162,19 @@ $(document).on("click touchstart", function(e) {
     if (!exceptDiv.is(t) && !searchDiv.is(s)) hideAutocomplete();
     else if (searchDiv.is(s)) updateSearch(searchDiv.val());
 });
+
+function translateURL(url) {
+    if (url != '') {
+        try {
+            //create valid json from the array
+            jsonURL = url;
+            jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
+            jsonURL = jsonURL.replace(/'/g, "\"");
+            return JSON.parse(jsonURL)["smallThumbnail"];
+        } catch (e) {
+            return url;
+        }
+    } else {
+        return 'https://isbndb.com/modules/isbndb/img/default-book-cover.jpg';
+    }
+}

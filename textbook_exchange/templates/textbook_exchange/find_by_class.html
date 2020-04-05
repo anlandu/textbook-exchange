@@ -48,7 +48,7 @@
                     <div class="card text-font" id="listing" style="width: 15rem; margin: 25px;">
                         <a href="{% url 'exchange:buy_product' textbook.isbn13 textbook.title_clean %}" style="text-decoration: none; color: black;">
                             <div class="card-header">
-                                <img class="card-img-top" src="{{ textbook.cover_photo.url }}" alt="{{ textbook.title }}" style="margin-top: 10px;">
+                                <img class="card-img-top" src="https://isbndb.com/modules/isbndb/img/default-book-cover.jpg" onload="this.onload = null; this.src = translateURL({{ textbook.cover_photo_url }});" alt="{{ textbook.title }}" style="margin-top: 10px;">
                                 <h5 class="card-title">{{ textbook.title }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{ textbook.author_clean }}</h6> 
                             </div>
@@ -82,6 +82,8 @@
 </div>
 
 <script>
+
+    
 {% if search %}
     //updateSearch("{{ search }}");
     document.getElementById("search_text").value = "{{ search }}";
