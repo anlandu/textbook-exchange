@@ -104,12 +104,12 @@ function updateSearch(search){
                             let oneLineStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
 
                             let class_info_p = document.createElement('p');
-                            class_info_p.innerHTML = "<b>" + course['department'] + " " + course['course_code'] + "</b>";
+                            class_info_p.innerHTML = "<b>" + course['class_title'] + "</b>";
                             class_info_p.classList = 'my-0';
                             class_info_p.style = oneLineStyle;
 
                             let professor_p = document.createElement('p');
-                            professor_p.innerHTML = "Section " + course['section_number'] + " - " + course['professor'];
+                            professor_p.innerHTML = course['department'] + " " + course['course_code'] + " - Section " + course['section_number'] + " - " + course['professor'];
                             professor_p.classList = 'my-0';
                             professor_p.style = oneLineStyle;
 
