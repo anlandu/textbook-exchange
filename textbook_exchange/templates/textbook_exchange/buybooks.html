@@ -32,6 +32,7 @@
             <!-- TODO: Add searchbar on mobile only, and change behavior from search in menu -->
         </div>
     </div>
+    {% if num_product_listings %}
     <div class="row">
         <div class="showing-results">
             <h3><b>{{ textbook.title }}</b></h3>
@@ -58,43 +59,46 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <div class="row">
-        <div class="col-md-3" style="padding-left: 0px;">
-            <div id="searchFilters" style="width: max-content;">
-                <div class="card card-body mx-auto sidefilter-padding" style="margin-top: 0px;">
-                    <div class="row mx-auto" style="padding: 10px;">
-                        <form method="GET">
-                                <h5>Condition</h5>
-                                <div class="checkboxes" style="padding-left: 20px;">
-                                    <input class="form-check-input" type="checkbox" value="likenew" id="likenew" checked>
-                                    <label class="form-check-label" for="likenew">Like new</label>
-                                    <br/>
-                                    <input class="form-check-input" type="checkbox" value="verygood" id="verygood" checked>
-                                    <label class="form-check-label" for="verygood">Very good</label>
-                                    <br/>
-                                    <input class="form-check-input" type="checkbox" value="" id="good" checked>
-                                    <label class="form-check-label" for="good">Good</label>
-                                    <br/>
-                                    <input class="form-check-input" type="checkbox" value="acceptable" id="acceptable" checked>
-                                    <label class="form-check-label" for="Acceptable">Acceptable</label>
-                                </div>
-                                <hr>
-                                <div class="row mt-4">
-                                    <div class="col">                                        
-                                        <h5 class="d-inline">Max Price</h5>
+        {% if num_product_listings %}
+            <div class="col-md-3" style="padding-left: 0px;">
+                <div id="searchFilters" style="width: max-content;">
+                    <div class="card card-body mx-auto sidefilter-padding" style="margin-top: 0px;">
+                        <div class="row mx-auto" style="padding: 10px;">
+                            <form method="GET">
+                                    <h5>Condition</h5>
+                                    <div class="checkboxes" style="padding-left: 20px;">
+                                        <input class="form-check-input" type="checkbox" value="likenew" id="likenew" checked>
+                                        <label class="form-check-label" for="likenew">Like new</label>
                                         <br/>
-                                        <input type="number" id="maxPrice" name="quantity" min="0" max="500" class="form-control mt-3" style="width:100px;">
+                                        <input class="form-check-input" type="checkbox" value="verygood" id="verygood" checked>
+                                        <label class="form-check-label" for="verygood">Very good</label>
+                                        <br/>
+                                        <input class="form-check-input" type="checkbox" value="" id="good" checked>
+                                        <label class="form-check-label" for="good">Good</label>
+                                        <br/>
+                                        <input class="form-check-input" type="checkbox" value="acceptable" id="acceptable" checked>
+                                        <label class="form-check-label" for="Acceptable">Acceptable</label>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <input type="button" value="Apply" id="apply_filter" onClick="applyClick()" method="GET" class="btn btn-uva mt-4" style="margin: 0 60px;">
-                                </div>
-                        </form>
+                                    <hr>
+                                    <div class="row mt-4">
+                                        <div class="col">                                        
+                                            <h5 class="d-inline">Max Price</h5>
+                                            <br/>
+                                            <input type="number" id="maxPrice" name="quantity" min="0" max="500" class="form-control mt-3" style="width:100px;">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <input type="button" value="Apply" id="apply_filter" onClick="applyClick()" method="GET" class="btn btn-uva mt-4" style="margin: 0 60px;">
+                                    </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-9">
+        {% endif %}
+        <div class="{% if num_product_listings %}col-md-9{% else %}col-12{% endif %}">
             {% if num_product_listings == 0 %}
                 <h3 class="text-center">
                     There are currently no listings for this textbook. Please try again later.
@@ -136,7 +140,7 @@
                 </div>
             <!-- NO TEXTBOOK SEARCHED -->
             {% else %}
-                <h1 class="buy-error-msg text-center">
+                <h1 class="text-center">
                     Please search a textbook or a class in the search bar above to find listings
                 </h1>
             {% endif %}
