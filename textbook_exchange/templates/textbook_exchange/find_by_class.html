@@ -33,15 +33,22 @@
         <!-- LISTINGS -->
         {% if num_textbooks == 0 %}
             <div class="top">
-                <div class="showing-results">Showing textbooks for {{ class.class_info }}: {{ class.class_title }}</div>
+                <div class="showing-results">
+                    <h3><b>{{ class.class_title }}</b></h3>
+                    <p>{{ class.department }}{{ class.course_code }}, Section {{ class.section_number }}</p>
+                </div>
             </div>
             <h1 class="buy-error-msg text-center">
                 There are no physical textbooks required for this class
             </h1>
         {% elif num_textbooks > 0 %}
             <div class="top d-inline-block">
-                <!-- {{ class.class_info }} -->
-                <div class="showing-results">Showing textbooks for {{ class.department }}{{ class.course_code }}, Section {{ class.section_number }} </div>
+                <div class="showing-results">
+                    <h3><b>{{ class.class_title }}</b></h3>
+                    <p>{{ class.department }}{{ class.course_code }}, Section {{ class.section_number }}</p>
+                    <p>
+                        There {% if num_textbooks > 1 %}are{% else %}is{% endif %} {{ num_textbooks }} textbook{{ num_textbooks|pluralize }} available for this class.</p>
+                </div>
             </div>
             <div class="row">
                 {% for textbook in textbooks %}
