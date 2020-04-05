@@ -42,6 +42,23 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-3 offset-9">
+            <div class="btn-group pull-right">
+                <!-- SORT BY -->
+                <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sort by: {{ ordering }}
+                </button>
+                <form method="GET">
+                    <div class="dropdown-menu">
+                        <a href="?sort=price" class="dropdown-item">Price: Low to High</a>
+                        <a href="?sort=-price" class="dropdown-item">Price: High to Low</a>
+                        <a href="?sort=-published_date" class="dropdown-item">Most recent</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-3" style="padding-left: 0px;">
             <div id="searchFilters" style="width: max-content;">
                 <div class="card card-body mx-auto sidefilter-padding" style="margin-top: 0px;">
@@ -85,7 +102,7 @@
             {% elif num_product_listings > 0 %}
                 <div class="row">
                     {% for listing in product_listings %}
-                        <div class="card text-font" id="listing" style="width: 15rem;" price="{{ listing.price }}" condition="{{ listing.condition }}">
+                        <div class="card text-font mt-0" id="listing" style="width: 15rem;" price="{{ listing.price }}" condition="{{ listing.condition }}">
                             <div class="card-header">
                                 <img class="card-img-top" src="{{ listing.picture.url }}" alt="{{ listing.textbook.title }}" style="margin-top: 10px;">
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>
