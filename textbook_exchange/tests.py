@@ -9,7 +9,7 @@ from django.core.files import File
 from django.urls import *
 from . import *
 from django.test import Client, override_settings
-
+from unittest.mock import MagicMock, Mock
 
 class HelloWord(TestCase):
 
@@ -149,7 +149,7 @@ class UserModelTest(TestCase):
         self.assertInHTML(test_user.email, response.content.decode())
 
 class SellTest(TestCase): #Can't simulate a fake photo
-    def test_sell_form_valid(self):
+    def test_sell_form_invalid(self):
         form = SellForm(data = {
             'book_title': "Digital Logic Design",
             'book_author': "Frank Vahid",
@@ -158,12 +158,20 @@ class SellTest(TestCase): #Can't simulate a fake photo
             'price': 100.00,
         })
         self.assertFalse(form.is_valid())
-    def test_sell_form_invalid(self):
-        form = SellForm(data = {})
-        self.assertFalse(form.is_valid())
-
-#class AccountPageTest(TestCase):
-
+    def test_new_listing_in_current_posts(self):
+        mock = Mock()
+        file_mock = mock.Mock(spec = File, name = 'mockFile.png')
+        form = SellForm(data = {
+            'book_title': 'sample_title',
+            'book_author': 'sample_author',
+            'isbn': 'sample_isbn',
+            'book_condition': "likenew",
+            'price': 1.00,
+            'picture': file_mock,
+            'comments': 'sample_comment',
+        })
+        self.assertTrue(form.is_valid())
+    
         
 
 #test models
