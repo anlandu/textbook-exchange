@@ -212,26 +212,6 @@ class SellTest(TestCase): #Can't simulate a fake photo
         form = SellForm(form_data, picture_data)
         self.assertTrue(form.is_valid())
     def test_new_listing_in_current_posts(self):
-        small_gif = (
-            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
-            b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
-            b'\x02\x4c\x01\x00\x3b'
-        )
-        form_data = {
-            'book_title': 'Classical Mechanics',
-            'book_author': 'John R. Taylor',
-            'isbn': '9781891389221',
-            'book_condition': "likenew",
-            'price': 1.0,
-            'comments': 'sample_comment',
-        }
-        picture_data = {
-            "picture": SimpleUploadedFile(name="small.gif", content=small_gif, content_type="image/gif"),
-        }
-        form = SellForm(form_data, picture_data)
-        self.assertTrue(form.is_valid())
-        c = Client()
-
         test_user = User.objects.create_user(
             username = "rc8yw",
             password = "12345",
@@ -251,6 +231,8 @@ class SellTest(TestCase): #Can't simulate a fake photo
             condition="likenew",
         )
 
+        c = Client()
+
         c.login(username = "rc8yw@virginia.edu", password="12345")
         
         response = c.get("/accounts/", secure=True, follow=True)        
@@ -259,6 +241,79 @@ class SellTest(TestCase): #Can't simulate a fake photo
         self.assertInHTML("$100.00", response.content.decode())
         self.assertInHTML("Rohan Chandra", response.content.decode())
         self.assertInHTML("Condition: Like new", response.content.decode())
+
+    def test_new_listing_in_search(self):
+        test_user = User.objects.create_user(
+            username = "rc8yw",
+            password = "12345",
+            first_name = "Rohan",
+            last_name = "Chandra",
+            email = "rc8yw@virginia.edu",
+            is_staff = False,
+            date_joined = timezone.now(),
+            balance = 0.0,
+        )
+        pl = ProductListing.objects.create(
+            user=test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=100.0,
+            condition="likenew",
+        )
+        c = Client()
+        c.login(username = "rc8yw@virginia.edu", password="12345")
+        
+        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        self.assertEqual(response.status_code, 200)
+        self.assertInHTML("Classical Mechanics", response.content.decode())
+        self.assertInHTML("$100.00", response.content.decode())
+        self.assertInHTML("Rohan Chandra", response.content.decode())
+        self.assertInHTML("Condition: Like new", response.content.decode())
+
+    def test_listing_in_cart_not_in_search(self):
+        test_user = User.objects.create_user(
+            username = "rc8yw",
+            password = "12345",
+            first_name = "Rohan",
+            last_name = "Chandra",
+            email = "rc8yw@virginia.edu",
+            is_staff = False,
+            date_joined = timezone.now(),
+            balance = 0.0,
+        )
+
+        test_user2 = User.objects.create_user(
+            username = "nw5zp",
+            password = "54321",
+            first_name = "Nick",
+            last_name = "Winans",
+            email = "nw5zp@virginia.edu",
+            is_staff = False,
+            date_joined = timezone.now(),
+            balance = 0.0,
+        )
+
+        pl = ProductListing.objects.create(
+            user=test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=test_user.cart,
+            price=100.0,
+            condition="likenew",
+        )
+
+        c = Client()
+        c.login(username = "nw5zp@virginia.edu", password="54321")
+        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        self.assertEqual(response.status_code, 200)
+        try:
+            self.assertInHTML("Classical Mechanics", response.content.decode())
+            self.assertInHTML("$100.00", response.content.decode())
+            self.assertInHTML("Rohan Chandra", response.content.decode())
+            self.assertInHTML("Condition: Like new", response.content.decode())
+            self.fail("Not removed")
+        except AssertionError:
+            pass
+        
     
         
 
