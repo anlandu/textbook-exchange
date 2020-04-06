@@ -1,12 +1,21 @@
 body {
     font-family: 'Raleway' !important;
 }
+
+/* Shart Corner */
+body, .form-control, .btn, .card, #results_dropdown {
+    border-radius: 0 !important;
+}
+
+/* Fonts */
 .text-font {
     font-family: 'Lato' !important;
 }
 .p-font {
     font-family: 'Nunito Sans', sans-serif;
 }
+
+/* UVA THEMING */
 :root {
     --uva-blue: rgb(32, 44, 80);
     --uva-orange: rgb(245, 121, 0);
@@ -17,7 +26,7 @@ body {
     --uva-darkblue: rgb(57, 73, 121);
     --uva-darkorange: rgb(255,139,25);
 }
-/* UVA THEMING */
+
 .uva {
     background-color: var(--uva-blue);
     color: var(--uva-white);
@@ -50,22 +59,22 @@ body {
     color: var(--uva-white);
     background-color: var(--uva-darkblue);
 }
-.cursor-pointer, #cursor-pointer {
-    cursor: pointer;
-}
 
 /* Standard HTML Tag Theming */
 
+.cursor-pointer, #cursor-pointer {
+    cursor: pointer;
+}
 div.container {
     margin-top: 50px;
 }
 
-.li-bottom {
-    padding-bottom: 30em;
+#errors {
+    color:red;
 }
 
-body, .form-control, .btn, .card {
-    border-radius: 0;
+.li-bottom {
+    padding-bottom: 30em;
 }
 
 .grid {
@@ -91,7 +100,6 @@ footer {
     position: absolute;
     bottom: 0;
     width: 100%;
-    /* background-color: rgb(25, 35, 55); */
     background-color: var(--uva-blue);
     color: var(--uva-white);
     text-align: center;

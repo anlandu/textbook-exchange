@@ -1,10 +1,11 @@
 from django.shortcuts import render, reverse, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from textbook_exchange import models as textbook_exchange_models
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-import requests
+import requests, json
 
-def get_cart(request):        
+def get_cart(request):      
     if request.user.is_authenticated:
         subtotal = 0
         for pl in request.user.cart.productlisting_set.all():
@@ -25,26 +26,25 @@ def get_cart(request):
     return context
 
 def cart(request):
-    context=get_cart(request)
     if request.method == "GET":
-        if len(request.user.cart.productlisting_set.all()) == 0:
-            return render(request, 'payments/empty_cart.html')
+        context=get_cart(request)
         if context['logged_in'] is False:
             return render(request, 'payments/log_in.html')
-        else:
-            return render(request, 'payments/cart.html', context=context)
-    elif request.method == "POST":
-        if context['logged_in'] is False:
-            return HttpResponse("failed")
+        context['title'] = "Cart"
+        if len(request.user.cart.productlisting_set.all()) == 0:
+            return render(request, 'payments/empty_cart.html')
+        return render(request, 'payments/cart.html', context=context)
+    elif request.method == "POST" and request.user.is_authenticated:
         listing = textbook_exchange_models.ProductListing.objects.get(pk=request.POST.get("id"))
         if request.POST.get("function") == "add":
             listing.cart = request.user.cart
             listing.save()
         elif request.POST.get("function") == "remove":
-            print("remove")
             listing.cart = None
             listing.save()
-        return HttpResponse("success")
+        return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json')
+    elif request.method == "POST" and not request.user.is_authenticated:
+        return HttpResponse(json.dumps({'status': 'not_logged_in'}), content_type='application/json')
 
 def one_week_in_future():
     return timezone.now() + timezone.timedelta(weeks=1)

@@ -34,19 +34,7 @@ function updateSearch(search){
                             pictureCol.classList = "col-1 my-0 text-center align-self-center d-none d-lg-block px-0";
 
                             let picture = document.createElement('img');
-                            if (book['cover_photo_url'] != '') {
-                                try {
-                                    //create valid json from the array
-                                    jsonURL = book['cover_photo_url'];
-                                    jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
-                                    jsonURL = jsonURL.replace(/'/g, "\"");
-                                    picture.src = JSON.parse(jsonURL)["smallThumbnail"];
-                                } catch (e) {
-                                    picture.src = book['cover_photo_url'];
-                                }
-                            } else {
-                                picture.src = 'https://isbndb.com/modules/isbndb/img/default-book-cover.jpg';
-                            }
+                            picture.src = translateURL(book['cover_photo_url']);
                             picture.classList = 'img-thumbnail mx-auto';
                             picture.style.maxHeight = '50px';
 
@@ -84,7 +72,7 @@ function updateSearch(search){
                             });
 
                             isbnList.appendChild(entry);
-                            if (i >= book_display_count) break; // only show 5 results
+                            if (i >= book_display_count) break;
                         }
                     }
                     else {
@@ -98,7 +86,8 @@ function updateSearch(search){
                         isbnList.innerHTML = ''; //remove old list elements
 
                         for(var i = 0; i < searchResults['courses'].length; i++){ //add new elements
-                            var entry = document.createElement('div');
+                            let course = JSON.parse(searchResults['courses'][i]);
+                            let entry = document.createElement('div');
 
                             entry.classList = "py-2 search-entry";
                             entry.style.height = '65px';
@@ -114,13 +103,13 @@ function updateSearch(search){
 
                             let oneLineStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
 
-                            var class_info_p = document.createElement('p');
-                            class_info_p.innerHTML = "<b>" + JSON.parse(searchResults['courses'][i])['department'] + " " + JSON.parse(searchResults['courses'][i])['course_code'] + "</b>";
+                            let class_info_p = document.createElement('p');
+                            class_info_p.innerHTML = "<b>" + course['class_title'] + "</b>";
                             class_info_p.classList = 'my-0';
                             class_info_p.style = oneLineStyle;
 
-                            var professor_p = document.createElement('p');
-                            professor_p.innerHTML = "Section " + JSON.parse(searchResults['courses'][i])['section_number'] + " - " + JSON.parse(searchResults['courses'][i])['professor'];
+                            let professor_p = document.createElement('p');
+                            professor_p.innerHTML = course['department'] + " " + course['course_code'] + " - Section " + course['section_number'] + " - " + course['professor'];
                             professor_p.classList = 'my-0';
                             professor_p.style = oneLineStyle;
 
@@ -132,8 +121,12 @@ function updateSearch(search){
 
                             entry.appendChild(row);
 
+                            entry.addEventListener("click", function() {
+                                window.location.href = '/find/' + course['class_info'];
+                            });
+
                             isbnList.appendChild(entry);
-                            if (i >= course_display_count) break; // only show 5 results
+                            if (i >= course_display_count) break;
                         }
                     }
                     else{
@@ -161,11 +154,9 @@ function updateSearch(search){
         $('#results_dropdown').hide();
     }
 };
+
 function hideAutocomplete() {
     $('#results_dropdown').hide();
-}
-function isbn13Format(isbn) {
-    return isbn.substring(0, 3) + "-" + isbn.substring(3, 6) + "-" + isbn.substring(6, 9) + "-" + isbn.substring(9, 13);
 }
 
 $(document).on("click touchstart", function(e) {
@@ -176,3 +167,28 @@ $(document).on("click touchstart", function(e) {
     if (!exceptDiv.is(t) && !searchDiv.is(s)) hideAutocomplete();
     else if (searchDiv.is(s)) updateSearch(searchDiv.val());
 });
+
+function translateURL(url) {
+    let returl = '';
+    if (url != '') {
+        try {
+            if (typeof url =='object') return url['thumbnail']; //only works on class search
+            else {
+                try {
+                    //create valid json from the array
+                    jsonURL = url;
+                    jsonURL = jsonURL.substring(0, jsonURL.indexOf(",")) + "}";
+                    jsonURL = jsonURL.replace(/'/g, "\"");
+                    return JSON.parse(jsonURL)["smallThumbnail"];
+                } catch (e2) {
+                   return url
+                }
+            }
+        } catch (e) {
+            return 'https://isbndb.com/modules/isbndb/img/default-book-cover.jpg';
+        }
+        return returl;
+    } else {
+        return 'https://isbndb.com/modules/isbndb/img/default-book-cover.jpg';
+    }
+}
