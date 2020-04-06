@@ -61,7 +61,14 @@
                                 <p>There were some errors in the information you entered. Please correct the following:</p>
                                 <ul>
                                     {% for field in form %}
-                                        {% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
+                                        {% if field.errors %}
+                                            {% for error in field.errors %}
+                                                {% if error == "Ensure that there are no more than 7 digits in total." %}
+                                                {% else %}
+                                                    <li>{{ field.label }}: {{ error|striptags }}</li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                     {% endfor %}
                                 </ul>
                             </div>
