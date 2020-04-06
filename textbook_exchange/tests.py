@@ -338,13 +338,9 @@ class SellTest(TestCase): #Can't simulate a fake photo
         c.login(username = "rc8yw@virginia.edu", password="12345")
         response = c.get("/cart/", secure=True, follow=True)        
         self.assertEqual(response.status_code, 200)
-        try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$100.00", response.content.decode())
-            self.assertInHTML("remove", response.content.decode())
-            self.fail("Not removed")
-        except AssertionError:
-            pass
+        self.assertInHTML("Classical Mechanics", response.content.decode())
+        self.assertInHTML("$100.00", response.content.decode())
+        self.assertInHTML("remove", response.content.decode())
         
 
 #test models
