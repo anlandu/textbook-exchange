@@ -185,7 +185,7 @@ class FindTextbooks(ListView):
         url_class_info = self.kwargs['class_info']
         class_found = get_object_or_404(Class, class_info=url_class_info)
         textbooks = class_found.textbook_set.all()
-        queryset = textbooks            
+        queryset = textbooks.filter(hasBeenSoldFlag=False, cart=None)
         return queryset
 
 
