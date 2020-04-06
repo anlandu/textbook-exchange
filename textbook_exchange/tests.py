@@ -396,6 +396,22 @@ class SellTest(TestCase): #Can't simulate a fake photo
         response = c.post("/cart/", {"id": pl.id, "function": "remove"})        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
+        response = c.get("/cart/", secure=True, follow=True)
+        try:
+            self.assertInHTML("Classical Mechanics", response.content.decode())
+            self.assertInHTML("$200.00", response.content.decode())
+            self.assertInHTML("Rohan Chandra", response.content.decode())
+            self.assertInHTML("Condition: Like new", response.content.decode())
+            self.fail("Not removed")
+        except AssertionError:
+            pass
+        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        self.assertEqual(response.status_code, 200)
+        self.assertInHTML("Classical Mechanics", response.content.decode())
+        self.assertInHTML("$200.00", response.content.decode())
+        self.assertInHTML("Rohan Chandra", response.content.decode())
+        self.assertInHTML("Condition: Like new", response.content.decode())
+
         
 
 #test models

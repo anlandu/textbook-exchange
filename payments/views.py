@@ -40,7 +40,7 @@ def cart(request):
             if listing.cart is not None:
                 if listing.cart is request.user.cart:
                     return JsonResponse({'status': 'success'})
-                return JsonResponse({'status': "error - already in a user's cart"})
+                return JsonResponse({'status': "error - already in another user's cart"})
             listing.cart = request.user.cart
             listing.save()       
             return JsonResponse({'status': 'success'})
