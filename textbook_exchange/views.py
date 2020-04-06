@@ -203,6 +203,8 @@ def autocomplete(request):
     books = Textbook.objects.filter(title__icontains=search) | Textbook.objects.filter(author__icontains=search) | Textbook.objects.filter(isbn13__icontains=search) | Textbook.objects.filter(isbn10__icontains=search) | Textbook.objects.filter(bookstore_isbn__icontains=search) # TODO: Add other methods to search
     courses = Class.objects.filter(class_info__icontains=search.replace(" ", "")) | Class.objects.filter(class_title__icontains=search)
     
+    books.order_by("title", "author", "isbn13")
+
     valid_books = []
     valid_courses = []
 
@@ -227,7 +229,6 @@ def autocomplete(request):
             break
         valid_courses.append(course.toJSON())
         
-
     data = {
         'search' : search,
         'books' : valid_books,

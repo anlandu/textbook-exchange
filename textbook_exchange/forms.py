@@ -10,6 +10,3 @@ class SellForm(forms.Form):
     price = forms.DecimalField(label='Price (USD)', min_value=0.0, max_value=1000.0, widget=forms.NumberInput(attrs={'class': 'form-control'}))
     picture = forms.ImageField(label='Upload picture', widget=forms.FileInput(attrs={'class': 'form-control'}))
     comments = forms.CharField(label='Comments', required=False, max_length=500, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': '3'}))
-
-    def submit_listing(self):
-        print(self.cleaned_data['book_name'] + " by " + self.cleaned_data['book_author'])
