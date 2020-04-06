@@ -314,7 +314,37 @@ class SellTest(TestCase): #Can't simulate a fake photo
         except AssertionError:
             pass
         
-    
+    def test_listing_in_cart(self):
+        test_user = User.objects.create_user(
+            username = "rc8yw",
+            password = "12345",
+            first_name = "Rohan",
+            last_name = "Chandra",
+            email = "rc8yw@virginia.edu",
+            is_staff = False,
+            date_joined = timezone.now(),
+            balance = 0.0,
+        )
+
+        pl = ProductListing.objects.create(
+            user=test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=test_user.cart,
+            price=100.0,
+            condition="likenew",
+        )
+
+        c = Client()
+        c.login(username = "rc8yw@virginia.edu", password="12345")
+        response = c.get("/cart/", secure=True, follow=True)        
+        self.assertEqual(response.status_code, 200)
+        try:
+            self.assertInHTML("Classical Mechanics", response.content.decode())
+            self.assertInHTML("$100.00", response.content.decode())
+            self.assertInHTML("remove", response.content.decode())
+            self.fail("Not removed")
+        except AssertionError:
+            pass
         
 
 #test models

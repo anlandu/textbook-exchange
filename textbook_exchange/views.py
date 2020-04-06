@@ -232,5 +232,5 @@ def autocomplete(request):
         'books' : valid_books,
         'courses' : valid_courses,
     }
-    
+
     return JsonResponse(data)

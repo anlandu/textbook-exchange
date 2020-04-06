@@ -38,11 +38,17 @@ def cart(request):
         listing = textbook_exchange_models.ProductListing.objects.get(pk=request.POST.get("id"))
         if request.POST.get("function") == "add":
             listing.cart = request.user.cart
-            listing.save()
+            listing.save()       
+            return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json')
+
         elif request.POST.get("function") == "remove":
             listing.cart = None
             listing.save()
-        return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json')
+            return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json')
+
+        return HttpResponse(json.dumps({'status': 'error'}), content_type='application/json')
+
+
     elif request.method == "POST" and not request.user.is_authenticated:
         return HttpResponse(json.dumps({'status': 'not_logged_in'}), content_type='application/json')
 

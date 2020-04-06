@@ -167,7 +167,7 @@ function addtoCart(id) {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(json) {
-            if (json['status'] == 'succcess') window.location.href = "{% url 'payments:cart' %}";
+            if (json['status'] == 'success') window.location.href = "{% url 'payments:cart' %}";
             else if (json['status'] == 'not_logged_in') window.location.href = "{% url 'google_login' %}";
         },
         error: function(xhr, errmsg, err) {
