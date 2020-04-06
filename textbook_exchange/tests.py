@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from textbook_exchange.forms import *
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.uploadedfile import UploadedFile
 from django.core.files import File
 from django.urls import *
 from . import *
@@ -149,7 +150,7 @@ class UserModelTest(TestCase):
         self.assertInHTML(test_user.email, response.content.decode())
 
 class SellTest(TestCase): #Can't simulate a fake photo
-    def test_sell_form_invalid(self):
+    def test_sell_form_valid(self):
         form = SellForm(data = {
             'book_title': "Digital Logic Design",
             'book_author': "Frank Vahid",
@@ -157,20 +158,21 @@ class SellTest(TestCase): #Can't simulate a fake photo
             'book_condition': "likenew",
             'price': 100.00,
         })
-        self.assertFalse(form.is_valid())
+        self.assertTrue(form.is_valid())
     def test_new_listing_in_current_posts(self):
-        mock = Mock()
-        file_mock = mock.Mock(spec = File, name = 'mockFile.png')
+        image_path = "./textbook_exchange/static/textbook_exchange/images/barcode.png"
         form = SellForm(data = {
             'book_title': 'sample_title',
             'book_author': 'sample_author',
             'isbn': 'sample_isbn',
             'book_condition': "likenew",
             'price': 1.00,
-            'picture': file_mock,
+            'picture': UploadedFile(open(image_path, 'rb')),
             'comments': 'sample_comment',
         })
         self.assertTrue(form.is_valid())
+        newProduct = form.save()
+        
     
         
 
