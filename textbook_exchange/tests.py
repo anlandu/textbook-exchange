@@ -253,9 +253,9 @@ class SellTest(TestCase): #Can't simulate a fake photo
             b'\x02\x4c\x01\x00\x3b'
         )
         form_data = {
-            'book_title': 'sample_title',
-            'book_author': 'sample_author',
-            'isbn': '1234567891234',
+            'book_title': 'Classical Mechanics',
+            'book_author': 'John R. Taylor',
+            'isbn': '9781891389221',
             'book_condition': "likenew",
             'price': 1.0,
             'comments': 'sample_comment',
@@ -265,8 +265,13 @@ class SellTest(TestCase): #Can't simulate a fake photo
         }
         form = SellForm(form_data, picture_data)
         self.assertTrue(form.is_valid())
-        #newProduct = form.save()
-        
+        '''newProduct = form.save() # need to call the sell page after logging in to do this
+
+        c = Client()
+        response = c.get('/buy/9781891389221/ClassicalMechanics/', secure = True, follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertInHTML("$1.0", response.content.decode())
+        self.assertInHTML("Like New", response.content.decode())'''
     
         
 
