@@ -1,5 +1,5 @@
 from django.shortcuts import render, reverse, redirect
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from textbook_exchange import models as textbook_exchange_models
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -37,14 +37,24 @@ def cart(request):
     elif request.method == "POST" and request.user.is_authenticated:
         listing = textbook_exchange_models.ProductListing.objects.get(pk=request.POST.get("id"))
         if request.POST.get("function") == "add":
+            if listing.cart is not None:
+                if listing.cart is request.user.cart:
+                    return JsonResponse({'status': 'success'})
+                return JsonResponse({'status': "error - already in another user's cart"})
             listing.cart = request.user.cart
-            listing.save()
+            listing.save()       
+            return JsonResponse({'status': 'success'})
         elif request.POST.get("function") == "remove":
+            if listing.cart != request.user.cart:
+                return JsonResponse({'status': "error - not authorized to perform this action"})
+            if listing.cart is None:
+                return JsonResponse({'status': "error - this item was not in the user's cart"})
             listing.cart = None
             listing.save()
-        return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json')
+            return JsonResponse({'status': 'success'})
+        return JsonResponse({'status': 'generic errorerror'})
     elif request.method == "POST" and not request.user.is_authenticated:
-        return HttpResponse(json.dumps({'status': 'not_logged_in'}), content_type='application/json')
+        return JsonResponse({'status': 'not_logged_in'})
 
 def one_week_in_future():
     return timezone.now() + timezone.timedelta(weeks=1)

@@ -4,14 +4,23 @@ from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+import json
 import itertools
 import functools
-
-
+import json
+import requests
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook, Class
 from django.http import JsonResponse #for autocompletion response
+import cloudinary.uploader
+import os
 
+os.environ["CLOUDINARY_URL"]="cloudinary://348783216512488:nPXIA343WzNVngfkykW-I7XkGgE@dasg2ntne"
+cloudinary.config(
+  cloud_name = "dasg2ntne", 
+  api_key = "348783216512488", 
+  api_secret = "nPXIA343WzNVngfkykW-I7XkGgE" 
+)
 
 def get_logged_in(request):
     if request.user.is_authenticated:
@@ -60,7 +69,8 @@ def sell_books(request):
                 listing_obj.user = user
                 listing_obj.price = cleaned_data['price']
                 listing_obj.condition = cleaned_data['book_condition']
-                listing_obj.picture = cleaned_data['picture']
+                response = cloudinary.uploader.upload(cleaned_data['picture'])
+                listing_obj.picture_url = response['url']
                 listing_obj.comments = cleaned_data['comments']
                 
                 # finding textbook using isbn
@@ -69,7 +79,6 @@ def sell_books(request):
                 listing_obj.textbook = txtbk
                 
                 listing_obj.save()
-
                 return HttpResponseRedirect('/sell?submitted=True')
             else:
                 return render(request, "textbook_exchange/sellbooks.html", context={'form':form})
@@ -199,7 +208,7 @@ def autocomplete(request):
 
     # add books that start with the search query first, up to a max of 6 books
     # we only display up to 6 search items, so dont send more than we can view, thats a waste of data
-    for book in list(b_starts_with):
+    for book in list(b_starts_with.order_by("title", 'isbn13')):
         if len(valid_books) >= 6:
             break
         valid_books.append(book.toJSON())
@@ -208,12 +217,12 @@ def autocomplete(request):
     if len(valid_books) < 6:
             books = books.difference(b_starts_with)
 
-    for book in list(books):
+    for book in list(books.order_by("title", 'isbn13')):
         if len(valid_books) >= 6:
             break
         valid_books.append(book.toJSON())
 
-    for course in list(courses):
+    for course in list(courses.order_by("class_title")):
         if len(valid_courses) >= 6:
             break
         valid_courses.append(course.toJSON())

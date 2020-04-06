@@ -110,7 +110,7 @@
                     {% for listing in product_listings %}
                         <div class="card text-font mt-0" id="listing" style="width: 15rem;" price="{{ listing.price }}" condition="{{ listing.condition }}">
                             <div class="card-header">
-                                <img class="card-img-top" src="{{ listing.picture.url }}" alt="{{ listing.textbook.title }}" style="margin-top: 10px;">
+                                <img class="card-img-top" src="{{ listing.picture_url }}" alt="{{ listing.textbook.title }}" style="border-radius: 0px; margin-top: 10px;">
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author_clean }}</h6> 
                                 <h5 class="card-subtitle mt-4 mb-2">${{ listing.price }}</h5>
@@ -167,7 +167,7 @@ function addtoCart(id) {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(json) {
-            if (json['status'] == 'succcess') window.location.href = "{% url 'payments:cart' %}";
+            if (json['status'] == 'success') window.location.href = "{% url 'payments:cart' %}";
             else if (json['status'] == 'not_logged_in') window.location.href = "{% url 'google_login' %}";
         },
         error: function(xhr, errmsg, err) {
