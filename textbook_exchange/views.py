@@ -72,7 +72,7 @@ def sell_books(request):
 
                 return HttpResponseRedirect('/sell?submitted=True')
             else:
-                print(form.errors)
+                return render(request, "textbook_exchange/sellbooks.html", context={'form':form})
                 # raise forms.ValidationError("Please fill in all fields in red.")
 
     else:
