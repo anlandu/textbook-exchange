@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+import json
 import itertools
 import functools
 
@@ -218,6 +219,7 @@ def autocomplete(request):
             break
         valid_courses.append(course.toJSON())
         
+
     data = {
         'search' : search,
         'books' : valid_books,
