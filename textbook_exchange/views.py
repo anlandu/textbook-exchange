@@ -136,9 +136,10 @@ class BuyProductListings(ListView):
     def get_context_data(self, **kwargs):
         url_ibsn = self.kwargs['isbn']
         context = super().get_context_data(**kwargs)
-        context['title'] = self.kwargs['slug']
-        context['textbook'] = get_object_or_404(Textbook, isbn13=url_ibsn)
-        context['num_product_listings'] = len(get_object_or_404(Textbook, isbn13=url_ibsn).productlisting_set.all())
+        textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
+        context['title'] = '"' + textbook.title + '"'
+        context['textbook'] = textbook
+        context['num_product_listings'] = len(textbook.productlisting_set.all())
         
         context['ordering'] = self.request.GET.get('sort')
         if context['ordering'] == "-price":
@@ -174,7 +175,9 @@ class FindTextbooks(ListView):
         url_class_info = self.kwargs['class_info']
         context = super().get_context_data(**kwargs)
         context['class'] = get_object_or_404(Class, class_info=url_class_info)
-        context['num_textbooks'] = len(get_object_or_404(Class, class_info=url_class_info).textbook_set.all())
+        clss = get_object_or_404(Class, class_info=url_class_info)
+        context['title'] = clss.class_info + " - " + '"' + clss.class_title + '"'
+        context['num_textbooks'] = len(clss.textbook_set.all())
 
         return context
 
