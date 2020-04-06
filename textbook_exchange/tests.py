@@ -412,6 +412,59 @@ class SellTest(TestCase): #Can't simulate a fake photo
         self.assertInHTML("Rohan Chandra", response.content.decode())
         self.assertInHTML("Condition: Like new", response.content.decode())
 
+    def test_checkout_success(self):
+        test_user = User.objects.create_user(
+            username = "rc8yw",
+            password = "12345",
+            first_name = "Rohan",
+            last_name = "Chandra",
+            email = "rc8yw@virginia.edu",
+            is_staff = False,
+            date_joined = timezone.now(),
+            balance = 0.0,
+        )
+
+        pl = ProductListing.objects.create(
+            user=test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=200.0,
+            condition="likenew",
+        )
+
+        c = Client()
+        c.login(username = "rc8yw@virginia.edu", password="12345")
+        response = c.post("/cart/", {"id": pl.id, "function": "add"})        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        response = c.get("/cart/checkout/success", secure=True, follow=True)
+        #self.assertInHTML("Success!", response.content.decode())
+        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        self.assertEqual(response.status_code, 200)
+        try:
+            self.assertInHTML("Classical Mechanics", response.content.decode())
+            self.assertInHTML("$200.00", response.content.decode())
+            self.assertInHTML("Rohan Chandra", response.content.decode())
+            self.assertInHTML("Condition: Like new", response.content.decode())
+        except AssertionError:
+            pass
+        response = c.get("/accounts/", secure=True, follow=True)
+        try:
+            self.assertInHTML("Classical Mechanics", response.content.decode())
+            self.assertInHTML("$200.00", response.content.decode())
+            self.assertInHTML("Rohan Chandra", response.content.decode())
+            self.assertInHTML("Condition: Like new", response.content.decode())
+        except AssertionError:
+            pass
+        response = c.get("/accounts/past_posts", secure=True, follow=True)
+        try:
+            self.assertInHTML("Classical Mechanics", response.content.decode())
+            self.assertInHTML("$200.00", response.content.decode())
+            self.assertInHTML("Rohan Chandra", response.content.decode())
+            self.assertInHTML("Condition: Like new", response.content.decode())
+        except AssertionError:
+            pass    
+
         
 
 #test models
