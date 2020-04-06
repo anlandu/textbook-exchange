@@ -189,7 +189,9 @@ class UserModelTest(TestCase):
         self.assertInHTML(test_user.first_name + ' ' + test_user.last_name, response.content.decode())
         self.assertInHTML(test_user.email, response.content.decode())
 
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class SellTest(TestCase): #Can't simulate a fake photo
+    fixtures = ['testing_data/textbooks.json', 'testing_data/classes.json']
     def test_sell_form_valid(self):
         small_gif = (
             b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
@@ -228,13 +230,35 @@ class SellTest(TestCase): #Can't simulate a fake photo
         }
         form = SellForm(form_data, picture_data)
         self.assertTrue(form.is_valid())
-        '''newProduct = form.save() # need to call the sell page after logging in to do this
-
         c = Client()
-        response = c.get('/buy/9781891389221/ClassicalMechanics/', secure = True, follow = True)
+
+        test_user = User.objects.create_user(
+            username = "rc8yw",
+            password = "12345",
+            first_name = "Rohan",
+            last_name = "Chandra",
+            email = "rc8yw@virginia.edu",
+            is_staff = False,
+            date_joined = timezone.now(),
+            balance = 0.0,
+        )
+
+        pl = ProductListing.objects.create(
+            user=test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=100.0,
+            condition="likenew",
+        )
+
+        c.login(username = "rc8yw@virginia.edu", password="12345")
+        
+        response = c.get("/accounts/", secure=True, follow=True)        
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML("$1.0", response.content.decode())
-        self.assertInHTML("Like New", response.content.decode())'''
+        self.assertInHTML("Classical Mechanics", response.content.decode())
+        self.assertInHTML("$100.00", response.content.decode())
+        self.assertInHTML("Rohan Chandra", response.content.decode())
+        self.assertInHTML("Condition: Like new", response.content.decode())
     
         
 
