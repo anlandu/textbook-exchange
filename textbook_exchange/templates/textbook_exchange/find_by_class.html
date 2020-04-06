@@ -1,0 +1,117 @@
+{% extends "textbook_exchange/base.html" %}
+
+{% block content %}
+<head>
+    <style>
+        #page-container {
+            min-width: 530px;
+        }
+        .buy-error-msg {
+            height: 287px;
+            padding: 90px 25px;
+            font-size: 3vw;
+        }
+        .top {
+            width: 100%; 
+            margin-bottom: 20px; 
+        }
+        @media only screen and (max-width: 767px){
+            .sidefilter-padding {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<div class="container">
+    <div class="input-group">
+        <!-- Searchbar? -->
+    </div>
+    <div>
+        <!-- LISTINGS -->
+        {% if num_textbooks == 0 %}
+            <div class="top">
+                <div class="showing-results">
+                    <h3><b>{{ class.class_title }}</b></h3>
+                    <p>{{ class.department }}{{ class.course_code }}, Section {{ class.section_number }}</p>
+                </div>
+            </div>
+            <div>
+                <h3>There are no physical textbooks required for this class</h3>
+            </div>
+        {% elif num_textbooks > 0 %}
+            <div class="top d-inline-block">
+                <div class="showing-results">
+                    <h3><b>{{ class.class_title }}</b></h3>
+                    <p>{{ class.department }}{{ class.course_code }}, Section {{ class.section_number }}</p>
+                    <p>
+                        There {% if num_textbooks > 1 %}are{% else %}is{% endif %} {{ num_textbooks }} textbook{{ num_textbooks|pluralize }} available for this class.</p>
+                </div>
+            </div>
+            <div class="row">
+                {% for textbook in textbooks %}
+                    <div class="card text-font" id="listing" style="width: 15rem; margin: 25px;">
+                        <a href="{% url 'exchange:buy_product' textbook.isbn13 textbook.title_clean %}" style="text-decoration: none; color: black;">
+                            <div class="card-header">
+                                <img class="card-img-top" src="https://isbndb.com/modules/isbndb/img/default-book-cover.jpg" onload="this.onload = null; this.src = translateURL({{ textbook.cover_photo_url }});" alt="{{ textbook.title }}" style="margin-top: 10px;">
+                                <h5 class="card-title">{{ textbook.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ textbook.author_clean }}</h6> 
+                            </div>
+                            <div class="card-body">
+                                <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">
+                                    ISBN13: {{ textbook.isbn13 }}
+                                    <br/>
+                                    ISBN10: {{ textbook.isbn10 }}
+                                </p>
+                                {% if textbook.req_type != "Required" %}
+                                    <p class="card-text" style="font-style: italic;">
+                                        {{ textbook.req_type }}
+                                    </p>
+                                {% endif %}
+                                <p class="card-text">
+                                    <u>Bookstrore Price</u>
+                                    <br/>
+                                    NEW: ${{ textbook.bookstore_new_price }}
+                                    <br/>USED: ${{ textbook.bookstore_used_price }}
+                                </p>
+                                <!-- <a href="#" id="" class="btn btn-primary d-block mx-auto" style="width: 60%;">
+                                    Find Listings
+                                </a> -->
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+
+    
+{% if search %}
+    //updateSearch("{{ search }}");
+    document.getElementById("search_text").value = "{{ search }}";
+{% endif %}
+
+function addtoCart(id) {
+    console.log("add to cart working");
+    $.ajax({
+        url : "{% url 'payments:cart' %}",
+        type: "POST",
+        data: { 
+            id : id,
+            function: "add",
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(json) {
+            window.location.href = "{% url 'payments:cart' %}";
+        },
+        error: function(xhr, errmsg, err) {
+            console.log("error");
+        },
+    });
+}
+
+</script>
+
+{% endblock content %}

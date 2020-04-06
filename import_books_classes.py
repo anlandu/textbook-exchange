@@ -5,7 +5,7 @@ import os
 #keep this script in main directory (with manage.py) for this path to work;
 #else, you can update with your own path as needed
 script_dir = os.path.dirname("__file__")
-rel_path = "books_google_isbndb.json"
+rel_path = "class_data.json"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 def mkflt(str_in):
@@ -24,6 +24,18 @@ with open(abs_file_path, encoding='utf-8') as data_file:
     json_data = json.loads(data_file.read())
 
     for book_data in json_data:
+        try:    
+            class_obj = Class.objects.get(class_info=book_data['Dept']+book_data['Course']+"-"+book_data['Sect'])
+            setattr(class_obj, "class_term", book_data['Term'])
+            setattr(class_obj, "department", book_data['Dept'])
+            setattr(class_obj, "course_code", book_data['Course'])
+            setattr(class_obj, "section_number", book_data['Sect'])
+            setattr(class_obj, "professor", book_data['Instructor'])
+            setattr(class_obj, 'class_title', book_data['ClassTitle'])
+            class_obj.save()
+        except:
+            class_obj = Class.create(**book_data)
+
         if "**" not in book_data['Title'] and "(eBook" not in book_data['Title'] and "Access Card" not in book_data['Title'] and "access code" not in book_data['Title'].lower() and "Websam" not in book_data['Title']:
             try:
                 book_obj = Textbook.objects.get(bookstore_isbn=book_data['ISBN'])
@@ -45,15 +57,4 @@ with open(abs_file_path, encoding='utf-8') as data_file:
             except:
                 book_obj = Textbook.create(**book_data)
 
-        try:    
-            class_obj = Class.objects.get(class_info=book_data['Dept']+book_data['Course']+"-"+book_data['Sect'])
-            setattr(class_obj, "class_term", book_data['Term'])
-            setattr(class_obj, "department", book_data['Dept'])
-            setattr(class_obj, "course_code", book_data['Course'])
-            setattr(class_obj, "section_number", book_data['Sect'])
-            setattr(class_obj, "professor", book_data['Instructor'])
-            class_obj.save()
-        except:
-            class_obj = Class.create(**book_data)
-
-        book_obj.class_objects.add(class_obj)
+            book_obj.class_objects.add(class_obj)

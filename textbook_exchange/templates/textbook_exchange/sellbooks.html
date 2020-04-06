@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container">
     {% if submitted %}
-        <h1 class="text-center" style="padding: 150px 0;">Your post was successfully posted!</h1>
+        <h1 class="text-center" style="padding: 150px 0;">Your listing was successfully created!</h1>
     {% else %}
 
     <div class="row">
@@ -54,23 +54,36 @@
             <!-- FORM -->
             <form action="" method="post" novalidate enctype="multipart/form-data">
                 {% csrf_token %}
-    {{ form.non_field_errors }}
+                    {% if form.errors %}
+                        <!-- Error messaging -->
+                        <div id="errors">
+                            <div class="inner">
+                                <p>There were some errors in the information you entered. Please correct the following:</p>
+                                <ul>
+                                    {% for field in form %}
+                                        {% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- /Error messaging -->
+                    {% endif %}
+                    
                 <div class="card">
                     <div class="card-content p-3">
                         <h3 class="card-title">Book Info</h3>
                         <hr>
                         <fieldset>
                             <div class="form-group row">
-    {{ form.book_title.errors }}
                                 <div class="col-md-2 col-form-label">{{ form.book_title.label_tag }}</div>
                                 <div class="col-md-10">{{ form.book_title }}</div>
                             </div>
-    {{ form.book_author.errors }}
+
                             <div class="form-group row">
                                 <div class="col-md-2 col-form-label">{{ form.book_author.label_tag }}</div>
                                 <div class="col-md-10">{{ form.book_author }}</div>
                             </div>
-    {{ form.isbn.errors }}
+
                             <div class="form-group row">
                                 <div class="col-md-2 col-form-label">{{ form.isbn.label_tag }}</div>
                                 <div class="col-md-10">{{ form.isbn }}</div>
@@ -85,17 +98,14 @@
                         <hr>
                         <fieldset>
                             <div class="form-group row">
-    {{ form.picture.errors }}
                                 <div class="col-md-2 col-form-label">{{ form.picture.label_tag }}</div>
                                 <div class="col-md-10">{{ form.picture }}</div>
                             </div>
                             <div class="form-group row">
-    {{ form.price.errors }}
                                 <div class="col-md-2 col-form-label">{{ form.price.label_tag }}</div>
                                 <div class="col-md-10">{{ form.price }}</div>
                             </div>
                             <div class="form-group row">
-    {{ form.book_condition.errors }}
                                 <div class="col-md-2 col-form-label">{{ form.book_condition.label_tag }}</div>
                                 <div class="col-md-10">
                                     {% for choice in form.book_condition %}

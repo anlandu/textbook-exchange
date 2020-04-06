@@ -38,13 +38,6 @@ def error_404(request):
     context['title'] ='404 Error: Not Found'
     return render(request, 'textbook_exchange/404_error.html')
 
-def buy_books(request):    
-    context = get_logged_in(request)
-    context['title'] ='Buy Books'
-    if request.GET.get("search"):
-        context['search'] = request.GET.get('search')
-    return render(request, 'textbook_exchange/buybooks.html', context=context)
-
 @login_required(redirect_field_name='my_redirect_field', login_url="/accounts/google/login/")
 def sell_books(request):
     context = get_logged_in(request) 
@@ -79,7 +72,7 @@ def sell_books(request):
 
                 return HttpResponseRedirect('/sell?submitted=True')
             else:
-                print(form.errors)
+                return render(request, "textbook_exchange/sellbooks.html", context={'form':form})
                 # raise forms.ValidationError("Please fill in all fields in red.")
 
     else:
@@ -128,6 +121,13 @@ class AccountPastListings(ListView):
         queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=True)
         return queryset
 
+def buy_books(request):    
+    context = get_logged_in(request)
+    context['title'] ='Buy Books'
+    if request.GET.get("search"):
+        context['search'] = request.GET.get('search')
+    return render(request, 'textbook_exchange/buybooks.html', context=context)
+
 class BuyProductListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/buybooks.html"
@@ -165,13 +165,34 @@ class BuyProductListings(ListView):
             
         return queryset
 
+class FindTextbooks(ListView):
+    model = Textbook
+    template_name = "textbook_exchange/find_by_class.html"
+    context_object_name = 'textbooks'
+    
+    def get_context_data(self, **kwargs):
+        url_class_info = self.kwargs['class_info']
+        context = super().get_context_data(**kwargs)
+        context['class'] = get_object_or_404(Class, class_info=url_class_info)
+        context['num_textbooks'] = len(get_object_or_404(Class, class_info=url_class_info).textbook_set.all())
+
+        return context
+
+    def get_queryset(self, *args, **kwargs):
+        url_class_info = self.kwargs['class_info']
+        class_found = get_object_or_404(Class, class_info=url_class_info)
+        textbooks = class_found.textbook_set.all()
+        queryset = textbooks            
+        return queryset
+
+
 def autocomplete(request):
     search = request.GET['search']
 
     #these will search in our models for matches
     b_starts_with = Textbook.objects.filter(title__istartswith=search) # first we want searches that start with the search term, then we want everything else
     books = Textbook.objects.filter(title__icontains=search) | Textbook.objects.filter(author__icontains=search) | Textbook.objects.filter(isbn13__icontains=search) | Textbook.objects.filter(isbn10__icontains=search) | Textbook.objects.filter(bookstore_isbn__icontains=search) # TODO: Add other methods to search
-    courses = Class.objects.filter(class_info__icontains=search.replace(" ", ""))
+    courses = Class.objects.filter(class_info__icontains=search.replace(" ", "")) | Class.objects.filter(class_title__icontains=search)
     
     valid_books = []
     valid_courses = []

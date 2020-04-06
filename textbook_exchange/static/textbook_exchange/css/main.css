@@ -69,6 +69,10 @@ div.container {
     margin-top: 50px;
 }
 
+#errors {
+    color:red;
+}
+
 .li-bottom {
     padding-bottom: 30em;
 }
