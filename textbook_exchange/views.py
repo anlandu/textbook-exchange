@@ -203,14 +203,12 @@ def autocomplete(request):
     books = Textbook.objects.filter(title__icontains=search) | Textbook.objects.filter(author__icontains=search) | Textbook.objects.filter(isbn13__icontains=search) | Textbook.objects.filter(isbn10__icontains=search) | Textbook.objects.filter(bookstore_isbn__icontains=search) # TODO: Add other methods to search
     courses = Class.objects.filter(class_info__icontains=search.replace(" ", "")) | Class.objects.filter(class_title__icontains=search)
     
-    books.order_by("title", "author", "isbn13")
-
     valid_books = []
     valid_courses = []
 
     # add books that start with the search query first, up to a max of 6 books
     # we only display up to 6 search items, so dont send more than we can view, thats a waste of data
-    for book in list(b_starts_with):
+    for book in list(b_starts_with.order_by("title")):
         if len(valid_books) >= 6:
             break
         valid_books.append(book.toJSON())
@@ -219,12 +217,12 @@ def autocomplete(request):
     if len(valid_books) < 6:
             books = books.difference(b_starts_with)
 
-    for book in list(books):
+    for book in list(books.order_by("title")):
         if len(valid_books) >= 6:
             break
         valid_books.append(book.toJSON())
 
-    for course in list(courses):
+    for course in list(courses.order_by("class_title")):
         if len(valid_courses) >= 6:
             break
         valid_courses.append(course.toJSON())
