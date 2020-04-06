@@ -208,7 +208,7 @@ def autocomplete(request):
 
     # add books that start with the search query first, up to a max of 6 books
     # we only display up to 6 search items, so dont send more than we can view, thats a waste of data
-    for book in list(b_starts_with.order_by("title")):
+    for book in list(b_starts_with.order_by("title", 'isbn13')):
         if len(valid_books) >= 6:
             break
         valid_books.append(book.toJSON())
@@ -217,7 +217,7 @@ def autocomplete(request):
     if len(valid_books) < 6:
             books = books.difference(b_starts_with)
 
-    for book in list(books.order_by("title")):
+    for book in list(books.order_by("title", 'isbn13')):
         if len(valid_books) >= 6:
             break
         valid_books.append(book.toJSON())
