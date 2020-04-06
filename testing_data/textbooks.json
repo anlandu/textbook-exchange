@@ -19,7 +19,7 @@
         "google_rating": 0.0,
         "num_reviews": 0,
         "class_objects": [
-            "PLPT3010-100"
+            "AAS3500-1"
         ]
     }
 },
@@ -43,7 +43,7 @@
         "google_rating": 0.0,
         "num_reviews": 0,
         "class_objects": [
-            "HIEA3112-1"
+            "AAS3500-1"
         ]
     }
 },
@@ -67,7 +67,7 @@
         "google_rating": 0.0,
         "num_reviews": 0,
         "class_objects": [
-            "ARTS2672-1"
+            "AAS3500-1"
         ]
     }
 },
@@ -91,7 +91,7 @@
         "google_rating": 0.0,
         "num_reviews": 0,
         "class_objects": [
-            "GCNL5230-1"
+            "AAS3500-1"
         ]
     }
 },
@@ -115,7 +115,7 @@
         "google_rating": 4.5,
         "num_reviews": 2,
         "class_objects": [
-            "RELG3600-1"
+            "AAS3500-1"
         ]
     }
 },
@@ -139,8 +139,7 @@
         "google_rating": 4.0,
         "num_reviews": 3,
         "class_objects": [
-            "AAS3200-1",
-            "RELG3200-1"
+            "AAS3500-1"
         ]
     }
 }
