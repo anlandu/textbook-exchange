@@ -22,11 +22,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('textbook_exchange.urls')),
-<<<<<<< HEAD
     path('accounts/', include('allauth.urls')),
     path('cart/', include('payments.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-=======
-    url(r'^accounts/', include('allauth.urls')),
-]
->>>>>>> Moving from django-private-chat to Twilio
