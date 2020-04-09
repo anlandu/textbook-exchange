@@ -53,6 +53,8 @@ def login_redirect_before(request):
     return response
 
 def login_redirect_after(request):
+    if "redirect_address" not in request.COOKIES:
+        return HttpResponseRedirect(reverse('exchange:landing'))
     address = request.COOKIES.get("redirect_address")
     response = HttpResponseRedirect(address)
     response.delete_cookie('redirect_address')
