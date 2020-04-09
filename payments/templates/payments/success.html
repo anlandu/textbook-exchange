@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h2>Success! {{ user.first_name }}, your order was confirmed succesfully. Please save this page for your records.</h2>
+            <h2>Success! {{ user.first_name }}, your order was confirmed succesfully. Please <a href="javascript:print()">save</a> this page for your records.</h2>
             <br>
             <div class="row">
                 <div class="col-sm-2">
@@ -17,13 +17,13 @@
                 </div>
             </div>
             <hr>
-            {% for product in cart.productlisting_set.all %}
+            {% for product in sold_items %}
             <div class="row">
                 <div class="col-sm-2">
-                    <img class="img-fluid" src='{{ product.picture.url }}'>
+                    <img class="img-fluid" src='{{ product.picture_url }}'>
                 </div>
                 <div class="col-sm-6">
-                    <p><b>{{ product.textbook.title }}</b><br><span class="text-muted">{{ product.textbook.author_clean }}</span><br><a href="#" style="position:absolute; bottom:0;">remove</a></p>
+                    <p><b>{{ product.textbook.title }}</b><br><span class="text-muted">{{ product.textbook.author_clean }}</span><br><br>Sold by: {{ product.user.first_name }} {{ product.user.last_name }}, {{ product.user.email }}</p>
                 </div>
                 <div class="col-sm-4">
                     <p class="text-right font-weight-bold">${{ product.price}}</p>
@@ -34,7 +34,7 @@
             <div class="row">
                 <div class="col-sm-8"></div>
                 <div class="col-sm-4">
-                    <p class="text-right"><b>Total: ${{ subtotal }}</b></p>
+                    <p class="text-right"><b>Total: ${{ total }}</b></p>
                 </div>
             </div>
 

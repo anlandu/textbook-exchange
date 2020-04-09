@@ -43,7 +43,7 @@ def cart(request):
     elif request.method == "POST" and request.user.is_authenticated:
         return cart_functions(request.user, request.POST.get("id"), request.POST.get("function"))
     elif request.method == "POST" and not request.user.is_authenticated:
-        response = JsonResponse({'status': 'not_logged_in'});
+        response = JsonResponse({'status': 'not_logged_in'})
         response.set_cookie("pl_fn_id", request.POST.get("id"))
         response.set_cookie("cart_fn", request.POST.get("function"))
         return response
@@ -54,6 +54,7 @@ def one_week_in_future():
 def success(request):
     # TODO: remove items from cart, mark them as sold and move to user purchase history
     context=get_cart(request)
+    sold_items = []
     for transaction in request.user.cart.productlisting_set.all():
         u = get_object_or_404(User, pk=transaction.user.email)
         pt = PendingTransaction(user=u, balance=transaction.price, date_transacted=timezone.now(), date_settled=one_week_in_future())
@@ -61,6 +62,9 @@ def success(request):
         transaction.hasBeenSoldFlag = True
         transaction.cart = None
         transaction.save()
+        sold_items.append(transaction)
+        
+    context['sold_items'] = sold_items
     return render(request, 'payments/success.html', context=context)
 
 def cancelled(request):
