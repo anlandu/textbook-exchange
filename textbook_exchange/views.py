@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -47,7 +47,16 @@ def error_404(request):
     context['title'] ='404 Error: Not Found'
     return render(request, 'textbook_exchange/404_error.html')
 
-@login_required(redirect_field_name='my_redirect_field', login_url="/accounts/google/login/")
+def login_redirect_before(request):
+    response = HttpResponseRedirect(reverse('google_login'))
+    response.set_cookie("redirect_address", request.GET.get('login_redirect_target'))
+    return response
+
+def login_redirect_after(request):
+    address = request.COOKIES.get("redirect_address")
+    return HttpResponseRedirect(address)
+
+@login_required(redirect_field_name='login_redirect_target', login_url="/login/")
 def sell_books(request):
     context = get_logged_in(request) 
     context['title'] = 'Sell Books'
