@@ -168,7 +168,7 @@ function addtoCart(id) {
         },
         success: function(json) {
             if (json['status'] == 'success') window.location.href = "{% url 'payments:cart' %}";
-            else if (json['status'] == 'not_logged_in') window.location.href = "{% url 'google_login' %}";
+            else if (json['status'] == 'not_logged_in') window.location.href = "{% url 'exchange:login' %}" + "?login_redirect_target=/cart/";
         },
         error: function(xhr, errmsg, err) {
             console.log("error");

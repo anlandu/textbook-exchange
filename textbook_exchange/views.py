@@ -54,7 +54,9 @@ def login_redirect_before(request):
 
 def login_redirect_after(request):
     address = request.COOKIES.get("redirect_address")
-    return HttpResponseRedirect(address)
+    response = HttpResponseRedirect(address)
+    response.delete_cookie('redirect_address')
+    return response
 
 @login_required(redirect_field_name='login_redirect_target', login_url="/login/")
 def sell_books(request):

@@ -1,6 +1,6 @@
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from textbook_exchange import models as textbook_exchange_models
+from textbook_exchange.models import ProductListing, User, PendingTransaction
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 import requests, json
@@ -27,34 +27,26 @@ def get_cart(request):
 
 def cart(request):
     if request.method == "GET":
+        if request.user.is_authenticated and "pl_fn_id" in request.COOKIES:
+            cart_functions(request.user, request.COOKIES.get("pl_fn_id"), request.COOKIES.get("cart_fn"))
         context=get_cart(request)
         if context['logged_in'] is False:
             return render(request, 'payments/log_in.html')
         context['title'] = "Cart"
         if len(request.user.cart.productlisting_set.all()) == 0:
             return render(request, 'payments/empty_cart.html')
-        return render(request, 'payments/cart.html', context=context)
+        response = render(request, 'payments/cart.html', context=context)
+        if "pl_fn_id" in request.COOKIES:
+            response.delete_cookie('pl_fn_id')
+            response.delete_cookie("cart_fn")
+        return response
     elif request.method == "POST" and request.user.is_authenticated:
-        listing = textbook_exchange_models.ProductListing.objects.get(pk=request.POST.get("id"))
-        if request.POST.get("function") == "add":
-            if listing.cart is not None:
-                if listing.cart is request.user.cart:
-                    return JsonResponse({'status': 'success'})
-                return JsonResponse({'status': "error - already in another user's cart"})
-            listing.cart = request.user.cart
-            listing.save()       
-            return JsonResponse({'status': 'success'})
-        elif request.POST.get("function") == "remove":
-            if listing.cart != request.user.cart:
-                return JsonResponse({'status': "error - not authorized to perform this action"})
-            if listing.cart is None:
-                return JsonResponse({'status': "error - this item was not in the user's cart"})
-            listing.cart = None
-            listing.save()
-            return JsonResponse({'status': 'success'})
-        return JsonResponse({'status': 'generic errorerror'})
+        return cart_functions(request.user, request.POST.get("id"), request.POST.get("function"))
     elif request.method == "POST" and not request.user.is_authenticated:
-        return JsonResponse({'status': 'not_logged_in'})
+        response = JsonResponse({'status': 'not_logged_in'});
+        response.set_cookie("pl_fn_id", request.POST.get("id"))
+        response.set_cookie("cart_fn", request.POST.get("function"))
+        return response
 
 def one_week_in_future():
     return timezone.now() + timezone.timedelta(weeks=1)
@@ -63,8 +55,8 @@ def success(request):
     # TODO: remove items from cart, mark them as sold and move to user purchase history
     context=get_cart(request)
     for transaction in request.user.cart.productlisting_set.all():
-        u = textbook_exchange_models.User.objects.get(pk=transaction.user.email)
-        pt = textbook_exchange_models.PendingTransaction(user=u, balance=transaction.price, date_transacted=timezone.now(), date_settled=one_week_in_future())
+        u = get_object_or_404(User, pk=transaction.user.email)
+        pt = PendingTransaction(user=u, balance=transaction.price, date_transacted=timezone.now(), date_settled=one_week_in_future())
         pt.save()
         transaction.hasBeenSoldFlag = True
         transaction.cart = None
@@ -74,3 +66,22 @@ def success(request):
 def cancelled(request):
     context=get_cart(request)
     return render(request, 'payments/cart.html', context=context)
+
+def cart_functions(user, listing_id, fn):
+    listing = get_object_or_404(ProductListing, pk=listing_id)
+    if fn == "add":
+        if listing.cart is not None:
+            if listing.cart is user.cart:
+                return JsonResponse({'status': 'success'})
+            return JsonResponse({'status': "error - already in another user's cart"})
+        listing.cart = user.cart
+        listing.save()       
+        return JsonResponse({'status': 'success'})
+    elif fn == "remove":
+        if listing.cart != user.cart:
+            return JsonResponse({'status': "error - not authorized to perform this action"})
+        if listing.cart is None:
+            return JsonResponse({'status': "error - this item was not in the user's cart"})
+        listing.cart = None
+        listing.save()
+        return JsonResponse({'status': 'success'})
