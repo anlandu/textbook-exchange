@@ -109,9 +109,11 @@ def account_page(request):
     context = get_logged_in(request)
     context['title'] = 'Account Page'
     if not context['logged_in']:
-        return HttpResponseRedirect('/404_error')    
+        print('redirecting')
+        return HttpResponseRedirect(reverse('exchange:login')+ "?login_redirect_target=" + reverse('exchange:account_page'))   
     return render(request, 'textbook_exchange/account_dashboard.html', context=context)
-
+    
+@login_required(redirect_field_name='login_redirect_target', login_url="/login/")
 def account_page_messages(request):
     context = get_logged_in(request)
     context['title'] = 'Messages'
