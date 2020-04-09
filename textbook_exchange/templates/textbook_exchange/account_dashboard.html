@@ -47,4 +47,9 @@
         {% endfor %}
     </div>
 </div>
+<script>
+    {% if status == "cashout_success" %}
+        alert('Successfully cashed out! Check the email used for this account for details.');
+    {% endif %}
+</script>
 {% endblock inner-content %}

@@ -144,6 +144,8 @@ class AccountCurrentListings(ListView):
         for pt in self.request.user.pendingtransaction_set.all():
             sum += pt.balance
         context['pending_balance'] = sum
+        if "status" in self.request.GET:
+            context['status'] = self.request.GET.get("status")
         return context
 
 class AccountPastListings(ListView):
@@ -322,4 +324,4 @@ def cashout(request):
         if isinstance(ioe, HttpError):
             # Something went wrong server-side
             print (ioe.status_code)
-    return HttpResponseRedirect(reverse('exchange:account_page'))
+    return HttpResponseRedirect(reverse('exchange:account_page') + "?status=cashout_success")
