@@ -16,8 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
+<<<<<<< HEAD
 from django.conf import settings
 from django.conf.urls.static import static
+=======
+from django_private_chat import urls as django_private_chat_urls
+>>>>>>> 49c220aac663c94c2aff98037fed47f08737f1fe
 
 urlpatterns = [
     path('admin/', admin.site.urls),

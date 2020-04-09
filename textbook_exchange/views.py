@@ -12,8 +12,20 @@ import requests
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook, Class
 from django.http import JsonResponse #for autocompletion response
+<<<<<<< HEAD
 import cloudinary.uploader
 import os
+=======
+from django.conf import settings #for twilio messaging
+from faker import Factory #for twilio messaging
+
+from twilio.rest import Client
+from twilio.jwt.access_token import AccessToken
+from twilio.jwt.access_token.grants import (
+    SyncGrant,
+    ChatGrant
+)
+>>>>>>> 49c220aac663c94c2aff98037fed47f08737f1fe
 
 os.environ["CLOUDINARY_URL"]="cloudinary://348783216512488:nPXIA343WzNVngfkykW-I7XkGgE@dasg2ntne"
 cloudinary.config(

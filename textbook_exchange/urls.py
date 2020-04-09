@@ -19,7 +19,13 @@ urlpatterns = [
     path('accounts/messages', views.account_page_messages, name='messages'),
     path('buy/', views.buy_books, name='buybooks'),
     path('buy/autocomplete/', views.autocomplete, name='ajax_autocomplete'),
+<<<<<<< HEAD
     path('buy/<slug:isbn>/<slug:slug>/', views.BuyProductListings.as_view(), name='buy_product'), 
     #path('buy/<slug:isbn>/<slug:slug>/<slug:sort>/', views.BuyProductListings.as_view(), name='buy_product'), 
     path('find/<slug:class_info>/', views.FindTextbooks.as_view(), name='find_by_class'), 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+=======
+    path('messaging/', views.chat_view, name='twilio'),
+    path(r'^token', views.token, name='token'),
+]
+>>>>>>> 49c220aac663c94c2aff98037fed47f08737f1fe
