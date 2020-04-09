@@ -85,7 +85,7 @@ paypal_sdk.Buttons({
                     items: [
                         {% for product in user.cart.productlisting_set.all %}
                             {
-                                name: '{{ product.textbook.title }}, Edition {{ product.textbook.edition }}',
+                                name: '{{ product.textbook.title }}, ISBN-13: {{ product.textbook.isbn13 }}',
                                 description: '{{ product.comments }}',
                                 quantity: '1',
                                 unit_amount: {
