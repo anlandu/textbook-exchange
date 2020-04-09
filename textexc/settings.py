@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'django_private_chat',
 ]
 #Set-up for Django-Private-Chat
 #Link: https://django-private-chat.readthedocs.io/en/latest/readme.html
@@ -168,19 +167,12 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-<<<<<<< HEAD
-=======
-# TWILIO_ACCT_SID = os.environ['TWILIO_ACCT_SID']
-# TWILIO_CHAT_SID = os.environ['TWILIO_CHAT_SID']
-# TWILIO_SYNC_SID = os.environ['TWILIO_SYNC_SID']
-# TWILIO_API_SID = os.environ['TWILIO_API_SID']
-# TWILIO_API_SECRET = os.environ['TWILIO_API_SECRET']
-
->>>>>>> 49c220aac663c94c2aff98037fed47f08737f1fe
-TWILIO_ACCT_SID='ACf0385517838b0c0e46062e41663cd6c8' #This is risky
+TWILIO_ACCT_SID='ACf0385517838b0c0e46062e41663cd6c8'
 TWILIO_CHAT_SID='IS132e7a7ce77447468436a24845500d04'
 TWILIO_SYNC_SID='IS7086992d661eb157e6b5149543febb51'
-TWILIO_API_SID='SK3ea6be2d2906b13b67acb9624bb718ab'
-TWILIO_API_SECRET='ONF8NGsbIBJv9eetyOTiX8hc7yEzWY4K'
+TWILIO_API_SID='SK9c7fe6717da5318751e61ca951dd784e'
+TWILIO_API_SECRET='YP8YzQNQw8K1VM9bgiFlezje0MckJenx'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (os.path.join(os.path.dirname(__file__),'static'),)
 django_heroku.settings(locals())
