@@ -112,7 +112,7 @@ def account_page(request):
         print('redirecting')
         return HttpResponseRedirect(reverse('exchange:login')+ "?login_redirect_target=" + reverse('exchange:account_page'))   
     return render(request, 'textbook_exchange/account_dashboard.html', context=context)
-    
+
 @login_required(redirect_field_name='login_redirect_target', login_url="/login/")
 def account_page_messages(request):
     context = get_logged_in(request)
@@ -133,6 +133,11 @@ class AccountCurrentListings(ListView):
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
     ordering = ['published_date']
+
+    def get_queryset(self):
+        queryset = super(AccountCurrentListings, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
+        return queryset
 
 class AccountPastListings(ListView):
     model = ProductListing
