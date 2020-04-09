@@ -1,21 +1,20 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-import json
-import itertools
-import functools
-import json
-import requests
+import json, itertools, functools, requests, os, cloudinary.uploader
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook, Class
-from django.http import JsonResponse #for autocompletion response
-import cloudinary.uploader
-import os
+from paypalpayoutssdk.core import PayPalHttpClient, SandboxEnvironment
+from paypalpayoutssdk.payouts import PayoutsPostRequest
+from paypalhttp import HttpError
+from datetime import datetime
+
 
 os.environ["CLOUDINARY_URL"]="cloudinary://348783216512488:nPXIA343WzNVngfkykW-I7XkGgE@dasg2ntne"
+
 cloudinary.config(
   cloud_name = "dasg2ntne", 
   api_key = "348783216512488", 
@@ -139,6 +138,14 @@ class AccountCurrentListings(ListView):
         queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
         return queryset
 
+    def get_context_data(self, **kwargs):          
+        context = super().get_context_data(**kwargs)                     
+        sum = 0
+        for pt in self.request.user.pendingtransaction_set.all():
+            sum += pt.balance
+        context['pending_balance'] = sum
+        return context
+
 class AccountPastListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_past_posts.html"
@@ -254,3 +261,65 @@ def autocomplete(request):
     }
 
     return JsonResponse(data)
+
+class PayPalClient:
+    def __init__(self):
+        self.client_id =  os.environ["PAYPAL-CLIENT-ID"] if 'PAYPAL-CLIENT-ID' in os.environ else "AcCaARG0gidap3Y0mCgZtbbdE3sDrYHyHSIBwJ20jwhyGk3MQSBLxpWggOwuOQphYKDLl87wRLek-qE8"
+        self.client_secret = os.environ["PAYPAL-CLIENT-SECRET"] if 'PAYPAL_CLIENT_SECRET' in os.environ else "ENBevuGci9BP5Lt7bAfofOFvjVerx7hMHKaapIo0-8idONUuQkx90pyyKM7HHAIlMYirX5mDRoc_zPFI"
+
+        """Set up and return PayPal Python SDK environment with PayPal Access credentials.
+           This sample uses SandboxEnvironment. In production, use
+           LiveEnvironment."""
+        self.environment = SandboxEnvironment(client_id=self.client_id, client_secret=self.client_secret)
+
+        """ Returns PayPal HTTP client instance in an environment with access credentials. Use this instance to invoke PayPal APIs, provided the
+            credentials have access. """
+        self.client = PayPalHttpClient(self.environment)
+
+@login_required(redirect_field_name='login_redirect_target', login_url="/login/")
+def process_pending(request):
+    for pt in request.user.pendingtransaction_set.all():
+        request.user.balance += pt.balance
+        pt.delete()
+    request.user.save()
+    return HttpResponseRedirect(reverse('exchange:account_page'))
+
+@login_required(redirect_field_name='login_redirect_target', login_url="/login/")
+def cashout(request):
+    batch_id = str(datetime.date(datetime.now()))+str(datetime.time(datetime.now()))
+    body = {
+        "sender_batch_header": {
+                "sender_batch_id": batch_id,
+                "email_subject": "You have a payout!",
+                "email_message": "You have received a payout! Thanks for using UVA TextEx for all you textbook exchange needs!"
+            },
+            "items": [
+                {
+                "recipient_type": "EMAIL",
+                "amount": {
+                    "value": str(request.user.balance),
+                    "currency": "USD"
+                },
+                "note": "Thanks using UVA TextEX!",
+                "sender_item_id": batch_id+"0001",
+                "receiver": 'pineappleseals@gmail.com'
+                }
+            ]
+    }
+
+    req = PayoutsPostRequest()
+    req.request_body(body)
+    ppc = PayPalClient()
+    try:
+        # Call API with your client and get a response for your call
+        response = ppc.client.execute(req)
+        # If call returns body in response, you can get the deserialized version from the result attribute of the response
+        b_id = response.result.batch_header.payout_batch_id
+        request.user.balance = 0.0
+        request.user.save()           
+    except IOError as ioe:
+        print(ioe)
+        if isinstance(ioe, HttpError):
+            # Something went wrong server-side
+            print (ioe.status_code)
+    return HttpResponseRedirect(reverse('exchange:account_page'))

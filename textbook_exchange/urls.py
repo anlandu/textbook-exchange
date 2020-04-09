@@ -20,6 +20,8 @@ urlpatterns = [
     path('accounts/', login_required(views.AccountCurrentListings.as_view(), redirect_field_name='login_redirect_target', login_url="/login/"), name='account_page'),
     path('accounts/past_posts', login_required(views.AccountPastListings.as_view(), redirect_field_name='login_redirect_target', login_url="/login/"), name='past_posts'),
     path('accounts/messages', views.account_page_messages, name='messages'),
+    path('accounts/cashout', views.cashout, name='cashout'),
+    path('accounts/process', views.process_pending, name='process'),
     path('buy/', views.buy_books, name='buybooks'),
     path('buy/autocomplete/', views.autocomplete, name='ajax_autocomplete'),
     path('buy/<slug:isbn>/<slug:slug>/', views.BuyProductListings.as_view(), name='buy_product'), 
