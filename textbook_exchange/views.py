@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from textbook_exchange import models as textbook_exchange_models
 import json
 import itertools
 import functools
@@ -113,6 +114,9 @@ def account_page(request):
 def account_page_messages(request):
     context = get_logged_in(request)
     context['title'] = 'Messages'
+    context['id'] = request.GET.get('listing_id')
+    listing = textbook_exchange_models.ProductListing.objects.get(pk=request.GET.get('listing_id'))
+    context['first_name'] = listing.user.first_name + " " + listing.user.last_name
     if not context['logged_in']:
         return HttpResponseRedirect('/404_error')    
     return render(request, 'textbook_exchange/account_messages.html', context=context)
@@ -252,6 +256,7 @@ def chat_view(request):
 def token(request):
     fake = Factory.create()
     return generateToken(fake.user_name())
+    #return generateToken(context.user_name)
 
 def generateToken(identity):
     # Get credentials from environment variables
