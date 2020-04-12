@@ -82,6 +82,11 @@
         Twilio.Chat.Client.create(data.token).then(client => {
           console.log('Created chat client');
           chatClient = client;
+          chatClient.on('channelInvited', function(channel) {
+            console.log('Invited to channel ' + channel.friendlyName);
+            // Join the channel that you were invited to
+            channel.join();
+          });
           chatClient.getSubscribedChannels().then(createOrJoinGeneralChannel);
     
         // Alert the user they have been assigned a random username
@@ -97,7 +102,8 @@
       });
     
       function createOrJoinGeneralChannel() {
-        var uniqueChannelName = 'Channel{{seller_name}}' + '{{user.username}}'+'{{listing_id}}';
+        var uniqueChannelName = 'Chat{{seller_name}}' + '{{user.username}}'+'{{listing_id}}';
+
         // Get the general chat channel, which is where all the messages are
         // sent in this simple application
         print('Attempting to join '+ uniqueChannelName + ' chat channel...');
@@ -119,6 +125,9 @@
             console.log('Created channel: ' + uniqueChannelName);
             console.log(channel);
             generalChannel = channel;
+            generalChannel.invite('{{ seller_name }}').then(function() {
+              console.log("Invitation sent!")
+            })
             setupChannel();
           }).catch(function(channel) {
             console.log('Channel could not be created:');

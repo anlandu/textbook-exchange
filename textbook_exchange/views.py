@@ -115,7 +115,7 @@ def account_page_messages(request):
     context = get_logged_in(request)
     context['title'] = 'Messages'
     context['id'] = request.GET.get('listing_id')
-    if request.GET.get("listing_id") is not None:
+    if request.method == 'GET' and 'listing_id' in request.GET:
         listing = textbook_exchange_models.ProductListing.objects.get(pk=request.GET.get('listing_id'))
         context['seller_name'] = listing.user.first_name + " " + listing.user.last_name
         context['listing'] = listing 
