@@ -12,6 +12,11 @@
     <h1 class="custom-header">Current Posts</h1>
 
     <!-- POSTS -->
+    {% if postSold %}
+    	<script>
+    		alert("Successfully marked as sold.");
+    	</script>
+    {% endif %}
     <div class="row">
         {% for post in current_posts %}
             <div class="card text-font" style="width: 15rem;">
@@ -20,7 +25,7 @@
                     <h5 class="card-title">{{ post.textbook.title }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author_clean }}</h6> 
                     <h5 class="card-subtitle mt-4 mb-2">${{ post.price }}</h5>
-                    <a href="#" class="card-link">edit</a>
+                    <a href="#" class="card-link" data-toggle="modal" data-target="#edit">edit</a>
                 </div>
                 <div class="card-body">
                     <p class="card-subtitle mb-2 mb-4 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
@@ -37,12 +42,81 @@
                         {% endif %}
                     </p>
                     <p class="card-text mb-4">{{ post.comments }}</p>
-                    <a href="#" class="btn btn-primary mx-auto d-block" style="width: 40%;">
-                        Sold?
-                    </a>
+                    <form action="" method="post">
+                      {% csrf_token %}
+                        <button href="#" name="sold_listing" value="{{ post.id }}" class="btn btn-primary mx-auto d-block" style="width: 40%;">
+                          Sold?
+                        </button>
+                      {% csrf_token %}     
+                    </form>
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Book Title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+			<form action="" method="post">
+			{% csrf_token %}
+                <div class="form-group form-inline">
+                    <!-- min_value=0.0, max_digits=7, decimal_places=2, validators=[MaxValueValidator(500.00)], widget=forms.NumberInput(attrs={'class': 'form-control'}) -->
+                  <label for="recipient-name" class="col-form-label">Price: $&nbsp&nbsp&nbsp</label>
+                  <input type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">Condition</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="condition" id="likenew" value="likenew" checked>
+                        <label class="form-check-label" for="likenew">Like new</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="condition" id="verygood" value="verygood">
+                        <label class="form-check-label" for="verygood">Very good</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="condition" id="good" value="good">
+                        <label class="form-check-label" for="good">Good</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="condition" id="acceptable" value="acceptable">
+                        <label class="form-check-label" for="acceptable">Acceptable</label>
+                      </div>
+                </div>
+                <div class="form-group form">
+                  <label for="message-text" class="col-form-label">Comments</label>
+                  <textarea class="form-control" id="message-text" max_length=300></textarea>
+                </div>
+          {% csrf_token %}     
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<script>
+$('#myModal').on('shown.bs.modal', function () {
+    $('#edit').trigger('focus')
+});
+
+
+// // clears edit form on click
+// $( "#edit" ).click(function() {
+// 	document.getElementById("edit_form").reset();
+// });
+
+</script>
 {% endblock inner-content %}
