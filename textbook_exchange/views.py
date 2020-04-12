@@ -115,8 +115,10 @@ def account_page_messages(request):
     context = get_logged_in(request)
     context['title'] = 'Messages'
     context['id'] = request.GET.get('listing_id')
-    listing = textbook_exchange_models.ProductListing.objects.get(pk=request.GET.get('listing_id'))
-    context['first_name'] = listing.user.first_name + " " + listing.user.last_name
+    if request.GET.get("listing_id") is not None:
+        listing = textbook_exchange_models.ProductListing.objects.get(pk=request.GET.get('listing_id'))
+        context['seller_name'] = listing.user.first_name + " " + listing.user.last_name
+        context['listing'] = listing 
     if not context['logged_in']:
         return HttpResponseRedirect('/404_error')    
     return render(request, 'textbook_exchange/account_messages.html', context=context)
@@ -251,12 +253,21 @@ def autocomplete(request):
     return JsonResponse(data)
 
 def chat_view(request):
-    return render(request, 'textbook_exchange/index.html')
+    context=get_logged_in(request)
+    listing = textbook_exchange_models.ProductListing.objects.get(pk=request.GET.get('listing_id'))
+    context['seller_name'] = listing.user.username
+    context['listing'] = listing 
+    context['listing_id'] = request.GET.get('listing_id')
+    return render(request, 'textbook_exchange/index.html', context = context)
     
 def token(request):
+    context = get_logged_in(request)
+    #user_identity = textbook_exchange_models.User.objects.get(pk=request.GET.get('listing_id'))
+    #user_identity = textbook_exchange_models.User.objects.get(pk=request.GET.get('name_id'))
+    #context['name'] = textbook_exchange_models.User.first_name + " " + textbook_exchange_models.User.last_name
     fake = Factory.create()
     return generateToken(fake.user_name())
-    #return generateToken(context.user_name)
+    #return generateToken(name_test)
 
 def generateToken(identity):
     # Get credentials from environment variables

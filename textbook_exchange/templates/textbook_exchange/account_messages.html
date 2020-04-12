@@ -6,7 +6,12 @@
 <div class="right-container">
     <h1 class="custom-header">Messages</h1>
     <!-- ... -->
-    <p>Message to {{ first_name }}</p>
+    {% if seller_name is not None %}
+        <!--<p>Message to {{ name }}</p> -->
+        <a  class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;" href="{% url 'exchange:twilio' %}?listing_id={{listing.id}}&seller_name={{ listing.user.username }}&user_name={{ user.username }}"> 
+            Message from {{ user.first_name }} {{ user.last_name }} to {{ seller_name }} for {{ listing.id }}
+        </a>
+    {% endif %}
 </div>
 
 {% endblock inner-content %}

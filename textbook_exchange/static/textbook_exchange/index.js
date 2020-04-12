@@ -81,7 +81,8 @@ $(function() {
         console.log('Creating general channel');
         chatClient.createChannel({
           uniqueName: 'general',
-          friendlyName: 'General Chat Channel'
+          friendlyName: 'General Chat Channel',
+          irPrivate: true
         }).then(function(channel) {
           console.log('Created general channel:');
           console.log(channel);
