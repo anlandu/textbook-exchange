@@ -265,8 +265,9 @@ def token(request):
     #user_identity = textbook_exchange_models.User.objects.get(pk=request.GET.get('listing_id'))
     #user_identity = textbook_exchange_models.User.objects.get(pk=request.GET.get('name_id'))
     #context['name'] = textbook_exchange_models.User.first_name + " " + textbook_exchange_models.User.last_name
-    fake = Factory.create()
-    return generateToken(fake.user_name())
+    #fake = Factory.create()
+    #print("Printing User " +  request.user.username)
+    return generateToken(request.user.username)
     #return generateToken(name_test)
 
 def generateToken(identity):
