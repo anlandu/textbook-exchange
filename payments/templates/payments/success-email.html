@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Receipt for your textbook order on UVA TextEx</h2>
+            <br>
+            <hr>
+            {% for product in sold_items %}
+            <div class="row">
+                <div class="col-sm-6">
+                    <p><b>{{ product.textbook.title }}</b><br><span class="text-muted">{{ product.textbook.author_clean }}</span><br><br>Sold by: {{ product.user.first_name }} {{ product.user.last_name }}, {{ product.user.email }}</p>
+                </div>
+                <div class="col-sm-4">
+                    <p class="text-right font-weight-bold">${{ product.price}}</p>
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+            <div class="row">
+                <div class="col-sm-8"></div>
+                <div class="col-sm-4">
+                    <p class="text-right"><b>Total: ${{ total }}</b></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

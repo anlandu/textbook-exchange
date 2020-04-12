@@ -3,6 +3,10 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from textbook_exchange.models import ProductListing, User, PendingTransaction
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.core.mail import send_mail, EmailMultiAlternatives
+from textexc.settings import EMAIL_HOST_USER
+from django.template.loader import get_template
+from django.template import Context
 import requests, json
 
 def get_cart(request):      
@@ -63,9 +67,24 @@ def success(request):
         transaction.cart = None
         transaction.save()
         sold_items.append(transaction)
-        
+
+        subject = 'A textbook sold on UVA TextEx!'
+        message = 'Dear ' + transaction.user.first_name +",\n\nYour listing of " + transaction.textbook.title + " has been sold!\n\nIf you have not already been in contact with the buyer, " + request.user.first_name +", make sure you message them or send them an email at " + request.user.email + ". As a reminder, your proceeds from selling the book will be held for two weeks to give the buyer a chance to raise a concern.\n\nThanks for using TextEx for all your used textbook needs,\nThe Team at UVA TextEx"
+        recipient = transaction.user.email
+        send_mail(subject, message, EMAIL_HOST_USER, [recipient], fail_silently=False)
+
     context['sold_items'] = sold_items
+    
+    text_email = get_template('payments/success-email.txt')
+    html_email = get_template('payments/success-email.html')
+
+    text_content = text_email.render(context)
+    html_content = html_email.render(context)
+    send_mail("Your receipt from UVA TextEx", text_content, EMAIL_HOST_USER, [request.user.email], html_message=html_content)
+
+
     return render(request, 'payments/success.html', context=context)
+
 
 def cancelled(request):
     context=get_cart(request)

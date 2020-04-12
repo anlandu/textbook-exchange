@@ -160,5 +160,13 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+#Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'pineappleseals@gmail.com'
+EMAIL_HOST_PASSWORD = 'Sherriff2020!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 django_heroku.settings(locals())
