@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from textbook_exchange.models import ProductListing, User, PendingTransaction
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core.mail import send_mail
 from textexc.settings import EMAIL_HOST_USER
 from django.template.loader import get_template
 from django.template import Context

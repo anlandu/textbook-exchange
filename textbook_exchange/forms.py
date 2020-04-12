@@ -10,3 +10,8 @@ class SellForm(forms.Form):
     price = forms.DecimalField(label='Price (USD)', min_value=0.0, max_value=1000.0, widget=forms.NumberInput(attrs={'class': 'form-control'}))
     picture = forms.ImageField(label='Upload picture', widget=forms.FileInput(attrs={'class': 'form-control'}))
     comments = forms.CharField(label='Comments', required=False, max_length=500, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': '3'}))
+
+class ContactForm(forms.Form):
+    subject = forms.CharField(label='Subject', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    message = forms.CharField(label='Message', max_length=5000, widget=forms.Textarea(attrs={'class': 'form-control'}))
+    email = forms.EmailField(label="Reply Email Address", widget=forms.EmailInput(attrs={'class': 'form-control'}))

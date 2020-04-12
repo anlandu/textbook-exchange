@@ -17,6 +17,7 @@ urlpatterns = [
     path('login/', views.login_redirect_before, name="login"),
     path('login/redirect/', views.login_redirect_after, name="login_redirect"),
     path('sell/', views.sell_books, name='sellbooks'),
+    path('contact_us/', views.contact_us, name='contact_us'),
     path('accounts/', login_required(views.AccountCurrentListings.as_view(), redirect_field_name='login_redirect_target', login_url="/login/"), name='account_page'),
     path('accounts/past_posts', login_required(views.AccountPastListings.as_view(), redirect_field_name='login_redirect_target', login_url="/login/"), name='past_posts'),
     path('accounts/messages', views.account_page_messages, name='messages'),

@@ -5,12 +5,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json, itertools, functools, requests, os, cloudinary.uploader
-from .forms import SellForm
+from .forms import SellForm, ContactForm
 from .models import ProductListing, Class, Textbook, Class
 from paypalpayoutssdk.core import PayPalHttpClient, SandboxEnvironment
 from paypalpayoutssdk.payouts import PayoutsPostRequest
 from paypalhttp import HttpError
 from datetime import datetime
+from django.core.mail import mail_admins
+from textexc.settings import EMAIL_HOST_USER
 
 
 os.environ["CLOUDINARY_URL"]="cloudinary://348783216512488:nPXIA343WzNVngfkykW-I7XkGgE@dasg2ntne"
@@ -325,3 +327,18 @@ def cashout(request):
             # Something went wrong server-side
             print (ioe.status_code)
     return HttpResponseRedirect(reverse('exchange:account_page') + "?status=cashout_success")
+
+def contact_us(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+
+            mail_admins(cleaned_data['subject'], 'Reply To: ' + cleaned_data['email'] + "\n" + cleaned_data['message'], fail_silently=False)
+
+            return HttpResponseRedirect('/contact_us?sent=True')
+        else:
+            return render(request, "textbook_exchange/contact_us.html", context={'form':form})
+            # raise forms.ValidationError("Please fill in all fields in red.")
+    else:
+        return render(request, 'textbook_exchange/contact_us.html', context={'form': ContactForm, 'sent': 'sent' in request.GET})
