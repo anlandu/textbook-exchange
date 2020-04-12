@@ -1,0 +1,17 @@
+{% extends 'textbook_exchange/base.html' %}
+{% block content %}
+    {% if sent %}
+        <h1 class="text-center" style="padding: 150px 0;">Your message was sent successfully! Look for a response in 24-48 hours!</h1>
+    {% else %}
+        <h1>Contact Us</h1>
+        <form action="" method="post" novalidate enctype="multipart/form-data">
+            {{ form }}
+            {% csrf_token %}
+            <div class="form-group row mt-3">
+                <div class="col-12 text-center">
+                    <button type="submit" value="Submit" class="btn btn-lg btn-uva">Send</button>
+                </div>
+            </div>
+        </form>
+    {% endif
+{% endblock %}
