@@ -97,24 +97,26 @@
       });
     
       function createOrJoinGeneralChannel() {
+        var uniqueChannelName = 'Channel{{seller_name}}' + '{{user.username}}'+'{{listing_id}}';
         // Get the general chat channel, which is where all the messages are
         // sent in this simple application
-        print('Attempting to join {{listing_id}} chat channel...');
-        chatClient.getChannelByUniqueName('{{ listing_id }}{{ seller_name }}{{ user.username }}')
+        print('Attempting to join '+ uniqueChannelName + ' chat channel...');
+        console.log('finding or creating ' + uniqueChannelName);
+        chatClient.getChannelByUniqueName(uniqueChannelName)
         .then(function(channel) {
           generalChannel = channel;
-          console.log('Found general channel:');
+          console.log('Found a channel: ');
           console.log(generalChannel);
           setupChannel();
         }).catch(function() {
           // If it doesn't exist, let's create it
-          console.log('Creating {{ listing_id }}{{ seller_name }}{{ user.username }} channel');
+          console.log('Creating channel ' + uniqueChannelName);
           chatClient.createChannel({
-            uniqueName: '{{ listing_id }}{{ seller_name }}{{ user.username }}',
-            friendlyName: 'General Chat Channel rohan{{listing_id}}',
-            isPrivate: true
+            uniqueName: uniqueChannelName,
+            friendlyName: 'General Chat Channel ' + uniqueChannelName,
+            isPrivate: false
           }).then(function(channel) {
-            console.log('Created general channel:');
+            console.log('Created channel: ' + uniqueChannelName);
             console.log(channel);
             generalChannel = channel;
             setupChannel();
