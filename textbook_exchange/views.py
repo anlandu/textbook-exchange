@@ -259,6 +259,12 @@ def chat_view(request):
     context['listing'] = listing 
     context['listing_id'] = request.GET.get('listing_id')
     return render(request, 'textbook_exchange/index.html', context = context)
+
+def channel_view(request):
+    context = get_logged_in(request)
+    if request.method == 'GET' and 'channel_name' in request.GET:
+        context['channel_name'] = request.GET.get('channel_name')
+    return render(request, 'textbook_exchange/message_channel.html', context = context)
     
 def token(request):
     context = get_logged_in(request)

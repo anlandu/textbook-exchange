@@ -25,4 +25,5 @@ urlpatterns = [
     path('messaging/', views.chat_view, name='twilio'),
     #path(r'^token', views.token, name='token'),
     path('token/', views.token, name='token'),
+    path('messaging/channel', views.channel_view, name='channel'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

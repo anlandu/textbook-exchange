@@ -85,7 +85,8 @@
         for (i = 0; i < paginator.items.length; i++) {
             const channel = paginator.items[i];
             console.log('Channel: ' + channel.friendlyName);
-            var channelItem = "<li>" + channel.friendlyName +  "</li>";
+            var channelItem = '<li><a href="/messaging/channel?channel_name=' + channel.uniqueName + '">' + channel.friendlyName  + '</a></li>';
+            //var channelItem = '<li>' +channel.friendlyName  + '</li>';
             $('ul#channels').append(channelItem);
         }
         console.log("Leaving listOfSubscribedChannels()")
