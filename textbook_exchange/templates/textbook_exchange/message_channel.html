@@ -100,7 +100,7 @@
   
       // Alert the user they have been assigned a random username
       username = data.identity;
-      print('Joining as'
+      print('Joining as '
       + '<span class="me">' + username + '</span>', true);
   
       }).catch(error => {
@@ -113,17 +113,25 @@
     // Set up channel after it has been found
     function setupChannel() {
       // Join the general channel
-      generalChannel.join().then(function(channel) {
-        print('Joined channel as '
-        + '<span class="me">' + username + '</span>.', true);
-      });
-  
+      getChatHistory(generalChannel);
       // Listen for new messages sent to the channel
       generalChannel.on('messageAdded', function(message) {
         printMessage(message.author, message.body);
       });
     }
   
+    function getChatHistory(channel) {
+      // Get Messages for a previously created channel
+      channel.getMessages().then(function(messages) {
+      const totalMessages = messages.items.length;
+      for (i = 0; i < totalMessages; i++) {
+        const message = messages.items[i];
+        printMessage(message.author, message.body);
+      }
+      console.log('Total Messages:' + totalMessages);
+      });
+    }
+
     // Send a new message to the general channel
     var $input = $('#chat-input');
     $input.on('keydown', function(e) {
