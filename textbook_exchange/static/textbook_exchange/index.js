@@ -27,13 +27,13 @@
   // Helper function to print chat message to the chat window
   function printMessage(fromUser, message) {
     let $container = "";
-    if (fromUser === username) {
+    if (fromUser === u_name) {
       $container = $('<div class="d-flex flex-row-reverse p-1">');
     } else {
       $container = $('<div class="d-flex flex-row p-1">');
     }
     
-    var $message = $('<div class="p-2 bd-highlight" style="background: lightgray; border-radius: 15px;">').text(message);
+    var $message = $('<div class="p-2" style="background: lightgray; border-radius: 15px;">').text(message);
     $container.append($message);
     $chatWindow.append($container);
     $chatWindow.scrollTop($chatWindow[0].scrollHeight);
@@ -54,11 +54,10 @@
         chatClient = client;
         chatClient.on('channelInvited', function(channel) {
           console.log('Invited to channel ' + channel.friendlyName);
-          try {
-            channel.join();
-          } catch (e) {
-            console.log(e);
-          }
+          if(channel.state.status !== "joined") 
+            channel.join().then(function(channel) {
+              console.log("joined channel" + channel.friendlyName);
+            });
         });
         chatClient.getChannelByUniqueName(channelName).then(function(channel) {
             generalChannel = channel;

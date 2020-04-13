@@ -28,7 +28,11 @@
         chatClient = client;
         chatClient.on('channelInvited', function(channel) {
           console.log('Invited to channel ' + channel.friendlyName);
-          channel.join();
+          if(channel.state.status !== "joined") 
+            channel.join().then(function(channel) {
+              console.log("joined channel" + channel.friendlyName);
+                redirect(channel.uniqueName);
+            });
         });
         chatClient.getSubscribedChannels().then(createOrJoinGeneralChannel);
         // Alert the user they have been assigned a random username
@@ -65,12 +69,6 @@
             }).catch(function(e) {
                 console.error(e);
             });
-            channel.invite('{{ seller_name }}').then(function() {
-                console.log("Invitation sent!")
-            }).catch(function(e) {
-                console.error(e);
-            });
-          redirect(uniqueChannelName);
         }).catch(function(e) {
           console.log('Channel could not be created:');
           //console.log(e);

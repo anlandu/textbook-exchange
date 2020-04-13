@@ -31,8 +31,10 @@
         chatClient = client;
         chatClient.on('channelInvited', function(channel) {
           console.log('Invited to channel ' + channel.friendlyName);
-          // Join the channel that you were invited to
-          channel.join();
+          if(channel.state.status !== "joined") 
+            channel.join().then(function(channel) {
+              console.log("joined channel" + channel.friendlyName);
+            });
         });
         chatClient.getSubscribedChannels().then(listOfSubscribedChannels);
   
