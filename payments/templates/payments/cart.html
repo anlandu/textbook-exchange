@@ -20,7 +20,7 @@
             {% for product in user.cart.productlisting_set.all %}
             <div class="row">
                 <div class="col-sm-2">
-                    <img class="img-fluid" src='{{ product.picture.url }}'>
+                    <img class="img-fluid" src='{{ product.picture_url }}'>
                 </div>
                 <div class="col-sm-6">
                     <p><b>{{ product.textbook.title }}</b><br><span class="text-muted">{{ product.textbook.author_clean }}</span><br><a href="javascript:removeFromCart({{ product.id }});" style="position:absolute; bottom:0;">remove</a></p>
@@ -45,6 +45,10 @@
             <h2>Checkout</h2>
             <hr>
             <div id="paypal"></div>
+            <hr>
+            <h3>Sandbox Paypal Login</h3>
+            <p>Email: <b>pineappleseals@gmail.com</b></p>
+            <p>Password: <b>CS3120Rocks</b></p>
         </div>
     </div>
 </div>
@@ -81,7 +85,7 @@ paypal_sdk.Buttons({
                     items: [
                         {% for product in user.cart.productlisting_set.all %}
                             {
-                                name: '{{ product.textbook.title }}, Edition {{ product.textbook.edition }}',
+                                name: '{{ product.textbook.title }}, ISBN-13: {{ product.textbook.isbn13 }}',
                                 description: '{{ product.comments }}',
                                 quantity: '1',
                                 unit_amount: {

@@ -124,7 +124,7 @@ class ProductListing(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True) # should prevent a product listing from being in multiple carts at once
     price = models.DecimalField(max_digits=7, decimal_places=2)
     condition = models.CharField(max_length=10) # 'likenew', 'verygood', 'good', 'acceptable'
-    picture = models.ImageField(upload_to='listing_images')
+    picture_url = models.CharField(max_length=500, default="")
     comments = models.CharField(max_length=500, blank=True)
     has_been_sold = models.BooleanField(default=False)
     published_date = models.DateTimeField('date published', auto_now_add=True)

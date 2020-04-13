@@ -82,7 +82,7 @@
                         <ul class="navbar-nav mx-auto mx-lg-0 float-lg-right">
                             <li class="nav-item"><a class="uva nav-link uva-nav" href="{% url 'exchange:sellbooks' %}">Sell a book</a></li>
                             {% if user.cart %}<li class="nav-item"><a class="uva nav-link uva-nav" href="{% url 'payments:cart' %}"><i class="fa fa-shopping-cart"></i> ({{ user.cart.productlisting_set.all|length }})</a></li>{% endif %}
-                            {% block loginlink %}<li class="nav-item"><a class="uva nav-link uva-nav" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'google_login' %}{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
+                            {% block loginlink %}<li class="nav-item"><a class="uva nav-link uva-nav" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'exchange:login' %}?login_redirect_target=/{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
                         </ul>
                     </div>
                 </div>
@@ -102,6 +102,10 @@
                     &bull;       <!-- dot -->
                     &nbsp;&nbsp; <!-- tab -->
                     <a href="{% url 'exchange:faq' %}" class="uva uva-nav text-font" style="font-weight: 700; text-decoration: none;">FAQ</a>
+                    &nbsp;&nbsp; <!-- tab -->
+                    &bull;       <!-- dot -->
+                    &nbsp;&nbsp; <!-- tab -->
+                    <a href="{% url 'exchange:contact_us' %}" class="uva uva-nav text-font" style="font-weight: 700; text-decoration: none;">Contact Us</a>
                 </p>
             </footer>
         </div>

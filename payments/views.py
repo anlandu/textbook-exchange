@@ -1,8 +1,12 @@
-from django.shortcuts import render, reverse, redirect
-from django.http import HttpResponseRedirect, HttpResponse
-from textbook_exchange import models as textbook_exchange_models
+from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from textbook_exchange.models import ProductListing, User, PendingTransaction
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.core.mail import send_mail
+from textexc.settings import EMAIL_HOST_USER
+from django.template.loader import get_template
+from django.template import Context
 import requests, json
 
 def get_cart(request):      
@@ -27,24 +31,26 @@ def get_cart(request):
 
 def cart(request):
     if request.method == "GET":
+        if request.user.is_authenticated and "pl_fn_id" in request.COOKIES:
+            cart_functions(request.user, request.COOKIES.get("pl_fn_id"), request.COOKIES.get("cart_fn"))
         context=get_cart(request)
         if context['logged_in'] is False:
             return render(request, 'payments/log_in.html')
         context['title'] = "Cart"
         if len(request.user.cart.productlisting_set.all()) == 0:
             return render(request, 'payments/empty_cart.html')
-        return render(request, 'payments/cart.html', context=context)
+        response = render(request, 'payments/cart.html', context=context)
+        if "pl_fn_id" in request.COOKIES:
+            response.delete_cookie('pl_fn_id')
+            response.delete_cookie("cart_fn")
+        return response
     elif request.method == "POST" and request.user.is_authenticated:
-        listing = textbook_exchange_models.ProductListing.objects.get(pk=request.POST.get("id"))
-        if request.POST.get("function") == "add":
-            listing.cart = request.user.cart
-            listing.save()
-        elif request.POST.get("function") == "remove":
-            listing.cart = None
-            listing.save()
-        return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json')
+        return cart_functions(request.user, request.POST.get("id"), request.POST.get("function"))
     elif request.method == "POST" and not request.user.is_authenticated:
-        return HttpResponse(json.dumps({'status': 'not_logged_in'}), content_type='application/json')
+        response = JsonResponse({'status': 'not_logged_in'})
+        response.set_cookie("pl_fn_id", request.POST.get("id"))
+        response.set_cookie("cart_fn", request.POST.get("function"))
+        return response
 
 def one_week_in_future():
     return timezone.now() + timezone.timedelta(weeks=1)
@@ -52,15 +58,53 @@ def one_week_in_future():
 def success(request):
     # TODO: remove items from cart, mark them as sold and move to user purchase history
     context=get_cart(request)
+    sold_items = []
     for transaction in request.user.cart.productlisting_set.all():
-        u = textbook_exchange_models.User.objects.get(pk=transaction.user.email)
-        pt = textbook_exchange_models.PendingTransaction(user=u, balance=transaction.price, date_transacted=timezone.now(), date_settled=one_week_in_future())
+        u = get_object_or_404(User, pk=transaction.user.email)
+        pt = PendingTransaction(user=u, balance=transaction.price, date_transacted=timezone.now(), date_settled=one_week_in_future())
         pt.save()
         transaction.has_been_sold = True
         transaction.cart = None
         transaction.save()
+        sold_items.append(transaction)
+
+        subject = 'A textbook sold on UVA TextEx!'
+        message = 'Dear ' + transaction.user.first_name +",\n\nYour listing of " + transaction.textbook.title + " has been sold!\n\nIf you have not already been in contact with the buyer, " + request.user.first_name +", make sure you message them or send them an email at " + request.user.email + ". As a reminder, your proceeds from selling the book will be held for two weeks to give the buyer a chance to raise a concern.\n\nThanks for using TextEx for all your used textbook needs,\nThe Team at UVA TextEx"
+        recipient = transaction.user.email
+        send_mail(subject, message, EMAIL_HOST_USER, [recipient], fail_silently=False)
+
+    context['sold_items'] = sold_items
+    
+    text_email = get_template('payments/success-email.txt')
+    html_email = get_template('payments/success-email.html')
+
+    text_content = text_email.render(context)
+    html_content = html_email.render(context)
+    send_mail("Your receipt from UVA TextEx", text_content, EMAIL_HOST_USER, [request.user.email], html_message=html_content)
+
+
     return render(request, 'payments/success.html', context=context)
+
 
 def cancelled(request):
     context=get_cart(request)
     return render(request, 'payments/cart.html', context=context)
+
+def cart_functions(user, listing_id, fn):
+    listing = get_object_or_404(ProductListing, pk=listing_id)
+    if fn == "add":
+        if listing.cart is not None:
+            if listing.cart is user.cart:
+                return JsonResponse({'status': 'success'})
+            return JsonResponse({'status': "error - already in another user's cart"})
+        listing.cart = user.cart
+        listing.save()       
+        return JsonResponse({'status': 'success'})
+    elif fn == "remove":
+        if listing.cart != user.cart:
+            return JsonResponse({'status': "error - not authorized to perform this action"})
+        if listing.cart is None:
+            return JsonResponse({'status': "error - this item was not in the user's cart"})
+        listing.cart = None
+        listing.save()
+        return JsonResponse({'status': 'success'})

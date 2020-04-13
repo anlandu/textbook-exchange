@@ -1,0 +1,31 @@
+{% extends 'textbook_exchange/base.html' %}
+{% block content %}
+    {% if sent %}
+        <h1 class="text-center" style="padding: 150px 0;">Your message was sent successfully! Look for a response in 24-48 hours!</h1>
+    {% else %}
+        <h1>Contact Us</h1>
+        <form action="" method="post" novalidate enctype="multipart/form-data">
+            {{ form }}
+            {% csrf_token %}
+            % if form.errors %}
+                        <!-- Error messaging -->
+                        <div id="errors">
+                            <div class="inner">
+                                <p>There were some errors in the information you entered. Please correct the following:</p>
+                                <ul>
+                                    {% for field in form %}
+                                        {% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- /Error messaging -->
+            {% endif %}
+            <div class="form-group row mt-3">
+                <div class="col-12 text-center">
+                    <button type="submit" value="Submit" class="btn btn-lg btn-uva">Send</button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}
