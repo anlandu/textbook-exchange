@@ -176,7 +176,7 @@ class AccountCurrentListings(ListView):
 
     def get_queryset(self):
         queryset = super(AccountCurrentListings, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
+        queryset = queryset.filter(user=self.request.user, has_been_sold=False)
         return queryset
 
     def get_context_data(self, **kwargs):          
