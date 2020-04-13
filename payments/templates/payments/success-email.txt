@@ -1,0 +1,9 @@
+Receipt for your textbook order on UVA TextEx
+---------------------------------------------
+{% for product in sold_items %}
+{{ product.textbook.title }}
+Sold by: {{ product.user.first_name }} {{ product.user.last_name }}, {{ product.user.email }}
+${{ product.price}}
+---------------------------------------------
+{% endfor %}
+Total: ${{ total }}

@@ -1,0 +1,22 @@
+{% extends 'textbook_exchange/account_base.html' %}
+{% load static %}
+{% block inner-content %}
+  <div class="right-container">
+    <h1 class="custom-header">Chat</h1>
+    <p><a href="{% url 'exchange:messages' %}">back</a></p>
+    <div id="messages" style=></div>
+    <div class="form-group mt-2">
+      <input id="chat-input" class="form-control type="text" placeholder="say anything" autofocus/>
+      <small id="chatHelp" class="form-text text-muted">Remember to never give out personal information to strangers!</small>
+    </div>
+    
+  </div>
+  <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
+  <script src="https://media.twiliocdn.com/sdk/js/chat/v3.0/twilio-chat.min.js"></script>
+  <script>
+    let channelName = '{{ channel_name }}';
+  </script>
+  <script src="{% static 'textbook_exchange/index.js' %}"></script>
+{% endblock %}
+</body>
+</html>

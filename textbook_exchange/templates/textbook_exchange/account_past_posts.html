@@ -12,11 +12,11 @@
                     <img class="card-img-top" src="{{ post.picture_url }}" alt="{{ post.textbook.title }}" style="margin-top: 10px;">
                     <h5 class="card-title">{{ post.textbook.title }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author_clean }}</h6> 
-                    <h5 class="card-subtitle mt-4 mb-2">${{ price.price }}</h5>
-                    <a href="#" class="card-link">edit</a>
+                    <h5 class="card-subtitle mt-4 mb-2">${{ post.price }}</h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-subtitle mb-2 mb-4 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
+                    <p class="card-subtitle mb-2 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
+                    <p class="card-subtitle mb-2 mb-4 text-muted" style="font-size: smaller;">Sold: {{ post.sold_date }}</p>
                     <p class="card-subtitle mb-4">
                         Condition:
                         {% if post.condition == "likenew" %}
@@ -30,9 +30,6 @@
                         {% endif %}
                     </p>
                     <p class="card-text mb-4">{{ post.comments }}</p>
-                    <a href="#" class="btn btn-primary d-block mx-auto" style="width: 40%;">
-                        Sold
-                    </a>
                 </div>
             </div>
         {% endfor %}

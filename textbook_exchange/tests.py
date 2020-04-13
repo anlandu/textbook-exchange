@@ -11,6 +11,7 @@ from django.urls import *
 from . import *
 from django.test import Client, override_settings
 from unittest.mock import MagicMock, Mock
+from bs4 import BeautifulSoup as Soup
 
 class SetUp(TestCase):
     def setUp(self):
@@ -30,7 +31,6 @@ class AutocompleteTest(TestCase):
     Since we don't have all the books and courses in yet I don't know what
     the results will be but this is the format for the autocomplete tests
     '''
-
     fixtures = ['testing_data/textbooks.json', 'testing_data/classes.json']
 
     def test_template(self):
@@ -78,8 +78,48 @@ class AutocompleteTest(TestCase):
         self.assertEqual(ordered(json.loads(response.content)), ordered(expected_results))
 
 
-    def test_isbn_1(self):
+    def test_invalid_isbn(self):
+        search = "999999999999"
+
+        #should not find any correct books
+        expected_results = {'search': '999999999999', 'books': [], 'courses': []}
+        
+        response = self.client.get('/buy/autocomplete/', {'search': search})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ordered(json.loads(response.content)), ordered(expected_results))
+
+    def test_valid_isbn(self):
         search = "9780060646912"
+
+        #just expecting the single correct book
+        expected_results = {'search': '9780060646912', 'books': ['{\n    "_state": {\n        "adding": false,\n        "db": "default"\n    },\n    "author": "[\'Martin Luther King\']",\n    "bookstore_isbn": "0-06-064691-8",\n    "bookstore_new_price": 29.99,\n    "bookstore_used_price": 14.91,\n    "cover_photo": "",\n    "cover_photo_url": "{\'smallThumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api\', \'thumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api\'}",\n    "date": "1990-12-07",\n    "description": "\\"We\'ve got some difficult days ahead,\\" civil rights activist Martin Luther King, Jr., told a crowd gathered at Memphis\'s Clayborn Temple on April 3, 1968. \\"But it really doesn\'t matter to me now because I\'ve been to the mountaintop. . . . And I\'ve seen the promised land. I may not get there with you. But I want you to know tonight that we as a people will get to the promised land.\\" These prohetic words, uttered the day before his assassination, challenged those he left behind to see that his \\"promised land\\" of racial equality became a reality; a reality to which King devoted the last twelve years of his life. These words and other are commemorated here in the only major one-volume collection of this seminal twentieth-century American prophet\'s writings, speeches, interviews, and autobiographical reflections. A Testament of Hope contains Martin Luther King, Jr.\'s essential thoughts on nonviolence, social policy, integration, black nationalism, the ethics of love and hope, and more.",\n    "google_rating": 4.0,\n    "isbn10": "0060646918",\n    "isbn13": "9780060646912",\n    "num_reviews": 3,\n    "page_count": 736,\n    "publisher": "Harper Collins",\n    "req_type": "Required",\n    "title": "A Testament of Hope: The Essential Writings and Speeches of Martin Luther King, Jr."\n}'], 'courses': []}
+        
+        response = self.client.get('/buy/autocomplete/', {'search': search})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ordered(json.loads(response.content)), ordered(expected_results))
+
+    def test_isbn10_with_dashes(self):
+        search = "0-06-064691-8"
+
+        #just expecting the single correct book
+        expected_results = {'search': '0-06-064691-8', 'books': ['{\n    "_state": {\n        "adding": false,\n        "db": "default"\n    },\n    "author": "[\'Martin Luther King\']",\n    "bookstore_isbn": "0-06-064691-8",\n    "bookstore_new_price": 29.99,\n    "bookstore_used_price": 14.91,\n    "cover_photo": "",\n    "cover_photo_url": "{\'smallThumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api\', \'thumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api\'}",\n    "date": "1990-12-07",\n    "description": "\\"We\'ve got some difficult days ahead,\\" civil rights activist Martin Luther King, Jr., told a crowd gathered at Memphis\'s Clayborn Temple on April 3, 1968. \\"But it really doesn\'t matter to me now because I\'ve been to the mountaintop. . . . And I\'ve seen the promised land. I may not get there with you. But I want you to know tonight that we as a people will get to the promised land.\\" These prohetic words, uttered the day before his assassination, challenged those he left behind to see that his \\"promised land\\" of racial equality became a reality; a reality to which King devoted the last twelve years of his life. These words and other are commemorated here in the only major one-volume collection of this seminal twentieth-century American prophet\'s writings, speeches, interviews, and autobiographical reflections. A Testament of Hope contains Martin Luther King, Jr.\'s essential thoughts on nonviolence, social policy, integration, black nationalism, the ethics of love and hope, and more.",\n    "google_rating": 4.0,\n    "isbn10": "0060646918",\n    "isbn13": "9780060646912",\n    "num_reviews": 3,\n    "page_count": 736,\n    "publisher": "Harper Collins",\n    "req_type": "Required",\n    "title": "A Testament of Hope: The Essential Writings and Speeches of Martin Luther King, Jr."\n}'], 'courses': []}
+        
+        response = self.client.get('/buy/autocomplete/', {'search': search})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ordered(json.loads(response.content)), ordered(expected_results))
+
+    def test_isbn10_without_dashes(self):
+        search = "0060646918"
+
+        #just expecting the single correct book
+        expected_results = {'search': '0060646918', 'books': ['{\n    "_state": {\n        "adding": false,\n        "db": "default"\n    },\n    "author": "[\'Martin Luther King\']",\n    "bookstore_isbn": "0-06-064691-8",\n    "bookstore_new_price": 29.99,\n    "bookstore_used_price": 14.91,\n    "cover_photo": "",\n    "cover_photo_url": "{\'smallThumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api\', \'thumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api\'}",\n    "date": "1990-12-07",\n    "description": "\\"We\'ve got some difficult days ahead,\\" civil rights activist Martin Luther King, Jr., told a crowd gathered at Memphis\'s Clayborn Temple on April 3, 1968. \\"But it really doesn\'t matter to me now because I\'ve been to the mountaintop. . . . And I\'ve seen the promised land. I may not get there with you. But I want you to know tonight that we as a people will get to the promised land.\\" These prohetic words, uttered the day before his assassination, challenged those he left behind to see that his \\"promised land\\" of racial equality became a reality; a reality to which King devoted the last twelve years of his life. These words and other are commemorated here in the only major one-volume collection of this seminal twentieth-century American prophet\'s writings, speeches, interviews, and autobiographical reflections. A Testament of Hope contains Martin Luther King, Jr.\'s essential thoughts on nonviolence, social policy, integration, black nationalism, the ethics of love and hope, and more.",\n    "google_rating": 4.0,\n    "isbn10": "0060646918",\n    "isbn13": "9780060646912",\n    "num_reviews": 3,\n    "page_count": 736,\n    "publisher": "Harper Collins",\n    "req_type": "Required",\n    "title": "A Testament of Hope: The Essential Writings and Speeches of Martin Luther King, Jr."\n}'], 'courses': []}
+        
+        response = self.client.get('/buy/autocomplete/', {'search': search})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ordered(json.loads(response.content)), ordered(expected_results))
+
+    def test_isbn_type_int(self):
+        search = 9780060646912
 
         #just expecting the single correct book
         expected_results = {'search': '9780060646912', 'books': ['{\n    "_state": {\n        "adding": false,\n        "db": "default"\n    },\n    "author": "[\'Martin Luther King\']",\n    "bookstore_isbn": "0-06-064691-8",\n    "bookstore_new_price": 29.99,\n    "bookstore_used_price": 14.91,\n    "cover_photo": "",\n    "cover_photo_url": "{\'smallThumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api\', \'thumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api\'}",\n    "date": "1990-12-07",\n    "description": "\\"We\'ve got some difficult days ahead,\\" civil rights activist Martin Luther King, Jr., told a crowd gathered at Memphis\'s Clayborn Temple on April 3, 1968. \\"But it really doesn\'t matter to me now because I\'ve been to the mountaintop. . . . And I\'ve seen the promised land. I may not get there with you. But I want you to know tonight that we as a people will get to the promised land.\\" These prohetic words, uttered the day before his assassination, challenged those he left behind to see that his \\"promised land\\" of racial equality became a reality; a reality to which King devoted the last twelve years of his life. These words and other are commemorated here in the only major one-volume collection of this seminal twentieth-century American prophet\'s writings, speeches, interviews, and autobiographical reflections. A Testament of Hope contains Martin Luther King, Jr.\'s essential thoughts on nonviolence, social policy, integration, black nationalism, the ethics of love and hope, and more.",\n    "google_rating": 4.0,\n    "isbn10": "0060646918",\n    "isbn13": "9780060646912",\n    "num_reviews": 3,\n    "page_count": 736,\n    "publisher": "Harper Collins",\n    "req_type": "Required",\n    "title": "A Testament of Hope: The Essential Writings and Speeches of Martin Luther King, Jr."\n}'], 'courses': []}
@@ -185,9 +225,10 @@ class UserModelTest(TestCase):
         self.assertTrue(logged_in)
         self.assertTrue(test_user.is_authenticated)
         response = c.get('/accounts/', secure = True, follow = True)
+        decoded_response=response.content.decode()
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML(test_user.first_name + ' ' + test_user.last_name, response.content.decode())
-        self.assertInHTML(test_user.email, response.content.decode())
+        self.assertInHTML(test_user.first_name + ' ' + test_user.last_name, decoded_response)
+        self.assertInHTML(test_user.email, decoded_response)
 
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class SellTest(TestCase): #Can't simulate a fake photo
@@ -211,8 +252,107 @@ class SellTest(TestCase): #Can't simulate a fake photo
         }
         form = SellForm(form_data, picture_data)
         self.assertTrue(form.is_valid())
-    def test_new_listing_in_current_posts(self):
-        test_user = User.objects.create_user(
+
+    def test_sell_form_three_decimal_price(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
+            b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
+            b'\x02\x4c\x01\x00\x3b'
+        )
+        form_data = {
+            'book_title': 'sample_title_1',
+            'book_author': 'sample_author_1',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': 1.0051,
+            'comments': 'sample_comment',
+        }
+        picture_data = {
+            "picture": SimpleUploadedFile(name="small.gif", content=small_gif, content_type="image/gif"),
+        }
+        form = SellForm(form_data, picture_data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'price':['Ensure that there are no more than 2 decimal places.']})
+
+    
+    def test_sell_form_string_price(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
+            b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
+            b'\x02\x4c\x01\x00\x3b'
+        )
+        form_data = {
+            'book_title': 'sample_title_1',
+            'book_author': 'sample_author_1',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': "k",
+            'comments': 'sample_comment',
+        }
+        picture_data = {
+            "picture": SimpleUploadedFile(name="small.gif", content=small_gif, content_type="image/gif"),
+        }
+        form = SellForm(form_data, picture_data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'price':['Enter a number.']})
+
+
+    def test_sell_form_blank_picture(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
+            b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
+            b'\x02\x4c\x01\x00\x3b'
+        )
+        form_data = {
+            'book_title': 'sample_title_1',
+            'book_author': 'sample_author_1',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': 1.0,
+            'comments': 'sample_comment',
+        }
+        picture_data={}
+        form = SellForm(form_data, picture_data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'picture':['This field is required.']})
+
+    def test_two_sell_forms_same_picture(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
+            b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
+            b'\x02\x4c\x01\x00\x3b'
+        )
+        form_data_1 = {
+            'book_title': 'sample_title_1',
+            'book_author': 'sample_author_1',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': 1.0,
+            'comments': 'sample_comment',
+        }
+        picture_data_1={'picture':SimpleUploadedFile(name="small.gif", content=small_gif, content_type="image/gif")}
+
+        form_data_2 = {
+            'book_title': 'sample_title_2',
+            'book_author': 'sample_author_2',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': 1.0,
+            'comments': 'sample_comment',
+        }
+        picture_data_2={'picture':SimpleUploadedFile(name="small.gif", content=small_gif, content_type="image/gif")}
+
+        form_1 = SellForm(form_data_1, picture_data_1)
+        form_2 = SellForm(form_data_2, picture_data_2)
+        self.assertTrue(form_1.is_valid())
+        self.assertTrue(form_2.is_valid())
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class ViewListingsTest(TestCase): 
+    fixtures = ['testing_data/textbooks.json', 'testing_data/classes.json']
+
+    def setUp(self):
+        self.test_user = User.objects.create_user(
             username = "rc8yw",
             password = "12345",
             first_name = "Rohan",
@@ -223,65 +363,38 @@ class SellTest(TestCase): #Can't simulate a fake photo
             balance = 0.0,
         )
 
-        pl = ProductListing.objects.create(
-            user=test_user,
+        self.pl = ProductListing.objects.create(
+            user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
             cart=None,
             price=100.0,
             condition="likenew",
         )
 
-        c = Client()
+        self.c = Client()
+        self.c.login(username = "rc8yw@virginia.edu", password="12345")
 
-        c.login(username = "rc8yw@virginia.edu", password="12345")
+    def test_new_listing_in_current_posts(self):
         
-        response = c.get("/accounts/", secure=True, follow=True)        
+        response = self.c.get("/accounts/", secure=True, follow=True)  
+        decoded_response=response.content.decode()      
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML("Classical Mechanics", response.content.decode())
-        self.assertInHTML("$100.00", response.content.decode())
-        self.assertInHTML("Rohan Chandra", response.content.decode())
-        self.assertInHTML("Condition: Like new", response.content.decode())
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("Rohan Chandra", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
 
     def test_new_listing_in_search(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
-            price=100.0,
-            condition="likenew",
-        )
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
         
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)  
+        decoded_response=response.content.decode()      
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML("Classical Mechanics", response.content.decode())
-        self.assertInHTML("$100.00", response.content.decode())
-        self.assertInHTML("Rohan Chandra", response.content.decode())
-        self.assertInHTML("Condition: Like new", response.content.decode())
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("Rohan Chandra", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
 
     def test_listing_in_cart_not_in_search(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-
         test_user2 = User.objects.create_user(
             username = "nw5zp",
             password = "54321",
@@ -292,128 +405,131 @@ class SellTest(TestCase): #Can't simulate a fake photo
             date_joined = timezone.now(),
             balance = 0.0,
         )
-
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=test_user.cart,
-            price=100.0,
-            condition="likenew",
-        )
-
-        c = Client()
-        c.login(username = "nw5zp@virginia.edu", password="54321")
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        self.c.logout()
+        self.c.login(username = "nw5zp@virginia.edu", password="54321")
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
         self.assertEqual(response.status_code, 200)
         try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$100.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
-            self.fail("Not removed")
+            decoded_response=response.content.decode()
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$100.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
+            self.fail("Listing not removed when added to cart")
         except AssertionError:
             pass
         
     def test_listing_in_cart(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=test_user.cart,
-            price=100.0,
-            condition="likenew",
-        )
-
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
-        response = c.get("/cart/", secure=True, follow=True)        
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
+        response = self.c.get("/cart/", secure=True, follow=True)   
+        decoded_response=response.content.decode()     
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML("Classical Mechanics", response.content.decode())
-        self.assertInHTML("$100.00", response.content.decode())
-        self.assertInHTML("remove", response.content.decode())
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("remove", decoded_response)
 
     def test_add_listing_to_cart(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
-            price=100.0,
-            condition="likenew",
-        )
-
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
-        response = c.post("/cart/", {"id": pl.id, "function": "add"})        
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
 
     def test_remove_listing_from_cart(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
-            price=200.0,
-            condition="likenew",
-        )
-
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
-        response = c.post("/cart/", {"id": pl.id, "function": "add"})        
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
-        response = c.post("/cart/", {"id": pl.id, "function": "remove"})        
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "remove"})        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
-        response = c.get("/cart/", secure=True, follow=True)
+        response = self.c.get("/cart/", secure=True, follow=True)
+        decoded_response=response.content.decode()
         try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$200.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
-            self.fail("Not removed")
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$100.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
+            self.fail("Listing not removed from cart")
         except AssertionError:
             pass
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
+        decoded_response=response.content.decode()        
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML("Classical Mechanics", response.content.decode())
-        self.assertInHTML("$200.00", response.content.decode())
-        self.assertInHTML("Rohan Chandra", response.content.decode())
-        self.assertInHTML("Condition: Like new", response.content.decode())
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("Rohan Chandra", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
 
     def test_checkout_success(self):
-        test_user = User.objects.create_user(
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        response = self.c.get("/cart/checkout/success", secure=True, follow=True)
+        #self.assertInHTML("Success!", decoded_response)
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
+        decoded_response=response.content.decode()        
+        self.assertEqual(response.status_code, 200)
+        try:
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$100.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
+            self.fail("Listing not removed on checkout success")
+        except AssertionError:
+            pass
+        response = self.c.get("/accounts/", secure=True, follow=True)
+        decoded_response=response.content.decode()
+        try:
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$100.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
+            self.fail("Listing not removed on checkout success")
+        except AssertionError:
+            pass
+        response = self.c.get("/accounts/past_posts", secure=True, follow=True)
+        decoded_response=response.content.decode()
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class ContactUsTest(TestCase):
+    fixtures = ['testing_data/textbooks.json', 'testing_data/classes.json']
+
+    def test_contact_us_form_valid(self):
+        form_data = {
+            'subject': 'Missing listing',
+            'message': 'Hi there! I am missing a listing. Can you help?',
+            'email': 'amd5wf@virginia.edu',
+        }
+        form = ContactForm(form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_contact_us_form_invalid_email(self):
+        form_data = {
+            'subject': 'Missing listing',
+            'message': 'Hi there! I am missing a listing. Can you help?',
+            'email': 'amd5wf',
+        }
+        form = ContactForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'email':['Enter a valid email address.']})
+
+    def test_contact_us_form_blank_message(self):
+        form_data = {
+            'subject': 'Missing listing',
+            'message': '',
+            'email': 'amd5wf@virginia.edu',
+        }
+        form = ContactForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'message':['This field is required.']})
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class FilterSortTest(TestCase):
+    fixtures = ['testing_data/textbooks.json', 'testing_data/classes.json']
+
+    def setUp(self):
+        self.test_user = User.objects.create_user(
             username = "rc8yw",
             password = "12345",
             first_name = "Rohan",
@@ -423,54 +539,63 @@ class SellTest(TestCase): #Can't simulate a fake photo
             date_joined = timezone.now(),
             balance = 0.0,
         )
-
         pl = ProductListing.objects.create(
-            user=test_user,
+            user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
             cart=None,
-            price=200.0,
+            price=100.0,
             condition="likenew",
         )
 
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
-        response = c.post("/cart/", {"id": pl.id, "function": "add"})        
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), {'status': 'success'})
-        response = c.get("/cart/checkout/success", secure=True, follow=True)
-        #self.assertInHTML("Success!", response.content.decode())
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
-        self.assertEqual(response.status_code, 200)
-        try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$200.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
-        except AssertionError:
-            pass
-        response = c.get("/accounts/", secure=True, follow=True)
-        try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$200.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
-        except AssertionError:
-            pass
-        response = c.get("/accounts/past_posts", secure=True, follow=True)
-        try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$200.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
-        except AssertionError:
-            pass    
+        p2 = ProductListing.objects.create(
+            user=self.test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=60.0,
+            condition="good",
+        )
+        p3 = ProductListing.objects.create(
+            user=self.test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=40.0,
+            condition="acceptable",
+        )
 
+        p4 = ProductListing.objects.create(
+            user=self.test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=80.0,
+            condition="verygood",
+        )
         
+
+        self.c = Client()
+        self.c.login(username = "rc8yw@virginia.edu", password="12345")
+    def test_sort_price_low_high(self):        
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=price", secure=True, follow=True)  
+        soup=Soup(response.content, 'html.parser')
+        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        self.assertIn("Acceptable", str(first_item))
+
+
+    def test_sort_price_high_low(self):        
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=-price", secure=True, follow=True)  
+        soup=Soup(response.content, 'html.parser')
+        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        self.assertIn("Like new", str(first_item))
+
+    def test_sort_recent(self):        
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=-published_date", secure=True, follow=True)  
+        soup=Soup(response.content, 'html.parser')
+        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        self.assertIn("Very good", str(first_item))
 
 #test models
 #create one in code and check and see if they are what I am expecting
 #test functionality. Build form requests import .forms, build a form and save it. 
-#query the database, try to break the database with wierd values
+#query the database, try to break the database with weird values
 
 #do the models and controllers work?
 

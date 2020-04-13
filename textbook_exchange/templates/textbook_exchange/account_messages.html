@@ -1,9 +1,58 @@
 {% extends 'textbook_exchange/account_base.html' %}
-{% load static %} 
 
 {% block inner-content %}
 <div class="right-container">
     <h1 class="custom-header">Messages</h1>
-    <!-- ... -->
+    <ul id="channels" class="sidebar-align d-inline">
+        
+    </ul>
 </div>
+
+<script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
+<script src="https://media.twiliocdn.com/sdk/js/chat/v3.0/twilio-chat.min.js"></script>
+
+<script> 
+    // Our interface to the Chat service
+    var chatClient;
+    
+    // The server will assign the client a random username - store that value
+    // here
+    var username;
+  
+    // Get an access token for the current user, passing a username (identity)
+    // and a device ID - for browser-based apps, we'll always just use the
+    // value "browser"
+    $.getJSON('/token', {
+      device: 'browser'
+    }, function(data) {
+      // Initialize the Chat client
+      Twilio.Chat.Client.create(data.token).then(client => {
+        console.log('Created chat client');
+        chatClient = client;
+        chatClient.on('channelInvited', function(channel) {
+          console.log('Invited to channel ' + channel.friendlyName);
+          // Join the channel that you were invited to
+          channel.join();
+        });
+        chatClient.getSubscribedChannels().then(listOfSubscribedChannels);
+  
+      }).catch(error => {
+        console.error(error);
+        print('There was an error creating the chat client:<br/>' + error, true);
+        print('Please check your .env file.', false);
+      });
+    });
+
+    function listOfSubscribedChannels(paginator){
+        console.log("Arrived at listOfSubscribedChannels()")
+        for (let i = 0; i < paginator.items.length; i++) {
+            const channel = paginator.items[i];
+            console.log('Channel: ' + channel.friendlyName);
+            var channelItem = '<li><a class="btn btn-uva side-btn d-block" href="/messaging/channel?channel_name=' + channel.uniqueName + '">' + channel.friendlyName  + '</a></li>';
+            //var channelItem = '<li>' +channel.friendlyName  + '</li>';
+            $('ul#channels').append(channelItem);
+        }
+        console.log("Leaving listOfSubscribedChannels()")
+    }
+  </script>
 {% endblock inner-content %}

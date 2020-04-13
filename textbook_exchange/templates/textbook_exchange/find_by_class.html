@@ -30,13 +30,14 @@
         <!-- LISTINGS -->
         {% if num_textbooks == 0 %}
             <div class="top">
-                <div class="showing-results">
+                <div class="showing-results mb-5">
                     <h3><b>{{ class.class_title }}</b></h3>
                     <p>{{ class.department }}{{ class.course_code }}, Section {{ class.section_number }}</p>
                 </div>
             </div>
+            <br/>
             <div>
-                <h3>There are no physical textbooks required for this class</h3>
+                <h3 style="text-align: center;">There are no physical textbooks required for this class</h3>
             </div>
         {% elif num_textbooks > 0 %}
             <div class="top d-inline-block">
