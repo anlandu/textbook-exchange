@@ -449,7 +449,7 @@ class SellTest(TestCase): #Can't simulate a fake photo
             self.assertInHTML("$100.00", decoded_response)
             self.assertInHTML("Rohan Chandra", decoded_response)
             self.assertInHTML("Condition: Like new", decoded_response)
-            self.fail("Not removed")
+            self.fail("Listing not removed when added to cart")
         except AssertionError:
             pass
         
@@ -543,7 +543,7 @@ class SellTest(TestCase): #Can't simulate a fake photo
             self.assertInHTML("$200.00", decoded_response)
             self.assertInHTML("Rohan Chandra", decoded_response)
             self.assertInHTML("Condition: Like new", decoded_response)
-            self.fail("Not removed")
+            self.fail("Listing not removed from cart")
         except AssertionError:
             pass
         response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
@@ -589,6 +589,7 @@ class SellTest(TestCase): #Can't simulate a fake photo
             self.assertInHTML("$200.00", decoded_response)
             self.assertInHTML("Rohan Chandra", decoded_response)
             self.assertInHTML("Condition: Like new", decoded_response)
+            self.fail("Listing not removed on checkout success")
         except AssertionError:
             pass
         response = c.get("/accounts/", secure=True, follow=True)
@@ -598,23 +599,21 @@ class SellTest(TestCase): #Can't simulate a fake photo
             self.assertInHTML("$200.00", decoded_response)
             self.assertInHTML("Rohan Chandra", decoded_response)
             self.assertInHTML("Condition: Like new", decoded_response)
+            self.fail("Listing not removed on checkout success")
         except AssertionError:
             pass
         response = c.get("/accounts/past_posts", secure=True, follow=True)
-        try:
-            self.assertInHTML("Classical Mechanics", decoded_response)
-            self.assertInHTML("$200.00", decoded_response)
-            self.assertInHTML("Rohan Chandra", decoded_response)
-            self.assertInHTML("Condition: Like new", decoded_response)
-        except AssertionError:
-            pass    
+        decoded_response=response.content.decode()
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$200.00", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
 
         
 
 #test models
 #create one in code and check and see if they are what I am expecting
 #test functionality. Build form requests import .forms, build a form and save it. 
-#query the database, try to break the database with wierd values
+#query the database, try to break the database with weird values
 
 #do the models and controllers work?
 
