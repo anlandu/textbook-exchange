@@ -126,10 +126,6 @@
       const totalMessages = messages.items.length;
       for (i = 0; i < totalMessages; i++) {
         const message = messages.items[i];
-        //console.log('Author:' + message.author);
-        //console.log(message.body);
-        //channel.sendMessage(message.author + ":")
-        //channel.sendMessage(message.body)
         printMessage(message.author, message.body);
       }
       console.log('Total Messages:' + totalMessages);
