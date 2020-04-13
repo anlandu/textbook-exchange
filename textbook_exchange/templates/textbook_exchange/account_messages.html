@@ -5,7 +5,7 @@
 {% block inner-content %}
 <div class="right-container">
     <h1 class="custom-header">Messages</h1>
-    <ul id="channels">
+    <ul id="channels" class="sidebar-align d-inline">
         
     </ul>
 </div>
@@ -85,12 +85,11 @@
         for (i = 0; i < paginator.items.length; i++) {
             const channel = paginator.items[i];
             console.log('Channel: ' + channel.friendlyName);
-            var channelItem = '<li><a href="/messaging/channel?channel_name=' + channel.uniqueName + '">' + channel.friendlyName  + '</a></li>';
+            var channelItem = '<li><a class="btn btn-uva side-btn d-block" href="/messaging/channel?channel_name=' + channel.uniqueName + '">' + channel.friendlyName  + '</a></li>';
             //var channelItem = '<li>' +channel.friendlyName  + '</li>';
             $('ul#channels').append(channelItem);
         }
         console.log("Leaving listOfSubscribedChannels()")
     }
-
   </script>
 {% endblock inner-content %}
