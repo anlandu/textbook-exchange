@@ -347,8 +347,12 @@ class SellTest(TestCase): #Can't simulate a fake photo
         self.assertTrue(form_1.is_valid())
         self.assertTrue(form_2.is_valid())
 
-    def test_new_listing_in_current_posts(self):
-        test_user = User.objects.create_user(
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class ViewListingsTest(TestCase): 
+    fixtures = ['testing_data/textbooks.json', 'testing_data/classes.json']
+
+    def setUp(self):
+        self.test_user = User.objects.create_user(
             username = "rc8yw",
             password = "12345",
             first_name = "Rohan",
@@ -359,19 +363,20 @@ class SellTest(TestCase): #Can't simulate a fake photo
             balance = 0.0,
         )
 
-        pl = ProductListing.objects.create(
-            user=test_user,
+        self.pl = ProductListing.objects.create(
+            user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
             cart=None,
             price=100.0,
             condition="likenew",
         )
 
-        c = Client()
+        self.c = Client()
+        self.c.login(username = "rc8yw@virginia.edu", password="12345")
 
-        c.login(username = "rc8yw@virginia.edu", password="12345")
+    def test_new_listing_in_current_posts(self):
         
-        response = c.get("/accounts/", secure=True, follow=True)  
+        response = self.c.get("/accounts/", secure=True, follow=True)  
         decoded_response=response.content.decode()      
         self.assertEqual(response.status_code, 200)
         self.assertInHTML("Classical Mechanics", decoded_response)
@@ -380,27 +385,8 @@ class SellTest(TestCase): #Can't simulate a fake photo
         self.assertInHTML("Condition: Like new", decoded_response)
 
     def test_new_listing_in_search(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
-            price=100.0,
-            condition="likenew",
-        )
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
         
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)  
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)  
         decoded_response=response.content.decode()      
         self.assertEqual(response.status_code, 200)
         self.assertInHTML("Classical Mechanics", decoded_response)
@@ -409,17 +395,6 @@ class SellTest(TestCase): #Can't simulate a fake photo
         self.assertInHTML("Condition: Like new", decoded_response)
 
     def test_listing_in_cart_not_in_search(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-
         test_user2 = User.objects.create_user(
             username = "nw5zp",
             password = "54321",
@@ -430,18 +405,9 @@ class SellTest(TestCase): #Can't simulate a fake photo
             date_joined = timezone.now(),
             balance = 0.0,
         )
-
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=test_user.cart,
-            price=100.0,
-            condition="likenew",
-        )
-
-        c = Client()
-        c.login(username = "nw5zp@virginia.edu", password="54321")
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        self.c.logout()
+        self.c.login(username = "nw5zp@virginia.edu", password="54321")
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
         self.assertEqual(response.status_code, 200)
         try:
             decoded_response=response.content.decode()
@@ -454,28 +420,8 @@ class SellTest(TestCase): #Can't simulate a fake photo
             pass
         
     def test_listing_in_cart(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=test_user.cart,
-            price=100.0,
-            condition="likenew",
-        )
-
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
-        response = c.get("/cart/", secure=True, follow=True)   
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
+        response = self.c.get("/cart/", secure=True, follow=True)   
         decoded_response=response.content.decode()     
         self.assertEqual(response.status_code, 200)
         self.assertInHTML("Classical Mechanics", decoded_response)
@@ -483,79 +429,107 @@ class SellTest(TestCase): #Can't simulate a fake photo
         self.assertInHTML("remove", decoded_response)
 
     def test_add_listing_to_cart(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
-            price=100.0,
-            condition="likenew",
-        )
-
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
-        response = c.post("/cart/", {"id": pl.id, "function": "add"})        
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
 
     def test_remove_listing_from_cart(self):
-        test_user = User.objects.create_user(
-            username = "rc8yw",
-            password = "12345",
-            first_name = "Rohan",
-            last_name = "Chandra",
-            email = "rc8yw@virginia.edu",
-            is_staff = False,
-            date_joined = timezone.now(),
-            balance = 0.0,
-        )
-
-        pl = ProductListing.objects.create(
-            user=test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
-            price=200.0,
-            condition="likenew",
-        )
-
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
-        response = c.post("/cart/", {"id": pl.id, "function": "add"})        
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
-        response = c.post("/cart/", {"id": pl.id, "function": "remove"})        
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "remove"})        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
-        response = c.get("/cart/", secure=True, follow=True)
+        response = self.c.get("/cart/", secure=True, follow=True)
         decoded_response=response.content.decode()
         try:
             self.assertInHTML("Classical Mechanics", decoded_response)
-            self.assertInHTML("$200.00", decoded_response)
+            self.assertInHTML("$100.00", decoded_response)
             self.assertInHTML("Rohan Chandra", decoded_response)
             self.assertInHTML("Condition: Like new", decoded_response)
             self.fail("Listing not removed from cart")
         except AssertionError:
             pass
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
         decoded_response=response.content.decode()        
         self.assertEqual(response.status_code, 200)
         self.assertInHTML("Classical Mechanics", decoded_response)
-        self.assertInHTML("$200.00", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
         self.assertInHTML("Rohan Chandra", decoded_response)
         self.assertInHTML("Condition: Like new", decoded_response)
 
     def test_checkout_success(self):
-        test_user = User.objects.create_user(
+        response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        response = self.c.get("/cart/checkout/success", secure=True, follow=True)
+        #self.assertInHTML("Success!", decoded_response)
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
+        decoded_response=response.content.decode()        
+        self.assertEqual(response.status_code, 200)
+        try:
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$100.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
+            self.fail("Listing not removed on checkout success")
+        except AssertionError:
+            pass
+        response = self.c.get("/accounts/", secure=True, follow=True)
+        decoded_response=response.content.decode()
+        try:
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$100.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
+            self.fail("Listing not removed on checkout success")
+        except AssertionError:
+            pass
+        response = self.c.get("/accounts/past_posts", secure=True, follow=True)
+        decoded_response=response.content.decode()
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class ContactUsTest(TestCase):
+    fixtures = ['testing_data/textbooks.json', 'testing_data/classes.json']
+
+    def test_contact_us_form_valid(self):
+        form_data = {
+            'subject': 'Missing listing',
+            'message': 'Hi there! I am missing a listing. Can you help?',
+            'email': 'amd5wf@virginia.edu',
+        }
+        form = ContactForm(form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_contact_us_form_invalid_email(self):
+        form_data = {
+            'subject': 'Missing listing',
+            'message': 'Hi there! I am missing a listing. Can you help?',
+            'email': 'amd5wf',
+        }
+        form = ContactForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'email':['Enter a valid email address.']})
+
+    def test_contact_us_form_blank_message(self):
+        form_data = {
+            'subject': 'Missing listing',
+            'message': '',
+            'email': 'amd5wf@virginia.edu',
+        }
+        form = ContactForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'message':['This field is required.']})
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class FilterSortTest(TestCase):
+    fixtures = ['testing_data/textbooks.json', 'testing_data/classes.json']
+
+    def setUp(self):
+        self.test_user = User.objects.create_user(
             username = "rc8yw",
             password = "12345",
             first_name = "Rohan",
@@ -565,50 +539,46 @@ class SellTest(TestCase): #Can't simulate a fake photo
             date_joined = timezone.now(),
             balance = 0.0,
         )
-
         pl = ProductListing.objects.create(
-            user=test_user,
+            user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
             cart=None,
-            price=200.0,
+            price=100.0,
             condition="likenew",
         )
-
-        c = Client()
-        c.login(username = "rc8yw@virginia.edu", password="12345")
-        response = c.post("/cart/", {"id": pl.id, "function": "add"})        
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), {'status': 'success'})
-        response = c.get("/cart/checkout/success", secure=True, follow=True)
-        #self.assertInHTML("Success!", decoded_response)
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
-        decoded_response=response.content.decode()        
-        self.assertEqual(response.status_code, 200)
-        try:
-            self.assertInHTML("Classical Mechanics", decoded_response)
-            self.assertInHTML("$200.00", decoded_response)
-            self.assertInHTML("Rohan Chandra", decoded_response)
-            self.assertInHTML("Condition: Like new", decoded_response)
-            self.fail("Listing not removed on checkout success")
-        except AssertionError:
-            pass
-        response = c.get("/accounts/", secure=True, follow=True)
-        decoded_response=response.content.decode()
-        try:
-            self.assertInHTML("Classical Mechanics", decoded_response)
-            self.assertInHTML("$200.00", decoded_response)
-            self.assertInHTML("Rohan Chandra", decoded_response)
-            self.assertInHTML("Condition: Like new", decoded_response)
-            self.fail("Listing not removed on checkout success")
-        except AssertionError:
-            pass
-        response = c.get("/accounts/past_posts", secure=True, follow=True)
-        decoded_response=response.content.decode()
-        self.assertInHTML("Classical Mechanics", decoded_response)
-        self.assertInHTML("$200.00", decoded_response)
-        self.assertInHTML("Condition: Like new", decoded_response)
-
+        p2 = ProductListing.objects.create(
+            user=self.test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=80.0,
+            condition="verygood",
+        )
         
+        p3 = ProductListing.objects.create(
+            user=self.test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=60.0,
+            condition="good",
+        )
+        p4 = ProductListing.objects.create(
+            user=self.test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=40.0,
+            condition="acceptable",
+        )
+
+        self.c = Client()
+        self.c.login(username = "rc8yw@virginia.edu", password="12345")
+    def test_sort_price(self):        
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=price", secure=True, follow=True)  
+        decoded_response=response.content.decode()   
+        self.assertEqual(response.status_code, 200)
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("Rohan Chandra", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
 
 #test models
 #create one in code and check and see if they are what I am expecting
