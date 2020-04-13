@@ -11,6 +11,7 @@ from django.urls import *
 from . import *
 from django.test import Client, override_settings
 from unittest.mock import MagicMock, Mock
+from bs4 import BeautifulSoup as Soup
 
 class SetUp(TestCase):
     def setUp(self):
@@ -546,22 +547,15 @@ class FilterSortTest(TestCase):
             price=100.0,
             condition="likenew",
         )
+
         p2 = ProductListing.objects.create(
-            user=self.test_user,
-            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
-            price=80.0,
-            condition="verygood",
-        )
-        
-        p3 = ProductListing.objects.create(
             user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
             cart=None,
             price=60.0,
             condition="good",
         )
-        p4 = ProductListing.objects.create(
+        p3 = ProductListing.objects.create(
             user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
             cart=None,
@@ -569,16 +563,35 @@ class FilterSortTest(TestCase):
             condition="acceptable",
         )
 
+        p4 = ProductListing.objects.create(
+            user=self.test_user,
+            textbook=Textbook.objects.get(pk="1-891389-22-X"), 
+            cart=None,
+            price=80.0,
+            condition="verygood",
+        )
+        
+
         self.c = Client()
         self.c.login(username = "rc8yw@virginia.edu", password="12345")
-    def test_sort_price(self):        
+    def test_sort_price_low_high(self):        
         response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=price", secure=True, follow=True)  
-        decoded_response=response.content.decode()   
-        self.assertEqual(response.status_code, 200)
-        self.assertInHTML("Classical Mechanics", decoded_response)
-        self.assertInHTML("$100.00", decoded_response)
-        self.assertInHTML("Rohan Chandra", decoded_response)
-        self.assertInHTML("Condition: Like new", decoded_response)
+        soup=Soup(response.content, 'html.parser')
+        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        self.assertIn("Acceptable", str(first_item))
+
+
+    def test_sort_price_high_low(self):        
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=-price", secure=True, follow=True)  
+        soup=Soup(response.content, 'html.parser')
+        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        self.assertIn("Like new", str(first_item))
+
+    def test_sort_recent(self):        
+        response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=-published_date", secure=True, follow=True)  
+        soup=Soup(response.content, 'html.parser')
+        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        self.assertIn("Very good", str(first_item))
 
 #test models
 #create one in code and check and see if they are what I am expecting
