@@ -337,7 +337,7 @@ def cashout(request):
         "sender_batch_header": {
                 "sender_batch_id": batch_id,
                 "email_subject": "You have a payout!",
-                "email_message": "You have received a payout! Thanks for using UVA TextEx for all you textbook exchange needs!"
+                "email_message": "You have received a payout! Thanks for using UVA TextEx for all your textbook exchange needs!"
             },
             "items": [
                 {
