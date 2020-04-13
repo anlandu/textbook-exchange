@@ -130,7 +130,7 @@ def account_page_messages(request):
     context['title'] = 'Messages'
     context['id'] = request.GET.get('listing_id')
     if request.method == 'GET' and 'listing_id' in request.GET:
-        listing = textbook_exchange_models.ProductListing.objects.get(pk=request.GET.get('listing_id'))
+        listing = ProductListing.objects.get(pk=request.GET.get('listing_id'))
         context['seller_name'] = listing.user.first_name + " " + listing.user.last_name
         context['listing'] = listing 
     if not context['logged_in']:
@@ -402,11 +402,12 @@ def contact_us(request):
         return render(request, 'textbook_exchange/contact_us.html', context={'form': ContactForm, 'sent': 'sent' in request.GET})
 def chat_view(request):
     context=get_logged_in(request)
-    listing = textbook_exchange_models.ProductListing.objects.get(pk=request.GET.get('listing_id'))
+    listing = get_object_or_404(ProductListing, pk=request.GET.get('listing_id'))
     context['seller_name'] = listing.user.username
     context['listing'] = listing 
     context['listing_id'] = request.GET.get('listing_id')
-    return render(request, 'textbook_exchange/index.html', context = context)
+    context['book_name'] = request.GET.get('bname')
+    return render(request, 'textbook_exchange/create_twilio.html', context = context)
 
 def channel_view(request):
     context = get_logged_in(request)
