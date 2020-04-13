@@ -173,6 +173,6 @@ TWILIO_SYNC_SID='IS7086992d661eb157e6b5149543febb51'
 TWILIO_API_SID='SK9c7fe6717da5318751e61ca951dd784e'
 TWILIO_API_SECRET='YP8YzQNQw8K1VM9bgiFlezje0MckJenx'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (os.path.join(os.path.dirname(__file__),'static'),)
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATICFILES_DIRS = (os.path.join(os.path.dirname(__file__),'static'),)
 django_heroku.settings(locals())
