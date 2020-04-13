@@ -225,9 +225,10 @@ class UserModelTest(TestCase):
         self.assertTrue(logged_in)
         self.assertTrue(test_user.is_authenticated)
         response = c.get('/accounts/', secure = True, follow = True)
+        decoded_response=response.content.decode()
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML(test_user.first_name + ' ' + test_user.last_name, response.content.decode())
-        self.assertInHTML(test_user.email, response.content.decode())
+        self.assertInHTML(test_user.first_name + ' ' + test_user.last_name, decoded_response)
+        self.assertInHTML(test_user.email, decoded_response)
 
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class SellTest(TestCase): #Can't simulate a fake photo
@@ -370,12 +371,13 @@ class SellTest(TestCase): #Can't simulate a fake photo
 
         c.login(username = "rc8yw@virginia.edu", password="12345")
         
-        response = c.get("/accounts/", secure=True, follow=True)        
+        response = c.get("/accounts/", secure=True, follow=True)  
+        decoded_response=response.content.decode()      
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML("Classical Mechanics", response.content.decode())
-        self.assertInHTML("$100.00", response.content.decode())
-        self.assertInHTML("Rohan Chandra", response.content.decode())
-        self.assertInHTML("Condition: Like new", response.content.decode())
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("Rohan Chandra", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
 
     def test_new_listing_in_search(self):
         test_user = User.objects.create_user(
@@ -398,12 +400,13 @@ class SellTest(TestCase): #Can't simulate a fake photo
         c = Client()
         c.login(username = "rc8yw@virginia.edu", password="12345")
         
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)  
+        decoded_response=response.content.decode()      
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML("Classical Mechanics", response.content.decode())
-        self.assertInHTML("$100.00", response.content.decode())
-        self.assertInHTML("Rohan Chandra", response.content.decode())
-        self.assertInHTML("Condition: Like new", response.content.decode())
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("Rohan Chandra", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
 
     def test_listing_in_cart_not_in_search(self):
         test_user = User.objects.create_user(
@@ -441,10 +444,11 @@ class SellTest(TestCase): #Can't simulate a fake photo
         response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
         self.assertEqual(response.status_code, 200)
         try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$100.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
+            decoded_response=response.content.decode()
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$100.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
             self.fail("Not removed")
         except AssertionError:
             pass
@@ -471,11 +475,12 @@ class SellTest(TestCase): #Can't simulate a fake photo
 
         c = Client()
         c.login(username = "rc8yw@virginia.edu", password="12345")
-        response = c.get("/cart/", secure=True, follow=True)        
+        response = c.get("/cart/", secure=True, follow=True)   
+        decoded_response=response.content.decode()     
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML("Classical Mechanics", response.content.decode())
-        self.assertInHTML("$100.00", response.content.decode())
-        self.assertInHTML("remove", response.content.decode())
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$100.00", decoded_response)
+        self.assertInHTML("remove", decoded_response)
 
     def test_add_listing_to_cart(self):
         test_user = User.objects.create_user(
@@ -532,20 +537,22 @@ class SellTest(TestCase): #Can't simulate a fake photo
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
         response = c.get("/cart/", secure=True, follow=True)
+        decoded_response=response.content.decode()
         try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$200.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$200.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
             self.fail("Not removed")
         except AssertionError:
             pass
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
+        decoded_response=response.content.decode()        
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML("Classical Mechanics", response.content.decode())
-        self.assertInHTML("$200.00", response.content.decode())
-        self.assertInHTML("Rohan Chandra", response.content.decode())
-        self.assertInHTML("Condition: Like new", response.content.decode())
+        self.assertInHTML("Classical Mechanics", decoded_response)
+        self.assertInHTML("$200.00", decoded_response)
+        self.assertInHTML("Rohan Chandra", decoded_response)
+        self.assertInHTML("Condition: Like new", decoded_response)
 
     def test_checkout_success(self):
         test_user = User.objects.create_user(
@@ -573,30 +580,32 @@ class SellTest(TestCase): #Can't simulate a fake photo
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
         response = c.get("/cart/checkout/success", secure=True, follow=True)
-        #self.assertInHTML("Success!", response.content.decode())
-        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)        
+        #self.assertInHTML("Success!", decoded_response)
+        response = c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
+        decoded_response=response.content.decode()        
         self.assertEqual(response.status_code, 200)
         try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$200.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$200.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
         except AssertionError:
             pass
         response = c.get("/accounts/", secure=True, follow=True)
+        decoded_response=response.content.decode()
         try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$200.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$200.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
         except AssertionError:
             pass
         response = c.get("/accounts/past_posts", secure=True, follow=True)
         try:
-            self.assertInHTML("Classical Mechanics", response.content.decode())
-            self.assertInHTML("$200.00", response.content.decode())
-            self.assertInHTML("Rohan Chandra", response.content.decode())
-            self.assertInHTML("Condition: Like new", response.content.decode())
+            self.assertInHTML("Classical Mechanics", decoded_response)
+            self.assertInHTML("$200.00", decoded_response)
+            self.assertInHTML("Rohan Chandra", decoded_response)
+            self.assertInHTML("Condition: Like new", decoded_response)
         except AssertionError:
             pass    
 
