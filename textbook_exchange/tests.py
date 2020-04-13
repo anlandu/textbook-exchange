@@ -31,7 +31,13 @@ class AutocompleteTest(TestCase):
     Since we don't have all the books and courses in yet I don't know what
     the results will be but this is the format for the autocomplete tests
     '''
-    def test_template(self):quiarch})
+    fixtures = ['testing_data/textbooks.json', 'testing_data/classes.json']
+
+    def test_template(self):
+        search = "test_search" #this should return no results
+        expected_results = {'search': 'test_search', 'books': [], 'courses': []}
+
+        response = self.client.get('/buy/autocomplete/', {'search': search})
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ordered(json.loads(response.content)), ordered(expected_results))
