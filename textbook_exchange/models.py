@@ -126,9 +126,9 @@ class ProductListing(models.Model):
     condition = models.CharField(max_length=10) # 'likenew', 'verygood', 'good', 'acceptable'
     picture_url = models.CharField(max_length=500, default="")
     comments = models.CharField(max_length=500, blank=True)
-    has_been_sold = models.BooleanField(default=False)
     published_date = models.DateTimeField('date published', auto_now_add=True)
-    sold_date = models.DateTimeField('date published', auto_now=True)
+    sold_date = models.DateTimeField('date sold', auto_now=True)
+    has_been_sold = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.textbook)

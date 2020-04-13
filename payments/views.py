@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from textexc.settings import EMAIL_HOST_USER
 from django.template.loader import get_template
 from django.template import Context
+from datetime import datetime
 import requests, json
 
 def get_cart(request):      
@@ -66,6 +67,7 @@ def success(request):
         transaction.has_been_sold = True
         transaction.cart = None
         transaction.save()
+        transaction.sold_date = datetime.now()
         sold_items.append(transaction)
 
         subject = 'A textbook sold on UVA TextEx!'
