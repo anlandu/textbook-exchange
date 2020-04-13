@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from textexc.settings import EMAIL_HOST_USER
 from django.template.loader import get_template
 from django.template import Context
+from datetime import datetime
 import requests, json
 
 def get_cart(request):      
@@ -63,9 +64,10 @@ def success(request):
         u = get_object_or_404(User, pk=transaction.user.email)
         pt = PendingTransaction(user=u, balance=transaction.price, date_transacted=timezone.now(), date_settled=one_week_in_future())
         pt.save()
-        transaction.hasBeenSoldFlag = True
+        transaction.has_been_sold = True
         transaction.cart = None
         transaction.save()
+        transaction.sold_date = datetime.now()
         sold_items.append(transaction)
 
         subject = 'A textbook sold on UVA TextEx!'

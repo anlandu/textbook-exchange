@@ -14,7 +14,6 @@ from datetime import datetime
 from django.core.mail import mail_admins
 from textexc.settings import EMAIL_HOST_USER
 
-
 os.environ["CLOUDINARY_URL"]="cloudinary://348783216512488:nPXIA343WzNVngfkykW-I7XkGgE@dasg2ntne"
 
 cloudinary.config(
@@ -133,11 +132,51 @@ class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
+    context_postSold = False
+    context_postUpdated = False
     ordering = ['published_date']
+    
+    def get_queryset(self):
+        queryset = super(AccountCurrentListings, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user, has_been_sold=False)
+        return queryset
+
+    # If POST request made by edit or sold buttons
+    def post(self, request, *args, **kwargs):
+        if self.request.method == 'POST':
+            # check which form is sending the post request (sold button or edit button)
+            if 'sold_listing' in self.request.POST:
+                listing_id = self.request.POST.get('sold_listing')
+                listing = ProductListing.objects.get(pk=listing_id)
+                listing.has_been_sold = True
+                listing.sold_date = datetime.now()
+                listing.save()
+                
+                # save context to send to template
+                self.context_postSold = True
+            elif 'edit_listing' in self.request.POST:
+                listing_id = self.request.POST.get('edit_listing')
+                listing = ProductListing.objects.get(pk=listing_id)
+                data = request.POST
+
+                # print(listing.picture)
+                # print(listing.picture.url)
+                # listing.picture = data['picture']
+                listing.price = data['price']
+                listing.condition = data['condition']
+                listing.comments = data['comments']
+                listing.save()
+
+                # save context to send to template
+                self.context_postUpdated = True
+
+        # redirect to account dashboard and show user's current posts again
+        queryset = ProductListing.objects.filter(user=request.user, has_been_sold=False)
+        return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.context_postSold, 'postUpdated': self.context_postUpdated })
 
     def get_queryset(self):
         queryset = super(AccountCurrentListings, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
+        queryset = queryset.filter(user=self.request.user, has_been_sold=False)
         return queryset
 
     def get_context_data(self, **kwargs):          
@@ -158,7 +197,7 @@ class AccountPastListings(ListView):
 
     def get_queryset(self):
         queryset = super(AccountPastListings, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=True)
+        queryset = queryset.filter(user=self.request.user, has_been_sold=True)
         return queryset
 
 def buy_books(request):    
@@ -175,10 +214,11 @@ class BuyProductListings(ListView):
     
     def get_context_data(self, **kwargs):
         url_ibsn = self.kwargs['isbn']
+        textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         context = super().get_context_data(**kwargs)
-        context['title'] = self.kwargs['slug']
-        context['textbook'] = get_object_or_404(Textbook, isbn13=url_ibsn)
-        context['num_product_listings'] = len(get_object_or_404(Textbook, isbn13=url_ibsn).productlisting_set.all())
+        context['title'] = '"' + textbook.title + '"'
+        context['textbook'] = textbook
+        context['num_product_listings'] = len(textbook.productlisting_set.all())
         
         context['ordering'] = self.request.GET.get('sort')
         if context['ordering'] == "-price":
@@ -196,7 +236,7 @@ class BuyProductListings(ListView):
 
         textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
-        queryset = product_listings.filter(hasBeenSoldFlag=False, cart=None)
+        queryset = product_listings.filter(has_been_sold=False, cart=None)
 
         if url_ordering is not None:
             queryset = queryset.order_by(url_ordering)
@@ -212,9 +252,11 @@ class FindTextbooks(ListView):
     
     def get_context_data(self, **kwargs):
         url_class_info = self.kwargs['class_info']
+        clss = get_object_or_404(Class, class_info=url_class_info)
         context = super().get_context_data(**kwargs)
         context['class'] = get_object_or_404(Class, class_info=url_class_info)
-        context['num_textbooks'] = len(get_object_or_404(Class, class_info=url_class_info).textbook_set.all())
+        context['title'] = clss.class_info + " - " + '"' + clss.class_title + '"'
+        context['num_textbooks'] = len(clss.textbook_set.all())
 
         return context
 
@@ -222,7 +264,7 @@ class FindTextbooks(ListView):
         url_class_info = self.kwargs['class_info']
         class_found = get_object_or_404(Class, class_info=url_class_info)
         textbooks = class_found.textbook_set.all()
-        queryset = textbooks            
+        queryset = textbooks.filter(has_been_sold=False, cart=None)
         return queryset
 
 
