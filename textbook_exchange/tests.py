@@ -271,6 +271,8 @@ class SellTest(TestCase): #Can't simulate a fake photo
         }
         form = SellForm(form_data, picture_data)
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'price':['Ensure that there are no more than 2 decimal places.']})
+
     
     def test_sell_form_string_price(self):
         small_gif = (
@@ -291,8 +293,10 @@ class SellTest(TestCase): #Can't simulate a fake photo
         }
         form = SellForm(form_data, picture_data)
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'price':['Enter a number.']})
 
-    def test_sell_form_string_price(self):
+
+    def test_sell_form_blank_picture(self):
         small_gif = (
             b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
             b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
@@ -303,14 +307,44 @@ class SellTest(TestCase): #Can't simulate a fake photo
             'book_author': 'sample_author_1',
             'isbn': '1234567891234',
             'book_condition': "likenew",
-            'price': "1.0",
+            'price': 1.0,
             'comments': 'sample_comment',
         }
         picture_data={}
         form = SellForm(form_data, picture_data)
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'picture':['This field is required.']})
 
+    def test_two_sell_forms_same_picture(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
+            b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
+            b'\x02\x4c\x01\x00\x3b'
+        )
+        form_data_1 = {
+            'book_title': 'sample_title_1',
+            'book_author': 'sample_author_1',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': 1.0,
+            'comments': 'sample_comment',
+        }
+        picture_data_1={'picture':SimpleUploadedFile(name="small.gif", content=small_gif, content_type="image/gif")}
 
+        form_data_2 = {
+            'book_title': 'sample_title_2',
+            'book_author': 'sample_author_2',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': 1.0,
+            'comments': 'sample_comment',
+        }
+        picture_data_2={'picture':SimpleUploadedFile(name="small.gif", content=small_gif, content_type="image/gif")}
+
+        form_1 = SellForm(form_data_1, picture_data_1)
+        form_2 = SellForm(form_data_2, picture_data_2)
+        self.assertTrue(form_1.is_valid())
+        self.assertTrue(form_2.is_valid())
 
     def test_new_listing_in_current_posts(self):
         test_user = User.objects.create_user(
