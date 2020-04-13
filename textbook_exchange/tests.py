@@ -118,6 +118,16 @@ class AutocompleteTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ordered(json.loads(response.content)), ordered(expected_results))
 
+    def test_isbn_type_int(self):
+        search = 9780060646912
+
+        #just expecting the single correct book
+        expected_results = {'search': '9780060646912', 'books': ['{\n    "_state": {\n        "adding": false,\n        "db": "default"\n    },\n    "author": "[\'Martin Luther King\']",\n    "bookstore_isbn": "0-06-064691-8",\n    "bookstore_new_price": 29.99,\n    "bookstore_used_price": 14.91,\n    "cover_photo": "",\n    "cover_photo_url": "{\'smallThumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api\', \'thumbnail\': \'http://books.google.com/books/content?id=mTb_yAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api\'}",\n    "date": "1990-12-07",\n    "description": "\\"We\'ve got some difficult days ahead,\\" civil rights activist Martin Luther King, Jr., told a crowd gathered at Memphis\'s Clayborn Temple on April 3, 1968. \\"But it really doesn\'t matter to me now because I\'ve been to the mountaintop. . . . And I\'ve seen the promised land. I may not get there with you. But I want you to know tonight that we as a people will get to the promised land.\\" These prohetic words, uttered the day before his assassination, challenged those he left behind to see that his \\"promised land\\" of racial equality became a reality; a reality to which King devoted the last twelve years of his life. These words and other are commemorated here in the only major one-volume collection of this seminal twentieth-century American prophet\'s writings, speeches, interviews, and autobiographical reflections. A Testament of Hope contains Martin Luther King, Jr.\'s essential thoughts on nonviolence, social policy, integration, black nationalism, the ethics of love and hope, and more.",\n    "google_rating": 4.0,\n    "isbn10": "0060646918",\n    "isbn13": "9780060646912",\n    "num_reviews": 3,\n    "page_count": 736,\n    "publisher": "Harper Collins",\n    "req_type": "Required",\n    "title": "A Testament of Hope: The Essential Writings and Speeches of Martin Luther King, Jr."\n}'], 'courses': []}
+        
+        response = self.client.get('/buy/autocomplete/', {'search': search})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ordered(json.loads(response.content)), ordered(expected_results))
+
 class LoginTest(TestCase):
     def test_login_success(self):
         test_user = User.objects.create(
@@ -241,6 +251,67 @@ class SellTest(TestCase): #Can't simulate a fake photo
         }
         form = SellForm(form_data, picture_data)
         self.assertTrue(form.is_valid())
+
+    def test_sell_form_three_decimal_price(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
+            b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
+            b'\x02\x4c\x01\x00\x3b'
+        )
+        form_data = {
+            'book_title': 'sample_title_1',
+            'book_author': 'sample_author_1',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': 1.0051,
+            'comments': 'sample_comment',
+        }
+        picture_data = {
+            "picture": SimpleUploadedFile(name="small.gif", content=small_gif, content_type="image/gif"),
+        }
+        form = SellForm(form_data, picture_data)
+        self.assertFalse(form.is_valid())
+    
+    def test_sell_form_string_price(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
+            b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
+            b'\x02\x4c\x01\x00\x3b'
+        )
+        form_data = {
+            'book_title': 'sample_title_1',
+            'book_author': 'sample_author_1',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': "k",
+            'comments': 'sample_comment',
+        }
+        picture_data = {
+            "picture": SimpleUploadedFile(name="small.gif", content=small_gif, content_type="image/gif"),
+        }
+        form = SellForm(form_data, picture_data)
+        self.assertFalse(form.is_valid())
+
+    def test_sell_form_string_price(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
+            b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
+            b'\x02\x4c\x01\x00\x3b'
+        )
+        form_data = {
+            'book_title': 'sample_title_1',
+            'book_author': 'sample_author_1',
+            'isbn': '1234567891234',
+            'book_condition': "likenew",
+            'price': "1.0",
+            'comments': 'sample_comment',
+        }
+        picture_data={}
+        form = SellForm(form_data, picture_data)
+        self.assertFalse(form.is_valid())
+
+
+
     def test_new_listing_in_current_posts(self):
         test_user = User.objects.create_user(
             username = "rc8yw",
