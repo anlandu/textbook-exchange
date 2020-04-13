@@ -7,6 +7,7 @@ from django.contrib import messages
 import itertools
 import functools
 from django.urls import reverse
+from datetime import datetime
 
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook, Class
@@ -114,7 +115,7 @@ class AccountCurrentListings(ListView):
     
     def get_queryset(self):
         queryset = super(AccountCurrentListings, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
+        queryset = queryset.filter(user=self.request.user, has_been_sold=False)
         return queryset
 
     # If POST request made by edit or sold buttons
@@ -124,8 +125,14 @@ class AccountCurrentListings(ListView):
             if 'sold_listing' in self.request.POST:
                 listing_id = self.request.POST.get('sold_listing')
                 listing = ProductListing.objects.get(pk=listing_id)
-                listing.hasBeenSoldFlag = True
+                listing.has_been_sold = True
+                listing.sold_date = datetime.now()
+                print("editing")
+                # print(listing.published_date)
+                # listing.published_date = listing.published_date
+                print(listing.published_date)
                 listing.save()
+                print("saved")
                 
                 # save context to send to template
                 self.context_postSold = True
@@ -146,7 +153,7 @@ class AccountCurrentListings(ListView):
                 self.context_postUpdated = True
 
         # redirect to account dashboard and show user's current posts again
-        queryset = ProductListing.objects.filter(user=request.user, hasBeenSoldFlag=False)
+        queryset = ProductListing.objects.filter(user=request.user, has_been_sold=False)
         return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.context_postSold, 'postUpdated': self.context_postUpdated })
 
 class AccountPastListings(ListView):
@@ -157,7 +164,7 @@ class AccountPastListings(ListView):
 
     def get_queryset(self):
         queryset = super(AccountPastListings, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=True)
+        queryset = queryset.filter(user=self.request.user, has_been_sold=True)
         return queryset
 
 def buy_books(request):    
@@ -196,7 +203,7 @@ class BuyProductListings(ListView):
 
         textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
-        queryset = product_listings.filter(hasBeenSoldFlag=False, cart=None)
+        queryset = product_listings.filter(has_been_sold=False, cart=None)
 
         if url_ordering is not None:
             queryset = queryset.order_by(url_ordering)
@@ -224,7 +231,7 @@ class FindTextbooks(ListView):
         url_class_info = self.kwargs['class_info']
         class_found = get_object_or_404(Class, class_info=url_class_info)
         textbooks = class_found.textbook_set.all()
-        queryset = textbooks.filter(hasBeenSoldFlag=False, cart=None)
+        queryset = textbooks.filter(has_been_sold=False, cart=None)
         return queryset
 
 

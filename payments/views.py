@@ -56,7 +56,7 @@ def success(request):
         u = textbook_exchange_models.User.objects.get(pk=transaction.user.email)
         pt = textbook_exchange_models.PendingTransaction(user=u, balance=transaction.price, date_transacted=timezone.now(), date_settled=one_week_in_future())
         pt.save()
-        transaction.hasBeenSoldFlag = True
+        transaction.has_been_sold = True
         transaction.cart = None
         transaction.save()
     return render(request, 'payments/success.html', context=context)
