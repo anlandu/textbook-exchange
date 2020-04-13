@@ -127,12 +127,7 @@ class AccountCurrentListings(ListView):
                 listing = ProductListing.objects.get(pk=listing_id)
                 listing.has_been_sold = True
                 listing.sold_date = datetime.now()
-                print("editing")
-                # print(listing.published_date)
-                # listing.published_date = listing.published_date
-                print(listing.published_date)
                 listing.save()
-                print("saved")
                 
                 # save context to send to template
                 self.context_postSold = True
