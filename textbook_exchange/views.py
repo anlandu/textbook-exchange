@@ -9,7 +9,7 @@ import functools
 from django.urls import reverse
 
 
-from .forms import SellForm, EditForm
+from .forms import SellForm
 from .models import ProductListing, Class, Textbook, Class
 from django.http import JsonResponse #for autocompletion response
 
@@ -112,8 +112,6 @@ class AccountCurrentListings(ListView):
     context_postSold = False
     ordering = ['published_date']
     
-    # context_form = EditForm
-
     def get_queryset(self):
         queryset = super(AccountCurrentListings, self).get_queryset()
         queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
@@ -129,30 +127,21 @@ class AccountCurrentListings(ListView):
                 listing.hasBeenSoldFlag = True
                 self.context_postSold = True
                 listing.save()
-            # elif 'edit_listing' in self.request.POST:
-                # form = EditForm(request.POST, request.FILES)
-                # if form.is_valid():
-                #     cleaned_data = form.cleaned_data
-                #     user = request.user
+            elif 'edit_listing' in self.request.POST:
+                listing_id = self.request.POST.get('edit_listing')
+                listing = ProductListing.objects.get(pk=listing_id)
+                data = request.POST
 
-                #     listing_id = self.request.POST.get('edit_listing')
-                #     listing_obj = ProductListing.objects.get(pk=listing_id)
-                #     listing_obj.user = user
-                #     listing_obj.picture = cleaned_data['picture']
-                #     listing_obj.price = cleaned_data['price']
-                #     listing_obj.condition = cleaned_data['book_condition']
-                #     listing_obj.comments = cleaned_data['comments']
-                #     listing_obj.save() 
-
-                # data = request.POST.dict()
-                # price = data.get("price")
-                # password = data.get("password")
-                # user_type = data.get("user_type")
-                # print(user_type, username, password)
-                
+                # print(listing.picture)
+                # print(listing.picture.url)
+                # listing.picture = data['picture']
+                listing.price = data['price']
+                listing.condition = data['condition']
+                listing.comments = data['comments']
+                listing.save()
         # redirect to account dashboard and show user's current posts again
         queryset = ProductListing.objects.filter(user=request.user, hasBeenSoldFlag=False)
-        return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.context_postSold})
+        return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.context_postSold })
 
 class AccountPastListings(ListView):
     model = ProductListing
