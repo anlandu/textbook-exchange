@@ -100,7 +100,7 @@
                 </div>
             </div>
         {% endif %}
-        <div class="{% if num_product_listings >= 1 %}col-md-9{% else %}col-12{% endif %}">
+        <div class="mt-5 {% if num_product_listings >= 1 %}col-md-9{% else %}col-12{% endif %}">
             {% if num_product_listings == 0 %}
                 <h3 class="text-center">
                     There are currently no listings for this textbook. Please try again later.
@@ -110,14 +110,19 @@
                     {% for listing in product_listings %}
                         <div class="card text-font mt-0" id="listing" style="width: 15rem;" price="{{ listing.price }}" condition="{{ listing.condition }}">
                             <div class="card-header">
-                                <img class="card-img-top" src="{{ listing.picture_url }}" alt="{{ listing.textbook.title }}" style="border-radius: 0px; margin-top: 10px;">
+                                <a href="{{ listing.picture_url }}" data-type="image" data-toggle="lightbox" data-max-width="700" id="{{ listing.isbn10 }}">
+                                    <img class="card-img-top img-fluid" src="{{ listing.picture_url }}" alt="{{ listing.textbook.title }}" style="margin-top: 10px;">
+                                </a>
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author_clean }}</h6> 
                                 <h5 class="card-subtitle mt-4 mb-2">${{ listing.price }}</h5>
                             </div>
                             <div class="card-body">
                                 <h6 class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
-                                <button type="button" class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;">Message</button>
+                                <!---<button type="button" class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;">Message</button>  -->
+                                <a  class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;" href="{% url 'exchange:twilio' %}?listing_id={{listing.id}}&seller_name={{ listing.user.username }}&user_name={{ user.username }}"> 
+                                    Message
+                                </a>
                                 <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">{{ listing.published_date }}</p>                                
                                 <p class="card-subtitle mb-4">
                                     Condition:
@@ -214,7 +219,15 @@ function applyClick() {
 
 };
 
+$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+    event.preventDefault();
+    console.log("clicked");
+    console.log($(this));
+    $(this).ekkoLightbox();
+});
+
 </script>
+
 
 <div class="modal fade" id="moreInfoModalCenter" tabindex="-1" role="dialog" aria-labelledby="scanModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

@@ -14,6 +14,16 @@ from datetime import datetime
 from django.core.mail import mail_admins
 from textexc.settings import EMAIL_HOST_USER
 
+from faker import Factory
+from django.http import JsonResponse
+from django.conf import settings
+
+from twilio.rest import Client
+from twilio.jwt.access_token import AccessToken
+from twilio.jwt.access_token.grants import (
+    SyncGrant,
+    ChatGrant
+)
 
 os.environ["CLOUDINARY_URL"]="cloudinary://348783216512488:nPXIA343WzNVngfkykW-I7XkGgE@dasg2ntne"
 
@@ -118,6 +128,11 @@ def account_page(request):
 def account_page_messages(request):
     context = get_logged_in(request)
     context['title'] = 'Messages'
+    context['id'] = request.GET.get('listing_id')
+    if request.method == 'GET' and 'listing_id' in request.GET:
+        listing = textbook_exchange_models.ProductListing.objects.get(pk=request.GET.get('listing_id'))
+        context['seller_name'] = listing.user.first_name + " " + listing.user.last_name
+        context['listing'] = listing 
     if not context['logged_in']:
         return HttpResponseRedirect('/404_error')    
     return render(request, 'textbook_exchange/account_messages.html', context=context)
@@ -133,11 +148,51 @@ class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
+    context_postSold = False
+    context_postUpdated = False
     ordering = ['published_date']
+    
+    def get_queryset(self):
+        queryset = super(AccountCurrentListings, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user, has_been_sold=False)
+        return queryset
+
+    # If POST request made by edit or sold buttons
+    def post(self, request, *args, **kwargs):
+        if self.request.method == 'POST':
+            # check which form is sending the post request (sold button or edit button)
+            if 'sold_listing' in self.request.POST:
+                listing_id = self.request.POST.get('sold_listing')
+                listing = ProductListing.objects.get(pk=listing_id)
+                listing.has_been_sold = True
+                listing.sold_date = datetime.now()
+                listing.save()
+                
+                # save context to send to template
+                self.context_postSold = True
+            elif 'edit_listing' in self.request.POST:
+                listing_id = self.request.POST.get('edit_listing')
+                listing = ProductListing.objects.get(pk=listing_id)
+                data = request.POST
+
+                # print(listing.picture)
+                # print(listing.picture.url)
+                # listing.picture = data['picture']
+                listing.price = data['price']
+                listing.condition = data['condition']
+                listing.comments = data['comments']
+                listing.save()
+
+                # save context to send to template
+                self.context_postUpdated = True
+
+        # redirect to account dashboard and show user's current posts again
+        queryset = ProductListing.objects.filter(user=request.user, has_been_sold=False)
+        return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.context_postSold, 'postUpdated': self.context_postUpdated })
 
     def get_queryset(self):
         queryset = super(AccountCurrentListings, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=False)
+        queryset = queryset.filter(user=self.request.user, has_been_sold=False)
         return queryset
 
     def get_context_data(self, **kwargs):          
@@ -158,7 +213,7 @@ class AccountPastListings(ListView):
 
     def get_queryset(self):
         queryset = super(AccountPastListings, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user, hasBeenSoldFlag=True)
+        queryset = queryset.filter(user=self.request.user, has_been_sold=True)
         return queryset
 
 def buy_books(request):    
@@ -175,10 +230,11 @@ class BuyProductListings(ListView):
     
     def get_context_data(self, **kwargs):
         url_ibsn = self.kwargs['isbn']
+        textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         context = super().get_context_data(**kwargs)
-        context['title'] = self.kwargs['slug']
-        context['textbook'] = get_object_or_404(Textbook, isbn13=url_ibsn)
-        context['num_product_listings'] = len(get_object_or_404(Textbook, isbn13=url_ibsn).productlisting_set.all())
+        context['title'] = '"' + textbook.title + '"'
+        context['textbook'] = textbook
+        context['num_product_listings'] = len(textbook.productlisting_set.all())
         
         context['ordering'] = self.request.GET.get('sort')
         if context['ordering'] == "-price":
@@ -196,7 +252,7 @@ class BuyProductListings(ListView):
 
         textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
-        queryset = product_listings.filter(hasBeenSoldFlag=False, cart=None)
+        queryset = product_listings.filter(has_been_sold=False, cart=None)
 
         if url_ordering is not None:
             queryset = queryset.order_by(url_ordering)
@@ -212,9 +268,11 @@ class FindTextbooks(ListView):
     
     def get_context_data(self, **kwargs):
         url_class_info = self.kwargs['class_info']
+        clss = get_object_or_404(Class, class_info=url_class_info)
         context = super().get_context_data(**kwargs)
         context['class'] = get_object_or_404(Class, class_info=url_class_info)
-        context['num_textbooks'] = len(get_object_or_404(Class, class_info=url_class_info).textbook_set.all())
+        context['title'] = clss.class_info + " - " + '"' + clss.class_title + '"'
+        context['num_textbooks'] = len(clss.textbook_set.all())
 
         return context
 
@@ -222,7 +280,7 @@ class FindTextbooks(ListView):
         url_class_info = self.kwargs['class_info']
         class_found = get_object_or_404(Class, class_info=url_class_info)
         textbooks = class_found.textbook_set.all()
-        queryset = textbooks            
+        queryset = textbooks.filter(has_been_sold=False)
         return queryset
 
 
@@ -295,7 +353,7 @@ def cashout(request):
         "sender_batch_header": {
                 "sender_batch_id": batch_id,
                 "email_subject": "You have a payout!",
-                "email_message": "You have received a payout! Thanks for using UVA TextEx for all you textbook exchange needs!"
+                "email_message": "You have received a payout! Thanks for using UVA TextEx for all your textbook exchange needs!"
             },
             "items": [
                 {
@@ -342,3 +400,50 @@ def contact_us(request):
             # raise forms.ValidationError("Please fill in all fields in red.")
     else:
         return render(request, 'textbook_exchange/contact_us.html', context={'form': ContactForm, 'sent': 'sent' in request.GET})
+def chat_view(request):
+    context=get_logged_in(request)
+    listing = textbook_exchange_models.ProductListing.objects.get(pk=request.GET.get('listing_id'))
+    context['seller_name'] = listing.user.username
+    context['listing'] = listing 
+    context['listing_id'] = request.GET.get('listing_id')
+    return render(request, 'textbook_exchange/index.html', context = context)
+
+def channel_view(request):
+    context = get_logged_in(request)
+    if request.method == 'GET' and 'channel_name' in request.GET:
+        context['channel_name'] = request.GET.get('channel_name')
+    return render(request, 'textbook_exchange/message_channel.html', context = context)
+    
+def token(request):
+    context = get_logged_in(request)
+    #user_identity = textbook_exchange_models.User.objects.get(pk=request.GET.get('listing_id'))
+    #user_identity = textbook_exchange_models.User.objects.get(pk=request.GET.get('name_id'))
+    #context['name'] = textbook_exchange_models.User.first_name + " " + textbook_exchange_models.User.last_name
+    #fake = Factory.create()
+    #print("Printing User " +  request.user.username)
+    return generateToken(request.user.username)
+    #return generateToken(name_test)
+
+def generateToken(identity):
+    # Get credentials from environment variables
+    account_sid      = settings.TWILIO_ACCT_SID
+    chat_service_sid = settings.TWILIO_CHAT_SID
+    sync_service_sid = settings.TWILIO_SYNC_SID
+    api_sid          = settings.TWILIO_API_SID
+    api_secret       = settings.TWILIO_API_SECRET
+
+    # Create access token with credentials
+    token = AccessToken(account_sid, api_sid, api_secret, identity=identity)
+
+    # Create a Sync grant and add to token
+    if sync_service_sid:
+        sync_grant = SyncGrant(service_sid=sync_service_sid)
+        token.add_grant(sync_grant)
+
+    # Create a Chat grant and add to token
+    if chat_service_sid:
+        chat_grant = ChatGrant(service_sid=chat_service_sid)
+        token.add_grant(chat_grant)
+
+    # Return token info as JSON
+    return JsonResponse({'identity':identity,'token':token.to_jwt().decode('utf-8')})
