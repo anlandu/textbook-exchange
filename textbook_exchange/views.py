@@ -8,7 +8,6 @@ import itertools
 import functools
 from django.urls import reverse
 
-
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook, Class
 from django.http import JsonResponse #for autocompletion response
@@ -110,6 +109,7 @@ class AccountCurrentListings(ListView):
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
     context_postSold = False
+    context_postUpdated = False
     ordering = ['published_date']
     
     def get_queryset(self):
@@ -125,8 +125,10 @@ class AccountCurrentListings(ListView):
                 listing_id = self.request.POST.get('sold_listing')
                 listing = ProductListing.objects.get(pk=listing_id)
                 listing.hasBeenSoldFlag = True
-                self.context_postSold = True
                 listing.save()
+                
+                # save context to send to template
+                self.context_postSold = True
             elif 'edit_listing' in self.request.POST:
                 listing_id = self.request.POST.get('edit_listing')
                 listing = ProductListing.objects.get(pk=listing_id)
@@ -139,9 +141,13 @@ class AccountCurrentListings(ListView):
                 listing.condition = data['condition']
                 listing.comments = data['comments']
                 listing.save()
+
+                # save context to send to template
+                self.context_postUpdated = True
+
         # redirect to account dashboard and show user's current posts again
         queryset = ProductListing.objects.filter(user=request.user, hasBeenSoldFlag=False)
-        return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.context_postSold })
+        return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.context_postSold, 'postUpdated': self.context_postUpdated })
 
 class AccountPastListings(ListView):
     model = ProductListing
