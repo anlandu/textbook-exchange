@@ -36,8 +36,15 @@ INSTALLED_APPS = [
     'payments',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google'
+    'allauth.socialaccount.providers.google',
 ]
+#Set-up for Django-Private-Chat
+#Link: https://django-private-chat.readthedocs.io/en/latest/readme.html
+
+CHAT_WS_SERVER_HOST = 'localhost'
+CHAT_WS_SERVER_PORT = 5002
+CHAT_WS_SERVER_PROTOCOL = 'ws'
+DATETIME_FORMAT = "d.m.Y H:i:s"
 
 AUTH_USER_MODEL = 'textbook_exchange.User'
 
@@ -170,4 +177,12 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 ADMINS = [('Pineapple Seals Admin', 'pineappleseals@gmail.com')]
 
+TWILIO_ACCT_SID='ACf0385517838b0c0e46062e41663cd6c8'
+TWILIO_CHAT_SID='IS132e7a7ce77447468436a24845500d04'
+TWILIO_SYNC_SID='IS7086992d661eb157e6b5149543febb51'
+TWILIO_API_SID='SK9c7fe6717da5318751e61ca951dd784e'
+TWILIO_API_SECRET='YP8YzQNQw8K1VM9bgiFlezje0MckJenx'
+
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATICFILES_DIRS = (os.path.join(os.path.dirname(__file__),'static'),)
 django_heroku.settings(locals())
