@@ -63,11 +63,9 @@
                                     <br/>
                                     ISBN10: {{ textbook.isbn10 }}
                                 </p>
-                                {% if textbook.req_type != "Required" %}
-                                    <p class="card-text" style="font-style: italic;">
-                                        {{ textbook.req_type }}
+                                    <p class="card-text">
+                                        Requirement Type: {{ textbook.req_type }}
                                     </p>
-                                {% endif %}
                                 <p class="card-text">
                                     <u>Bookstore Price</u>
                                     <br/>
