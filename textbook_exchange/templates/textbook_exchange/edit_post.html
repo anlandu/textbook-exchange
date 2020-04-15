@@ -1,0 +1,61 @@
+{% extends 'textbook_exchange/account_base.html' %}
+{% load static %} 
+
+{% block inner-content %}
+{% if postUpdated %}
+    <h1>
+        This post was successfully updated.
+    </h1>
+{% endif %}
+
+<form action="" method="post" novalidate enctype="multipart/form-data" id="form">
+{% csrf_token %}
+    <div class="right-container">
+        <h2 class="custom-header">Edit Post</h2>
+        <br/>
+        <div class="card" style="margin: 0;">
+            <div class="card-content p-3">
+                <h4 class="card-title">{{ post.textbook.title }}</h4>
+                <h6 class="card-subtitle text-muted mb-4">{{ post.textbook.author_clean }}</h6>
+                <hr>
+                <!-- <div class="form-group form-inline">
+                    <label class="col-form-label">Picture: </label>
+                    <input type="file" id="img" name="img" accept="image/*" value="{{ post.price }}">
+                </div> -->
+                <div class="form-group form-inline">
+                    <label class="col-form-label">Price (USD): &nbsp&nbsp&nbsp</label>
+                    <input type="number" step=".01" min="0.0" max="500" name="price" class="form-control" value="{{ post.price }}">
+                </div>
+                <div class="form-group mb-4">
+                    <label class="col-form-label">Condition</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="condition" id="likenew" value="likenew" checked>
+                        <label class="form-check-label" for="likenew">Like new</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="condition" id="verygood" value="verygood">
+                        <label class="form-check-label" for="verygood">Very good</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="condition" id="good" value="good">
+                        <label class="form-check-label" for="good">Good</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="condition" id="acceptable" value="acceptable">
+                        <label class="form-check-label" for="acceptable">Acceptable</label>
+                    </div>
+                </div>
+                <div class="form-group form mb-5">
+                    <label class="col-form-label">Comments</label>
+                    <textarea class="form-control" name="comments" max_length='300'>{{ post.comments }}</textarea>
+                </div>
+                <button type="submit" name="cancel_edit" class="btn btn-secondary">Cancel</button>
+                <button type="submit" name="edit_listing" class="btn btn-primary" value="{{ post.id }}" >Save</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+            
+
+{% endblock %}

@@ -18,7 +18,7 @@
     	</script>
 	{% elif postUpdated %}
     	<script>
-    		alert("Post successfully updated.");
+    		alert("Post was successfully updated.");
     	</script>
     {% endif %}
     <div class="row">
@@ -28,8 +28,11 @@
                 <img class="card-img-top" src="{{ post.picture.url }}" alt="{{ post.textbook.title }}" style="margin-top: 10px;">
                 <h5 class="card-title">{{ post.textbook.title }}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author_clean }}</h6> 
-                <h5 class="card-subtitle mt-4 mb-2">${{ post.price }}</h5>
-                <a href="#" class="card-link" data-toggle="modal" data-target="#edit">edit</a>
+				<h5 class="card-subtitle mt-4 mb-2">${{ post.price }}</h5>
+				<form method="GET">
+					<a href="{% url 'exchange:edit_post' post.id post.textbook.title_clean %}" class="card-link">edit</a>
+					<!-- href="accounts/edit/?listing_id={{post.id}}" -->
+				</form>
             </div>
             <div class="card-body">
                 <p class="card-subtitle mb-2 mb-4 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
@@ -112,10 +115,6 @@
 </div>
   
 <script>
-$('#myModal').on('shown.bs.modal', function () {
-    $('#edit').trigger('focus')
-});
-
 
 // // clears edit form on click
 // $( "#edit" ).click(function() {

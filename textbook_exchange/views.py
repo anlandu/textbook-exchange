@@ -8,6 +8,7 @@ import itertools
 import functools
 from django.urls import reverse
 from datetime import datetime
+from django.forms.models import model_to_dict
 
 from .forms import SellForm
 from .models import ProductListing, Class, Textbook, Class
@@ -105,20 +106,61 @@ def account_page_past_posts(request):
         return HttpResponseRedirect('/404_error')
     return render(request, 'textbook_exchange/account_current_posts.html', context=context)
 
+def edit_post(request, listing_id, title):
+    template_name = "textbook_exchange/edit_post.html"
+    context = {}
+    context['context_postUpdated'] = False
+
+    if request.method == 'POST':
+        if 'cancel_edit' in request.POST:
+            return HttpResponseRedirect('/accounts')
+        elif 'edit_listing' in request.POST:
+            listing_id = request.POST.get('edit_listing')
+            listing = ProductListing.objects.get(pk=listing_id)
+            data = request.POST
+
+            # print(listing.picture)
+            # print(listing.picture.url)
+            # listing.picture = data['picture']
+            listing.price = data['price']
+            listing.condition = data['condition']
+            listing.comments = data['comments']
+            listing.save()
+
+            # save context to send to template
+            context['context_postUpdated'] = True
+
+            response = HttpResponseRedirect('/accounts/?postUpdated=True')
+            response.set_cookie('postUpdated', True)
+            return response
+    
+    # Show form and prepopulate with listing data        
+    context['post'] = ProductListing.objects.get(pk=listing_id)
+    return render(request, template_name, context=context)
+
 class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
-    context_postSold = False
-    context_postUpdated = False
+    postUpdated = False
     ordering = ['published_date']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if (self.request.GET.get('postUpdated')):
+            context['postUpdated'] = True
+        return context
+
+        # if (self.request.GET.get("postUpdated") is None):
+        #     print(self.request.GET.get("postUpdated"))
+        #     self.postUpdated = True
     
     def get_queryset(self):
         queryset = super(AccountCurrentListings, self).get_queryset()
         queryset = queryset.filter(user=self.request.user, has_been_sold=False)
         return queryset
 
-    # If POST request made by edit or sold buttons
+    # If POST request made by sold button
     def post(self, request, *args, **kwargs):
         if self.request.method == 'POST':
             # check which form is sending the post request (sold button or edit button)
@@ -130,26 +172,13 @@ class AccountCurrentListings(ListView):
                 listing.save()
                 
                 # save context to send to template
-                self.context_postSold = True
-            elif 'edit_listing' in self.request.POST:
-                listing_id = self.request.POST.get('edit_listing')
-                listing = ProductListing.objects.get(pk=listing_id)
-                data = request.POST
-
-                # print(listing.picture)
-                # print(listing.picture.url)
-                # listing.picture = data['picture']
-                listing.price = data['price']
-                listing.condition = data['condition']
-                listing.comments = data['comments']
-                listing.save()
-
-                # save context to send to template
-                self.context_postUpdated = True
-
+                self.postSold = True
+    
         # redirect to account dashboard and show user's current posts again
         queryset = ProductListing.objects.filter(user=request.user, has_been_sold=False)
-        return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.context_postSold, 'postUpdated': self.context_postUpdated })
+
+        # 'postUpdated': self.postUpdated
+        return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.postSold })
 
 class AccountPastListings(ListView):
     model = ProductListing
