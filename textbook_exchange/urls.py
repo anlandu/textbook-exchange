@@ -3,6 +3,7 @@ from . import views
 from . import forms
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
 # from django.contrib import admin
 # from django.urls import include, path
 # from django.contrib.auth import views as auth_views
@@ -13,11 +14,16 @@ urlpatterns = [
     path('', views.landing, name='landing'),
     path('faq', views.faq, name='faq'),
     path('404_error', views.error_404, name='404_error'),
+    path('login/', views.login_redirect_before, name="login"),
+    path('login/redirect/', views.login_redirect_after, name="login_redirect"),
     path('sell/', views.sell_books, name='sellbooks'),
-    path('accounts/', views.AccountCurrentListings.as_view(), name='account_page'),
+    path('contact_us/', views.contact_us, name='contact_us'),
+    path('accounts/', login_required(views.AccountCurrentListings.as_view(), redirect_field_name='login_redirect_target', login_url="/login/"), name='account_page'),
     path('accounts/edit/<int:listing_id>/<slug:title>', views.edit_post, name='edit_post'),
-    path('accounts/past_posts', views.AccountPastListings.as_view(), name='past_posts'),
+    path('accounts/past_posts', login_required(views.AccountPastListings.as_view(), redirect_field_name='login_redirect_target', login_url="/login/"), name='past_posts'),
     path('accounts/messages', views.account_page_messages, name='messages'),
+    path('accounts/cashout', views.cashout, name='cashout'),
+    path('accounts/process', views.process_pending, name='process'),
     path('buy/', views.buy_books, name='buybooks'),
     path('buy/autocomplete/', views.autocomplete, name='ajax_autocomplete'),
     path('buy/<slug:isbn>/<slug:slug>/', views.BuyProductListings.as_view(), name='buy_product'), 

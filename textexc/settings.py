@@ -142,8 +142,8 @@ MEDIA_URL = '/media/'
 
 # ALL AUTH CONFIG
 ACCOUNT_LOGOUT_REDIRECT_URL ='/'
-LOGIN_REDIRECT_URL = '/'
-SOCIALACCOUNT_QUERY_EMAIL=True
+LOGIN_REDIRECT_URL = '/login/redirect/'
+SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_LOGOUT_ON_GET = True
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -160,5 +160,14 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+#Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'pineappleseals@gmail.com'
+EMAIL_HOST_PASSWORD = 'Sherriff2020!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+ADMINS = [('Pineapple Seals Admin', 'pineappleseals@gmail.com')]
 
 django_heroku.settings(locals())

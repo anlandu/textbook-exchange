@@ -7,6 +7,8 @@
     <div style="background-color: whitesmoke; padding: 10px 10px 10px 18px;">
         <h1 style="margin-bottom: 10px;">{{ user.first_name }} {{ user.last_name }}</h1>
         <h5>{{ user.email }}</h5>
+        <h5>Balance: ${{ user.balance }} <a href="{% url 'exchange:cashout' %}">Cashout</a></h5>
+        <h5>Pending Balance: ${{ pending_balance }} <a href="{% url 'exchange:process' %}">Process (only exists for testing)</a></h5>
     </div>
     <br/><br/>
     <h1 class="custom-header">Current Posts</h1>
@@ -38,8 +40,8 @@
                         Like new
                     {% elif post.condition == "verygood" %}
                         Very good
-					{% elif post.condition == "good" %}
-				Good
+					          {% elif post.condition == "good" %}
+				                Good
                     {% elif post.condition == "acceptable" %}
                         Acceptable
                     {% endif %}
@@ -126,5 +128,8 @@ $(document).ready(function() {
 	} 
 });
 
+    {% if status == "cashout_success" %}
+        alert('Successfully cashed out! Check the email used for this account for details.');
+    {% endif %}
 </script>
 {% endblock inner-content %}

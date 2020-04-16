@@ -1,19 +1,26 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-import itertools
-import functools
-from django.urls import reverse
-from datetime import datetime
-from django.forms.models import model_to_dict
-
-from .forms import SellForm
+import json, itertools, functools, requests, os, cloudinary.uploader
+from .forms import SellForm, ContactForm
 from .models import ProductListing, Class, Textbook, Class
-from django.http import JsonResponse #for autocompletion response
+from paypalpayoutssdk.core import PayPalHttpClient, SandboxEnvironment
+from paypalpayoutssdk.payouts import PayoutsPostRequest
+from paypalhttp import HttpError
+from datetime import datetime
+from django.core.mail import mail_admins
+from textexc.settings import EMAIL_HOST_USER
 
+os.environ["CLOUDINARY_URL"]="cloudinary://348783216512488:nPXIA343WzNVngfkykW-I7XkGgE@dasg2ntne"
+
+cloudinary.config(
+  cloud_name = "dasg2ntne", 
+  api_key = "348783216512488", 
+  api_secret = "nPXIA343WzNVngfkykW-I7XkGgE" 
+)
 
 def get_logged_in(request):
     if request.user.is_authenticated:
@@ -40,7 +47,20 @@ def error_404(request):
     context['title'] ='404 Error: Not Found'
     return render(request, 'textbook_exchange/404_error.html')
 
-@login_required(redirect_field_name='my_redirect_field', login_url="/accounts/google/login/")
+def login_redirect_before(request):
+    response = HttpResponseRedirect(reverse('google_login'))
+    response.set_cookie("redirect_address", request.GET.get('login_redirect_target'))
+    return response
+
+def login_redirect_after(request):
+    if "redirect_address" not in request.COOKIES:
+        return HttpResponseRedirect(reverse('exchange:landing'))
+    address = request.COOKIES.get("redirect_address")
+    response = HttpResponseRedirect(address)
+    response.delete_cookie('redirect_address')
+    return response
+
+@login_required(redirect_field_name='login_redirect_target', login_url="/login/")
 def sell_books(request):
     context = get_logged_in(request) 
     context['title'] = 'Sell Books'
@@ -62,7 +82,8 @@ def sell_books(request):
                 listing_obj.user = user
                 listing_obj.price = cleaned_data['price']
                 listing_obj.condition = cleaned_data['book_condition']
-                listing_obj.picture = cleaned_data['picture']
+                response = cloudinary.uploader.upload(cleaned_data['picture'])
+                listing_obj.picture_url = response['url']
                 listing_obj.comments = cleaned_data['comments']
                 
                 # finding textbook using isbn
@@ -71,7 +92,6 @@ def sell_books(request):
                 listing_obj.textbook = txtbk
                 
                 listing_obj.save()
-
                 return HttpResponseRedirect('/sell?submitted=True')
             else:
                 return render(request, "textbook_exchange/sellbooks.html", context={'form':form})
@@ -89,9 +109,11 @@ def account_page(request):
     context = get_logged_in(request)
     context['title'] = 'Account Page'
     if not context['logged_in']:
-        return HttpResponseRedirect('/404_error')
+        print('redirecting')
+        return HttpResponseRedirect(reverse('exchange:login')+ "?login_redirect_target=" + reverse('exchange:account_page'))   
     return render(request, 'textbook_exchange/account_dashboard.html', context=context)
 
+@login_required(redirect_field_name='login_redirect_target', login_url="/login/")
 def account_page_messages(request):
     context = get_logged_in(request)
     context['title'] = 'Messages'
@@ -167,6 +189,16 @@ class AccountCurrentListings(ListView):
         queryset = ProductListing.objects.filter(user=request.user, has_been_sold=False)
 
         return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.postSold })
+
+    def get_context_data(self, **kwargs):          
+        context = super().get_context_data(**kwargs)                     
+        sum = 0
+        for pt in self.request.user.pendingtransaction_set.all():
+            sum += pt.balance
+        context['pending_balance'] = sum
+        if "status" in self.request.GET:
+            context['status'] = self.request.GET.get("status")
+        return context
 
 class AccountPastListings(ListView):
     model = ProductListing
@@ -260,7 +292,7 @@ def autocomplete(request):
 
     # add books that start with the search query first, up to a max of 6 books
     # we only display up to 6 search items, so dont send more than we can view, thats a waste of data
-    for book in list(b_starts_with):
+    for book in list(b_starts_with.order_by("title", 'isbn13')):
         if len(valid_books) >= 6:
             break
         valid_books.append(book.toJSON())
@@ -269,12 +301,12 @@ def autocomplete(request):
     if len(valid_books) < 6:
             books = books.difference(b_starts_with)
 
-    for book in list(books):
+    for book in list(books.order_by("title", 'isbn13')):
         if len(valid_books) >= 6:
             break
         valid_books.append(book.toJSON())
 
-    for course in list(courses):
+    for course in list(courses.order_by("class_title")):
         if len(valid_courses) >= 6:
             break
         valid_courses.append(course.toJSON())
@@ -286,3 +318,80 @@ def autocomplete(request):
     }
 
     return JsonResponse(data)
+
+class PayPalClient:
+    def __init__(self):
+        self.client_id =  os.environ["PAYPAL-CLIENT-ID"] if 'PAYPAL-CLIENT-ID' in os.environ else "AcCaARG0gidap3Y0mCgZtbbdE3sDrYHyHSIBwJ20jwhyGk3MQSBLxpWggOwuOQphYKDLl87wRLek-qE8"
+        self.client_secret = os.environ["PAYPAL-CLIENT-SECRET"] if 'PAYPAL_CLIENT_SECRET' in os.environ else "ENBevuGci9BP5Lt7bAfofOFvjVerx7hMHKaapIo0-8idONUuQkx90pyyKM7HHAIlMYirX5mDRoc_zPFI"
+
+        """Set up and return PayPal Python SDK environment with PayPal Access credentials.
+           This sample uses SandboxEnvironment. In production, use
+           LiveEnvironment."""
+        self.environment = SandboxEnvironment(client_id=self.client_id, client_secret=self.client_secret)
+
+        """ Returns PayPal HTTP client instance in an environment with access credentials. Use this instance to invoke PayPal APIs, provided the
+            credentials have access. """
+        self.client = PayPalHttpClient(self.environment)
+
+@login_required(redirect_field_name='login_redirect_target', login_url="/login/")
+def process_pending(request):
+    for pt in request.user.pendingtransaction_set.all():
+        request.user.balance += pt.balance
+        pt.delete()
+    request.user.save()
+    return HttpResponseRedirect(reverse('exchange:account_page'))
+
+@login_required(redirect_field_name='login_redirect_target', login_url="/login/")
+def cashout(request):
+    batch_id = str(datetime.date(datetime.now()))+str(datetime.time(datetime.now()))
+    body = {
+        "sender_batch_header": {
+                "sender_batch_id": batch_id,
+                "email_subject": "You have a payout!",
+                "email_message": "You have received a payout! Thanks for using UVA TextEx for all you textbook exchange needs!"
+            },
+            "items": [
+                {
+                "recipient_type": "EMAIL",
+                "amount": {
+                    "value": str(request.user.balance),
+                    "currency": "USD"
+                },
+                "note": "Thanks using UVA TextEX!",
+                "sender_item_id": batch_id+"0001",
+                "receiver": 'pineappleseals@gmail.com'
+                }
+            ]
+    }
+
+    req = PayoutsPostRequest()
+    req.request_body(body)
+    ppc = PayPalClient()
+    try:
+        # Call API with your client and get a response for your call
+        response = ppc.client.execute(req)
+        # If call returns body in response, you can get the deserialized version from the result attribute of the response
+        b_id = response.result.batch_header.payout_batch_id
+        request.user.balance = 0.0
+        request.user.save()           
+    except IOError as ioe:
+        print(ioe)
+        if isinstance(ioe, HttpError):
+            # Something went wrong server-side
+            print (ioe.status_code)
+    return HttpResponseRedirect(reverse('exchange:account_page') + "?status=cashout_success")
+
+def contact_us(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+
+            mail_admins(cleaned_data['subject'], 'Reply To: ' + cleaned_data['email'] + "\n" + cleaned_data['message'], fail_silently=False)
+
+            return HttpResponseRedirect('/contact_us?sent=True')
+        else:
+            return render(request, "textbook_exchange/contact_us.html", context={'form':form})
+            # raise forms.ValidationError("Please fill in all fields in red.")
+    else:
+        return render(request, 'textbook_exchange/contact_us.html', context={'form': ContactForm, 'sent': 'sent' in request.GET})
