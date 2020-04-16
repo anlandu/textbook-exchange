@@ -2,12 +2,6 @@
 {% load static %} 
 
 {% block inner-content %}
-{% if postUpdated %}
-    <h1>
-        This post was successfully updated.
-    </h1>
-{% endif %}
-
 <form action="" method="post" novalidate enctype="multipart/form-data" id="form">
 {% csrf_token %}
     <div class="right-container">

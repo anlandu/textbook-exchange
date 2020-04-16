@@ -131,7 +131,7 @@ def edit_post(request, listing_id, title):
             context['context_postUpdated'] = True
 
             response = HttpResponseRedirect('/accounts/?postUpdated=True')
-            response.set_cookie('postUpdated', True)
+            response.set_cookie('postUpdated', value=True, path="/accounts")
             return response
     
     # Show form and prepopulate with listing data        
@@ -142,18 +142,7 @@ class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
-    postUpdated = False
     ordering = ['published_date']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if (self.request.GET.get('postUpdated')):
-            context['postUpdated'] = True
-        return context
-
-        # if (self.request.GET.get("postUpdated") is None):
-        #     print(self.request.GET.get("postUpdated"))
-        #     self.postUpdated = True
     
     def get_queryset(self):
         queryset = super(AccountCurrentListings, self).get_queryset()
@@ -177,7 +166,6 @@ class AccountCurrentListings(ListView):
         # redirect to account dashboard and show user's current posts again
         queryset = ProductListing.objects.filter(user=request.user, has_been_sold=False)
 
-        # 'postUpdated': self.postUpdated
         return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.postSold })
 
 class AccountPastListings(ListView):
