@@ -158,17 +158,20 @@ def edit_post(request, listing_id, title):
             listing = ProductListing.objects.get(pk=listing_id)
             data = request.POST
             
-            # save data
-            listing.price = data['price']
-            listing.condition = data['condition']
-            listing.comments = data['comments']
-            listing.save()
-
-            # handle img upload
-            if len(request.FILES) != 0:
+            # if img is uploaded, store it
+            if len(request.FILES) != 0:                
                 newimg = request.FILES['newimg']
                 response = cloudinary.uploader.upload(newimg)
                 listing.picture_url = response['url']
+                listing.picture_upload = newimg
+
+            # store other submitted data
+            listing.price = data['price']
+            listing.condition = data['condition']
+            listing.comments = data['comments']
+
+            # update listing
+            listing.save()
 
             # save context to send to template
             context['context_postUpdated'] = True
