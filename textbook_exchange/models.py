@@ -125,6 +125,7 @@ class ProductListing(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2)
     condition = models.CharField(max_length=10) # 'likenew', 'verygood', 'good', 'acceptable'
     picture_url = models.CharField(max_length=500, default="")
+    picture_upload = models.CharField(max_length=500, default="")
     comments = models.CharField(max_length=500, blank=True)
     published_date = models.DateTimeField('date published', auto_now_add=True)
     sold_date = models.DateTimeField('date sold', auto_now=True)
@@ -132,6 +133,7 @@ class ProductListing(models.Model):
 
     def __str__(self):
         return str(self.textbook)
+    
 
 class PendingTransaction(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

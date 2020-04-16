@@ -93,6 +93,7 @@ def sell_books(request):
                 listing.user = user
                 listing.price = cleaned_data['price']
                 listing.condition = cleaned_data['book_condition']
+                listing.picture_upload = cleaned_data['picture']
                 response = cloudinary.uploader.upload(cleaned_data['picture'])
                 listing.picture_url = response['url']
                 listing.comments = cleaned_data['comments']
@@ -165,10 +166,13 @@ def edit_post(request, listing_id, title):
             listing.save()
 
             # handle img upload
-            if len(request.FILES) != 0:
+            if len(request.FILES) != 0:                
+                print("file submitted")
                 newimg = request.FILES['newimg']
+                print(newimg)
                 response = cloudinary.uploader.upload(newimg)
                 listing.picture_url = response['url']
+                listing.picture_upload = newimg
 
             # save context to send to template
             context['context_postUpdated'] = True
