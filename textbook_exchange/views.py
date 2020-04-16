@@ -89,20 +89,20 @@ def sell_books(request):
                 cleaned_data = form.cleaned_data
                 user = request.user
 
-                listing_obj = ProductListing()
-                listing_obj.user = user
-                listing_obj.price = cleaned_data['price']
-                listing_obj.condition = cleaned_data['book_condition']
+                listing = ProductListing()
+                listing.user = user
+                listing.price = cleaned_data['price']
+                listing.condition = cleaned_data['book_condition']
                 response = cloudinary.uploader.upload(cleaned_data['picture'])
-                listing_obj.picture_url = response['url']
-                listing_obj.comments = cleaned_data['comments']
+                listing.picture_url = response['url']
+                listing.comments = cleaned_data['comments']
                 
                 # finding textbook using isbn
                 isbn = cleaned_data['isbn']
                 txtbk = get_object_or_404(Textbook, isbn13=isbn) # takes in bookstore_isbn
-                listing_obj.textbook = txtbk
+                listing.textbook = txtbk
                 
-                listing_obj.save()
+                listing.save()
                 return HttpResponseRedirect('/sell?submitted=True')
             else:
                 return render(request, "textbook_exchange/sellbooks.html", context={'form':form})
@@ -153,21 +153,27 @@ def edit_post(request, listing_id, title):
         if 'cancel_edit' in request.POST:
             return HttpResponseRedirect('/accounts')
         elif 'edit_listing' in request.POST:
+            # get data
             listing_id = request.POST.get('edit_listing')
             listing = ProductListing.objects.get(pk=listing_id)
             data = request.POST
-
-            # print(listing.picture)
-            # print(listing.picture.url)
-            # listing.picture = data['picture']
+            
+            # save data
             listing.price = data['price']
             listing.condition = data['condition']
             listing.comments = data['comments']
             listing.save()
 
+            # handle img upload
+            if len(request.FILES) != 0:
+                newimg = request.FILES['newimg']
+                response = cloudinary.uploader.upload(newimg)
+                listing.picture_url = response['url']
+
             # save context to send to template
             context['context_postUpdated'] = True
 
+            # redirect & set cookie
             response = HttpResponseRedirect('/accounts/?postUpdated=True')
             response.set_cookie('postUpdated', value=True, path="/accounts")
             return response
