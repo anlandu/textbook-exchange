@@ -1,0 +1,85 @@
+{% extends 'textbook_exchange/account_base.html' %}
+{% load static %} 
+
+{% block inner-content %}
+<form action="" method="post" novalidate enctype="multipart/form-data" id="form">
+{% csrf_token %}
+    <div class="right-container">
+        <h2 class="custom-header">Edit Post</h2>
+        <br/>
+        <div class="card" style="margin: 0;">
+            <div class="card-content p-3">
+                <h4 class="card-title">{{ post.textbook.title }}</h4>
+                <h6 class="card-subtitle text-muted mb-4">{{ post.textbook.author_clean }}</h6>
+                <hr>
+                <fieldset>
+                    <div class="form-group row">
+                        <div class="col-md-2 col-form-label" style="padding-right: 0; min-width: 83px;">
+                            <label class="col-form-label">Picture: </label>
+                        </div>
+                        <div class="col-md-10">
+                            <input type='file' title="Change picture" id="newimg" name="newimg" accept="image/*" onchange="imgpressed()" style="width:110px; color:transparent;">
+                            <label id="fileLabel">
+                                {{ post.picture_upload }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-2 col-form-label" style="padding-right: 0; min-width: 83px;">
+                            <label class="col-form-label">Price (USD):</label>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="number" step=".01" min="0.0" max="500" name="price" class="form-control" value="{{ post.price }}">
+                        </div>
+                    </div>
+                    <div class="form-group row mb-4">
+                        <div class="col-md-2 col-form-label" style="padding-right: 0; min-width: 83px;">
+                            <label class="col-form-label">Condition:</label>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="condition" id="likenew" value="likenew" checked>
+                                <label class="form-check-label" for="likenew">Like new</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="condition" id="verygood" value="verygood">
+                                <label class="form-check-label" for="verygood">Very good</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="condition" id="good" value="good">
+                                <label class="form-check-label" for="good">Good</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="condition" id="acceptable" value="acceptable">
+                                <label class="form-check-label" for="acceptable">Acceptable</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-5">
+                        <div class="col-md-2 col-form-label" style="padding-right: 0; min-width: 83px;">
+                            <label class="col-form-label">Comments:</label>
+                        </div>
+                        <div class="col-md-10">
+                            <textarea class="form-control" name="comments" max_length='300'>{{ post.comments }}</textarea>
+                        </div>
+                    </div>
+                    <button type="submit" name="cancel_edit" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" name="edit_listing" class="btn btn-primary" value="{{ post.id }}" >Save</button>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    window.imgpressed = function(){
+        var a = document.getElementById('newimg');
+        if(a.value != "")
+        {
+            var theSplit = a.value.split('\\');
+            fileLabel.innerHTML = theSplit[theSplit.length-1];
+        }
+    };
+</script>            
+
+{% endblock %}

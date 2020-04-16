@@ -2,6 +2,18 @@
 {% load static %} 
 
 {% block inner-content %}
+
+{% if postSold %}
+    <script>
+    	alert("Successfully marked as sold.");
+	</script>
+{% endif %}
+{% if status == "cashout_success" %}
+	<script>
+		alert('Successfully cashed out! Check the email used for this account for details.');
+	</script>
+{% endif %}
+
 <!-- Name/Email/Header -->
 <div class="right-container">
     <div style="background-color: whitesmoke; padding: 10px 10px 10px 18px;">
@@ -10,19 +22,11 @@
         <h5>Balance: ${{ user.balance }} <a href="{% url 'exchange:cashout' %}">Cashout</a></h5>
         <h5>Pending Balance: ${{ pending_balance }} <a href="{% url 'exchange:process' %}">Process (only exists for testing)</a></h5>
     </div>
-    <br/><br/>
+	<br/><br/>
+	
     <h1 class="custom-header">Current Posts</h1>
 
     <!-- POSTS -->
-    {% if postSold %}
-    	<script>
-    		alert("Successfully marked as sold.");
-    	</script>
-	{% elif postUpdated %}
-    	<script>
-    		alert("Post successfully updated.");
-    	</script>
-    {% endif %}
     <div class="row">
     {% for post in current_posts %}
         <div class="card text-font" style="width: 15rem;">
@@ -30,8 +34,10 @@
                 <img class="card-img-top" src="{{ post.picture_url }}" alt="{{ post.textbook.title }}" style="margin-top: 10px;">
                 <h5 class="card-title">{{ post.textbook.title }}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author_clean }}</h6> 
-                <h5 class="card-subtitle mt-4 mb-2">${{ post.price }}</h5>
-                <a href="#" class="card-link" data-toggle="modal" data-target="#edit">edit</a>
+				<h5 class="card-subtitle mt-4 mb-2">${{ post.price }}</h5>
+				<form method="GET">
+					<a href="{% url 'exchange:edit_post' post.id post.textbook.title_clean %}" class="card-link">edit</a>
+				</form>
             </div>
             <div class="card-body">
                 <p class="card-subtitle mb-2 mb-4 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
@@ -57,75 +63,25 @@
                 </form>
             </div>
         </div>
-
-	<!-- Modal -->
-	<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content" style="padding: 17px;">
-			<div class="modal-header">
-				<h5 class="modal-title font-weight-bold" id="exampleModalLongTitle">{{ post.textbook.title }}</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form action="" method="post">
-			{% csrf_token %}
-				<div class="modal-body">
-					<div class="form-group form-inline">
-						<label for="recipient-name" class="col-form-label">Price (USD): &nbsp&nbsp&nbsp</label>
-						<input type="number" step=".01" min="0.0" max="500" name="price" class="form-control" value="{{ post.price }}">
-					</div>
-					<div class="form-group">
-					<label class="col-form-label">Condition</label>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="condition" id="likenew" value="likenew" checked>
-							<label class="form-check-label" for="likenew">Like new</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="condition" id="verygood" value="verygood">
-							<label class="form-check-label" for="verygood">Very good</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="condition" id="good" value="good">
-							<label class="form-check-label" for="good">Good</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="condition" id="acceptable" value="acceptable">
-							<label class="form-check-label" for="acceptable">Acceptable</label>
-						</div>
-					</div>
-					<div class="form-group form">
-						<label class="col-form-label">Comments</label>
-						<textarea class="form-control" name="comments" max_length='300'>{{ post.comments }}</textarea>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary" name="edit_listing" value="{{ post.id }}" >Save</button>
-				</div>
-			</form>
-		</div>
-		</div>
-	</div>
-
-  
 	{% endfor %}
 	</div>
 </div>
   
 <script>
-$('#myModal').on('shown.bs.modal', function () {
-    $('#edit').trigger('focus')
+
+$(document).ready(function() {
+	function getCookie(name) {
+		var value = "; " + document.cookie;
+		var parts = value.split("; " + name + "=");
+		if (parts.length == 2) 
+			return parts.pop().split(";").shift();
+	}
+	
+	if (getCookie("postUpdated")=="True") {
+		alert("Post was successfully updated");
+		document.cookie = "postUpdated=false";
+	} 
 });
 
-
-// // clears edit form on click
-// $( "#edit" ).click(function() {
-// 	document.getElementById("edit_form").reset();
-// });
-
-    {% if status == "cashout_success" %}
-        alert('Successfully cashed out! Check the email used for this account for details.');
-    {% endif %}
 </script>
 {% endblock inner-content %}

@@ -63,7 +63,11 @@
           friendlyName: '{{ seller_name }} - {{ user.username }} - {{ book_name }}',
           isPrivate: false
         }).then(function(channel) {
-            console.log('{{ seller_name }}')
+            channel.invite('{{ seller_name }}').then(function() {
+                console.log("Invitation sent!")
+            }).catch(function(e) {
+                console.error(e);
+            });
             channel.invite('{{ user.username }}').then(function() {
                 console.log("Invitation sent!")
             }).catch(function(e) {
