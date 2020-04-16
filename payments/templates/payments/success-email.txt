@@ -6,4 +6,7 @@ Sold by: {{ product.user.first_name }} {{ product.user.last_name }}, {{ product.
 ${{ product.price}}
 ---------------------------------------------
 {% endfor %}
+Subtotal: ${{ subtotal }}
++ Tax: ${{ tax }}
+---------------------------------------------
 Total: ${{ total }}
