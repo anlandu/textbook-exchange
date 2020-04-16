@@ -14,6 +14,17 @@ from datetime import datetime
 from django.core.mail import mail_admins
 from textexc.settings import EMAIL_HOST_USER
 
+from faker import Factory
+from django.http import JsonResponse
+from django.conf import settings
+
+from twilio.rest import Client
+from twilio.jwt.access_token import AccessToken
+from twilio.jwt.access_token.grants import (
+    SyncGrant,
+    ChatGrant
+)
+
 os.environ["CLOUDINARY_URL"]="cloudinary://348783216512488:nPXIA343WzNVngfkykW-I7XkGgE@dasg2ntne"
 
 cloudinary.config(
@@ -117,6 +128,11 @@ def account_page(request):
 def account_page_messages(request):
     context = get_logged_in(request)
     context['title'] = 'Messages'
+    context['id'] = request.GET.get('listing_id')
+    if request.method == 'GET' and 'listing_id' in request.GET:
+        listing = ProductListing.objects.get(pk=request.GET.get('listing_id'))
+        context['seller_name'] = listing.user.first_name + " " + listing.user.last_name
+        context['listing'] = listing 
     if not context['logged_in']:
         return HttpResponseRedirect('/404_error')    
     return render(request, 'textbook_exchange/account_messages.html', context=context)
@@ -166,6 +182,16 @@ class AccountCurrentListings(ListView):
     context_object_name = 'current_posts'
     ordering = ['published_date']
     
+    def get_context_data(self, **kwargs):          
+        context = super().get_context_data(**kwargs)                     
+        sum = 0
+        for pt in self.request.user.pendingtransaction_set.all():
+            sum += pt.balance
+        context['pending_balance'] = sum
+        if "status" in self.request.GET:
+            context['status'] = self.request.GET.get("status")
+        return context
+
     def get_queryset(self):
         queryset = super(AccountCurrentListings, self).get_queryset()
         queryset = queryset.filter(user=self.request.user, has_been_sold=False)
@@ -189,16 +215,6 @@ class AccountCurrentListings(ListView):
         queryset = ProductListing.objects.filter(user=request.user, has_been_sold=False)
 
         return render(request, self.template_name, context={'current_posts' : queryset, 'postSold': self.postSold })
-
-    def get_context_data(self, **kwargs):          
-        context = super().get_context_data(**kwargs)                     
-        sum = 0
-        for pt in self.request.user.pendingtransaction_set.all():
-            sum += pt.balance
-        context['pending_balance'] = sum
-        if "status" in self.request.GET:
-            context['status'] = self.request.GET.get("status")
-        return context
 
 class AccountPastListings(ListView):
     model = ProductListing
@@ -275,8 +291,7 @@ class FindTextbooks(ListView):
         url_class_info = self.kwargs['class_info']
         class_found = get_object_or_404(Class, class_info=url_class_info)
         textbooks = class_found.textbook_set.all()
-        queryset = textbooks.filter(has_been_sold=False, cart=None)
-        return queryset
+        return textbooks
 
 
 def autocomplete(request):
@@ -348,7 +363,7 @@ def cashout(request):
         "sender_batch_header": {
                 "sender_batch_id": batch_id,
                 "email_subject": "You have a payout!",
-                "email_message": "You have received a payout! Thanks for using UVA TextEx for all you textbook exchange needs!"
+                "email_message": "You have received a payout! Thanks for using UVA TextEx for all your textbook exchange needs!"
             },
             "items": [
                 {
@@ -395,3 +410,51 @@ def contact_us(request):
             # raise forms.ValidationError("Please fill in all fields in red.")
     else:
         return render(request, 'textbook_exchange/contact_us.html', context={'form': ContactForm, 'sent': 'sent' in request.GET})
+def chat_view(request):
+    context=get_logged_in(request)
+    listing = get_object_or_404(ProductListing, pk=request.GET.get('listing_id'))
+    context['seller_name'] = listing.user.username
+    context['listing'] = listing 
+    context['listing_id'] = request.GET.get('listing_id')
+    context['book_name'] = request.GET.get('bname')
+    return render(request, 'textbook_exchange/create_twilio.html', context = context)
+
+def channel_view(request):
+    context = get_logged_in(request)
+    if request.method == 'GET' and 'channel_name' in request.GET:
+        context['channel_name'] = request.GET.get('channel_name')
+    return render(request, 'textbook_exchange/message_channel.html', context = context)
+    
+def token(request):
+    context = get_logged_in(request)
+    #user_identity = textbook_exchange_models.User.objects.get(pk=request.GET.get('listing_id'))
+    #user_identity = textbook_exchange_models.User.objects.get(pk=request.GET.get('name_id'))
+    #context['name'] = textbook_exchange_models.User.first_name + " " + textbook_exchange_models.User.last_name
+    #fake = Factory.create()
+    #print("Printing User " +  request.user.username)
+    return generateToken(request.user.username)
+    #return generateToken(name_test)
+
+def generateToken(identity):
+    # Get credentials from environment variables
+    account_sid      = settings.TWILIO_ACCT_SID
+    chat_service_sid = settings.TWILIO_CHAT_SID
+    sync_service_sid = settings.TWILIO_SYNC_SID
+    api_sid          = settings.TWILIO_API_SID
+    api_secret       = settings.TWILIO_API_SECRET
+
+    # Create access token with credentials
+    token = AccessToken(account_sid, api_sid, api_secret, identity=identity)
+
+    # Create a Sync grant and add to token
+    if sync_service_sid:
+        sync_grant = SyncGrant(service_sid=sync_service_sid)
+        token.add_grant(sync_grant)
+
+    # Create a Chat grant and add to token
+    if chat_service_sid:
+        chat_grant = ChatGrant(service_sid=chat_service_sid)
+        token.add_grant(chat_grant)
+
+    # Return token info as JSON
+    return JsonResponse({'identity':identity,'token':token.to_jwt().decode('utf-8')})
