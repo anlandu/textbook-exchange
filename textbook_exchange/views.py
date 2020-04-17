@@ -148,6 +148,7 @@ def account_page_past_posts(request):
 def edit_post(request, listing_id, title):
     template_name = "textbook_exchange/edit_post.html"
     context = {}
+    context['title'] = "Edit Post"
     context['context_postUpdated'] = False
 
     if request.method == 'POST':
