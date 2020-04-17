@@ -57,10 +57,10 @@
                     </a> 
                     <!-- Search Bar -->
                     <div class="collapse navbar-collapse text-center" id="navbarResponsive">
-                        <form class="my-2 my-lg-0 mx-auto" action="{% url 'exchange:buybooks' %}" style="width: 70%;" method="GET">
+                        <form class="my-2 my-lg-0 mx-auto nav-search" action="{% url 'exchange:buybooks' %}" method="GET">
                             <div class="input-group">
-                                <input name="search" type="text" class="form-control" id="search_text" style="background-clip: unset;" placeholder="Search for a book or a course" onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
-                                <span class="input-group-append" type='submit' style="-webkit-appearance: none;"><button type="submit" class="btn btn-uva"><i class="fa fa-search my-auto"></i></button></span>
+                                <input name="search" type="text" class="form-control navbar-search" id="search_text" style="background-clip: unset;" placeholder="Search for a book or a course" onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
+                                <span class="input-group-append navbar-search" type='submit' style="-webkit-appearance: none;"><button type="submit" class="btn btn-uva"><i class="fa fa-search my-auto"></i></button></span>
                                 <div class="input-group-append" style="width: 100%;">
                                     <ul style="width:100%;" id="results_dropdown" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
                                         <li id="results_books"><div id="book_results"></div></li>
@@ -79,10 +79,10 @@
                             </div>
                         </form>
                         <!-- Sell, Cart, Login Buttons -->
-                        <ul class="navbar-nav mx-auto mx-lg-0 float-lg-right">
-                            <li class="nav-item"><a class="uva nav-link uva-nav" href="{% url 'exchange:sellbooks' %}">Sell a book</a></li>
-                            {% if user.cart %}<li class="nav-item"><a class="uva nav-link uva-nav" href="{% url 'payments:cart' %}"><i class="fa fa-shopping-cart"></i> ({{ user.cart.productlisting_set.all|length }})</a></li>{% endif %}
-                            {% block loginlink %}<li class="nav-item"><a class="uva nav-link uva-nav" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'exchange:login' %}?login_redirect_target=/{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
+                        <ul class="navbar-nav mx-auto mx-lg-0 float-lg-right d-block" style="min-width: 245px;">
+                            <li class="nav-item d-inline-block"><a class="uva nav-link uva-nav" href="{% url 'exchange:sellbooks' %}">Sell a book</a></li>
+                            {% if user.cart %}<li class="nav-item d-inline-block"><a class="uva nav-link uva-nav" href="{% url 'payments:cart' %}"><i class="fa fa-shopping-cart"></i> ({{ user.cart.productlisting_set.all|length }})</a></li>{% endif %}
+                            {% block loginlink %}<li class="nav-item d-inline-block"><a class="uva nav-link uva-nav" href="{% if user.is_authenticated %}{% url 'exchange:account_page' %}{% else %}{% url 'exchange:login' %}?login_redirect_target=/{% endif %}">{% if user.is_authenticated %}<i class="fa fa-user-circle-o"></i> {{ user.first_name }}{% else %}Login{% endif %}</a></li>{% endblock %}
                         </ul>
                     </div>
                 </div>
