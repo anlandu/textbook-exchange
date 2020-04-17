@@ -148,17 +148,20 @@ def account_page_past_posts(request):
 def edit_post(request, listing_id, title):
     template_name = "textbook_exchange/edit_post.html"
     context = {}
-    context['title'] = "Edit Post"
     context['context_postUpdated'] = False
+    listing = ProductListing.objects.get(pk=listing_id)
+    context['title'] = 'Edit Post'
 
     if request.method == 'POST':
         if 'cancel_edit' in request.POST:
             return HttpResponseRedirect('/accounts')
         elif 'edit_listing' in request.POST:
-            # get data
-            listing_id = request.POST.get('edit_listing')
-            listing = ProductListing.objects.get(pk=listing_id)
             data = request.POST
+
+            # store data
+            listing.price = data['price']
+            listing.condition = data['condition']
+            listing.comments = data['comments']
             
             # if img is uploaded, store it
             if len(request.FILES) != 0:                
@@ -166,11 +169,6 @@ def edit_post(request, listing_id, title):
                 response = cloudinary.uploader.upload(newimg)
                 listing.picture_url = response['url']
                 listing.picture_upload = newimg
-
-            # store other submitted data
-            listing.price = data['price']
-            listing.condition = data['condition']
-            listing.comments = data['comments']
 
             # update listing
             listing.save()
@@ -194,7 +192,8 @@ class AccountCurrentListings(ListView):
     ordering = ['published_date']
     
     def get_context_data(self, **kwargs):          
-        context = super().get_context_data(**kwargs)                     
+        context = super().get_context_data(**kwargs)    
+        context['title'] = "Dashboard"           
         sum = 0
         for pt in self.request.user.pendingtransaction_set.all():
             sum += pt.balance
@@ -232,6 +231,11 @@ class AccountPastListings(ListView):
     template_name = "textbook_exchange/account_past_posts.html"
     context_object_name = 'past_posts'
     ordering = ['published_date']
+
+    def get_context_data(self, **kwargs):          
+        context = super().get_context_data(**kwargs)    
+        context['title'] = "Past Posts" 
+        return context     
 
     def get_queryset(self):
         queryset = super(AccountPastListings, self).get_queryset()
