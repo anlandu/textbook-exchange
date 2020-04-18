@@ -170,20 +170,19 @@
                         </p>
                         <p class="card-text mb-4">{{ listing.comments }}</p>
                     </div>
-                <div class="px-4" style="flex-grow: 1; padding: 10px; width: 20%; border-left: 1px solid #e5e5e5;">
-                    <h5 class="card-subtitle mt-2 mb-4">${{ listing.price }}</h5>
-                    <h6 class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
-                    <a class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'> 
-                        Message
-                    </a>
+                    <div class="px-4" style="flex-grow: 1; padding: 10px; width: 20%; border-left: 1px solid #e5e5e5;">
+                        <h5 class="card-subtitle mt-2 mb-4">${{ listing.price }}</h5>
+                        <h6 class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
+                        <a class="btn btn-outline-primary btn-sm mt-2 mb-5" style="padding: 2px 10px;" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'> 
+                            Message
+                        </a>
+                        <a href="javascript:addtoCart({{ listing.id }});" id="add{{listing.id}}"
+                        class="btn btn-primary d-block mx-auto">
+                            Add to Cart
+                        </a>
+                    </div>
                 </div>
-                </div>
-                <div class="card-footer w-100 text-muted" style="border: 1px solid rgba(0,0,0,.125); border-top: 0;">
-                    <a href="javascript:addtoCart({{ listing.id }});" id="add{{listing.id}}"
-                    class="btn btn-primary d-block mx-auto" style="width: 200px;">
-                        Add to Cart
-                    </a>
-                </div>
+                
             </div>
             {% endfor %}
         </div>
