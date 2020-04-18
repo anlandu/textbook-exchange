@@ -149,7 +149,7 @@ footer {
 }
 @media only screen and (max-width: 768px) {
     .panel-wide {
-        display: none;
+        /* display: none; */
     }
     .panel-small {
         display: block;

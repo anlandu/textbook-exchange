@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/buybooks.css' %}">
 </head>
 <!-- SIDEBAR FILTER -->
-<div id="myFilterTab" class="filterTab" style="display: none;">
+<div id="myFilterTab" class="filterTab" style="display: none; padding: 25px; padding-left: 10px;">
     <a href="javascript:void(0)" class="closebtn" onclick="closeToggle()">&times;</a>
     <div class="searchFilters" style="width: max-content; margin-left: 30px;" style="display: none;">
         <div class="mx-auto sidefilter-padding" style="margin-top: 0px;">
@@ -63,7 +63,7 @@
 <!-- Product Listings Exist For This Textbook -->
 {% elif num_product_listings > 0 %}
 <div id="left">
-    <div class="searchFilters" id="searchFilters" style="width: max-content;">
+    <div class="searchFilters" id="searchFilters" style="width: max-content; padding-top: 65px;">
         <div class="mx-auto sidefilter-padding" style="margin-top: 0px;">
             <div class="row mx-auto" style="padding: 10px;">
                 <form method="GET">
@@ -98,11 +98,11 @@
         </div>
     </div>
 </div>
-<div class="container" id="buypg-container">
+<div id="right-container">
     <div id="right">
         <div class="row p20">
             <!-- SHOWING RESULTS & SORT BY -->
-            <div class="showing-results mb-4" style="padding: 0 15px; width: 100%;">
+            <div class="showing-results mb-4" style="width: 100%;">
                 <h4><b>{{ textbook.title }}</b></h4>
                 <p>{{ textbook.author_clean }}</p>
                 <div class="align-items-center justify-content-center">
@@ -145,8 +145,7 @@
                 </div>
             </div>
             {% for listing in product_listings %}
-            <!-- PANEL: WIDE SCREEN -->
-            <div class="mb-5 w-100 crd-hidden" id="listing" price="{{ listing.price }}" condition="{{ listing.condition }}" style="width: 15rem">
+            <div class="mb-5 w-100 crd-hidden listing-panel" id="listing" price="{{ listing.price }}" condition="{{ listing.condition }}" style="width: 15rem">
                 <div class="card flex-row" style="margin: 0;">
                     <div class="card border-0 px-1" style="margin-right: 5px; min-width: 150px;">
                         <a href="{{ listing.picture_url }}" data-type="image" data-toggle="lightbox" data-max-width="700" id="{{ listing.isbn10 }}">
@@ -157,7 +156,7 @@
                         <h5 class="card-title">{{ listing.textbook.title }}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author_clean }}</h6> 
                         <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">{{ listing.published_date }}</p>                                
-                        <p class="card-subtitle mb-1">
+                        <p class="card-text mb-1">
                             Condition:
                             {% if listing.condition == "likenew" %}
                                 Like new
@@ -171,57 +170,19 @@
                         </p>
                         <p class="card-text mb-4">{{ listing.comments }}</p>
                     </div>
-                    <div class="px-4 mt-3 mb-3" style="flex-grow: 1; padding: 10px; width: 20%; border-left: 1px solid #e5e5e5; min-width: 165px;">
-                        <h5 class="card-subtitle mb-4">${{ listing.price }}</h5>
-                        <h6 class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
+                    <div class="px-4 mt-3 mb-3 msgcrt" style="flex-grow: 1; padding: 10px; width: 20%; border-left: 1px solid #e5e5e5; min-width: 165px;">
+                        <h5 class="card-text mb-4 price">${{ listing.price }}</h5>
+                        <h6 class="card-text" style="margin-bottom: 0px;">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
                         <a class="btn btn-outline-primary btn-sm mt-2 mb-5" style="padding: 2px 10px;" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'> 
                             Message
                         </a>
                         <a href="javascript:addtoCart({{ listing.id }});" id="add{{listing.id}}"
-                        class="btn btn-primary d-block mx-auto">
+                        class="btn btn-primary d-block mx-auto cart">
                             Add to Cart
                         </a>
                     </div>
                 </div>
             </div>
-            <!-- PANEL: SMALL SCREEN -->
-            <!-- <div class="mb-5 w-100" id="panel-small">
-                <div class="card flex-row" style="margin: 0;">
-                    <div class="card border-0 px-1" style="margin-right: 5px; min-width: 150px;">
-                        <a href="{{ listing.picture_url }}" data-type="image" data-toggle="lightbox" data-max-width="700" id="{{ listing.isbn10 }}">
-                            <img class="card-img-top img-fluid" src="{{ listing.picture_url }}" alt="{{ listing.textbook.title }}" style="max-width: 200px; border-radius: 0;">
-                        </a>
-                    </div>
-                    <div class="card-block px-3" style="flex-grow: 1; padding: 20px;">
-                        <p class="card-subtitle text-muted mb-3" style="font-size: smaller;">{{ listing.published_date }}</p> 
-                        <h6 id="panel-sm" class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
-                        <a id="panel-sm" class="btn btn-outline-primary btn-sm mt-2 mb-1" style="padding: 2px 10px;" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'> 
-                            Message
-                        </a>
-                        <hr/>
-                        <h5 class="card-subtitle mt-3 mb-3">${{ listing.price }}</h5>
-                        <p class="card-subtitle mb-1">
-                            Condition:
-                            {% if listing.condition == "likenew" %}
-                                Like new
-                            {% elif listing.condition == "verygood" %}
-                                Very good
-                            {% elif listing.condition == "good" %}
-                                Good
-                            {% elif listing.condition == "acceptable" %}
-                                Acceptable
-                            {% endif %}
-                        </p>
-                        <p class="card-text">{{ listing.comments }}</p>
-                    </div>
-                </div>
-                <div class="card-footer text-muted" id="panel-sm" style="background-color: white; border: 1px solid rgba(0,0,0,.125); border-top: white; padding: 15px;border-radius: 0;">
-                    <a href="javascript:addtoCart({{ listing.id }});" id="add{{listing.id}}"
-                    class="btn btn-primary d-block mx-auto" style="width: 150px !important;">
-                        Add to Cart
-                    </a>
-                </div>
-            </div> -->
             {% endfor %}
         </div>
     </div>
