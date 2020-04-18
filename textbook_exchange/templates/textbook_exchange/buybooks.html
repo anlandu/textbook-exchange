@@ -40,6 +40,9 @@
             }
         }
         @media only screen and (max-width: 991px) {
+            .p20 {
+                padding: 20px;
+            }
             #left {
                 display: none;
                 }
@@ -48,6 +51,9 @@
             }
             .sort-by-sm, .toggle-filter, #myFilterTab {
                 display: block !important;
+            }
+            #myFilterTab {
+                width: 265px !important;
             }
             .showing-results {
                 padding: 0px !important;
@@ -161,7 +167,7 @@
         </div>
     <div class="container" id="buypg-container">
         <div id="right">
-                <div class="row">
+                <div class="row p20">
                 <!-- SHOWING RESULTS & SORT BY -->
                 <div class="showing-results mb-4" style="padding: 0 15px; width: 100%;">
                     <h4><b>{{ textbook.title }}</b></h4>
@@ -266,11 +272,13 @@
 function toggleFilter() {
     document.getElementById("myFilterTab").style.width = "250px";
     // document.getElementById("buypg-container").style.marginLeft = "250px";
+    document.getElementById("myFilterTab").style.marginLeft = "0px";
 }
 
 function closeToggle() {
   document.getElementById("myFilterTab").style.width = "0";
 //   document.getElementById("buypg-container").style.marginLeft = "0px";
+    document.getElementById("myFilterTab").style.marginLeft = "-370px";
 }
 
 function addtoCart(id) {
