@@ -140,20 +140,20 @@ footer {
 
 /* Toggle Filter */
 @media only screen and (min-width: 767px) {
-    /* #panel-wide {
+    .panel-wide {
         display: block;
     }
-    #panel-small {
+    .panel-small {
         display: none;
-    } */
+    }
 }
 @media only screen and (max-width: 768px) {
-    /* #panel-wide {
+    .panel-wide {
         display: none;
     }
-    #panel-small {
+    .panel-small {
         display: block;
-    } */
+    }
 }
 @media only screen and (max-width: 991px) {
     .filterTab {
