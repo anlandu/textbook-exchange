@@ -70,16 +70,16 @@
                     <h3 class="mb-5" style="width: 100%;">Filters</h3>
                     <h5>Condition</h5>
                     <div class="checkboxes" style="padding-left: 20px;">
-                        <input class="form-check-input" type="checkbox" value="likenew" id="likenew" checked>
+                        <input class="form-check-input" type="checkbox" value="likenew" id="likenewToggle" checked>
                         <label class="form-check-label" for="likenew">Like new</label>
                         <br/>
-                        <input class="form-check-input" type="checkbox" value="verygood" id="verygood" checked>
+                        <input class="form-check-input" type="checkbox" value="verygood" id="verygoodToggle" checked>
                         <label class="form-check-label" for="verygood">Very good</label>
                         <br/>
-                        <input class="form-check-input" type="checkbox" value="" id="good" checked>
+                        <input class="form-check-input" type="checkbox" value="" id="goodToggle" checked>
                         <label class="form-check-label" for="good">Good</label>
                         <br/>
-                        <input class="form-check-input" type="checkbox" value="acceptable" id="acceptable" checked>
+                        <input class="form-check-input" type="checkbox" value="acceptable" id="acceptableToggle" checked>
                         <label class="form-check-label" for="Acceptable">Acceptable</label>
                     </div>
                     <hr>
@@ -87,11 +87,11 @@
                         <div class="col">                                        
                             <h5 class="d-inline">Max Price</h5>
                             <br/>
-                            <input type="number" id="maxPrice" name="quantity" min="0" max="500" class="form-control mt-3" style="width:100px;">
+                            <input type="number" id="maxPriceToggle" name="quantity" min="0" max="500" class="form-control mt-3" style="width:100px;">
                         </div>
                     </div>
                     <div class="row">
-                        <input type="button" value="Apply" onClick="applyClick()" method="GET" class="btn btn-uva mt-4" style="margin: 0 60px;">
+                        <input type="button" value="Apply" onClick="applyClickToggle()" method="GET" class="btn btn-uva mt-4" style="margin: 0 60px;">
                     </div>
                 </form>
             </div>
@@ -146,7 +146,7 @@
             </div>
             {% for listing in product_listings %}
             <!-- PANEL: WIDE SCREEN -->
-            <div class="mb-5 w-100" id="panel-wide">
+            <div class="mb-5 w-100 crd-hidden" id="listing" price="{{ listing.price }}" condition="{{ listing.condition }}" style="width: 15rem">
                 <div class="card flex-row" style="margin: 0;">
                     <div class="card border-0 px-1" style="margin-right: 5px; min-width: 150px;">
                         <a href="{{ listing.picture_url }}" data-type="image" data-toggle="lightbox" data-max-width="700" id="{{ listing.isbn10 }}">
@@ -185,7 +185,7 @@
                 </div>
             </div>
             <!-- PANEL: SMALL SCREEN -->
-            <div class="mb-5 w-100" id="panel-small">
+            <!-- <div class="mb-5 w-100" id="panel-small">
                 <div class="card flex-row" style="margin: 0;">
                     <div class="card border-0 px-1" style="margin-right: 5px; min-width: 150px;">
                         <a href="{{ listing.picture_url }}" data-type="image" data-toggle="lightbox" data-max-width="700" id="{{ listing.isbn10 }}">
@@ -221,7 +221,7 @@
                         Add to Cart
                     </a>
                 </div>
-            </div>
+            </div> -->
             {% endfor %}
         </div>
     </div>
@@ -299,7 +299,44 @@ function applyClick() {
     if (document.getElementById('acceptable').checked == true)
         conditions_selected.push("acceptable");
 
-    $('.card').each(function() {
+    $('.crd-hidden').each(function() {
+        $(this).show();
+
+        var listing_condition = $(this).attr("condition");
+        var listing_price = parseInt($(this).attr('price'));
+
+        if ($(this).attr('id') == "listing") {
+            if (listing_price > maxprice) // (this) == i in for loop
+                $(this).hide();
+            if (!conditions_selected.includes(listing_condition))
+                $(this).hide();
+        }
+    });
+
+};
+function applyClickToggle() {
+    event.preventDefault();
+
+    var maxprice = document.getElementById('maxPriceToggle').value;
+
+    if (maxprice === "")
+        maxprice = 500;
+    else if (maxprice > 500)
+        maxprice = 500;
+    else if (maxprice < 0)
+        maxprice = 0;
+
+    var conditions_selected = [];
+    if (document.getElementById('likenewToggle').checked == true)
+        conditions_selected.push("likenew");
+    if (document.getElementById('verygoodToggle').checked == true)
+        conditions_selected.push("verygood");
+    if (document.getElementById('goodToggle').checked == true)
+        conditions_selected.push("good");
+    if (document.getElementById('acceptableToggle').checked == true)
+        conditions_selected.push("acceptable");
+
+    $('.crd-hidden').each(function() {
         $(this).show();
 
         var listing_condition = $(this).attr("condition");

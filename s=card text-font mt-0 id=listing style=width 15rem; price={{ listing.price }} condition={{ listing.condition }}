@@ -1,0 +1,96 @@
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{0}: checkout: moving from f2b4f2cedfc09d1e8e749d4dbcc4fa7866d9a131 to 0ec27aed176d6caedbc92def312ecc23b0b0827e
+[33mf2b4f2c[m HEAD@{1}: checkout: moving from 0ec27aed176d6caedbc92def312ecc23b0b0827e to f2b4f2cedfc09d1e8e749d4dbcc4fa7866d9a131
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{2}: checkout: moving from 0d570f9a39e7233049fe1b6fe756d3881b28e6c4 to 0ec27aed176d6caedbc92def312ecc23b0b0827e
+[33m0d570f9[m HEAD@{3}: reset: moving to 0d570f9
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{4}: checkout: moving from 0d570f9a39e7233049fe1b6fe756d3881b28e6c4 to 0ec27aed176d6caedbc92def312ecc23b0b0827e
+[33m0d570f9[m HEAD@{5}: reset: moving to 0d570f9
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{6}: checkout: moving from 0d570f9a39e7233049fe1b6fe756d3881b28e6c4 to 0ec27aed176d6caedbc92def312ecc23b0b0827e
+[33m0d570f9[m HEAD@{7}: reset: moving to 0d570f9
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{8}: checkout: moving from 0d570f9a39e7233049fe1b6fe756d3881b28e6c4 to 0ec27aed176d6caedbc92def312ecc23b0b0827e
+[33m0d570f9[m HEAD@{9}: commit: panels wide & sm
+[33m03b2780[m[33m ([m[1;32mdev[m[33m)[m HEAD@{10}: reset: moving to 03b2780
+[33m3e507d5[m HEAD@{11}: commit: refactored
+[33mdeb82b2[m HEAD@{12}: revert: Revert "redesigned buy pg"
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{13}: checkout: moving from dev to 0ec27aed176d6caedbc92def312ecc23b0b0827e
+[33m03b2780[m[33m ([m[1;32mdev[m[33m)[m HEAD@{14}: checkout: moving from 0ec27aed176d6caedbc92def312ecc23b0b0827e to dev
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{15}: checkout: moving from dev to 0ec27aed176d6caedbc92def312ecc23b0b0827e
+[33m03b2780[m[33m ([m[1;32mdev[m[33m)[m HEAD@{16}: reset: moving to HEAD
+[33m03b2780[m[33m ([m[1;32mdev[m[33m)[m HEAD@{17}: checkout: moving from 0ec27aed176d6caedbc92def312ecc23b0b0827e to dev
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{18}: checkout: moving from dev to 0ec27aed176d6caedbc92def312ecc23b0b0827e
+[33m03b2780[m[33m ([m[1;32mdev[m[33m)[m HEAD@{19}: commit: panels replaced cards
+[33m9ac1c03[m HEAD@{20}: checkout: moving from 0ec27aed176d6caedbc92def312ecc23b0b0827e to dev
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{21}: checkout: moving from dev to 0ec27aed176d6caedbc92def312ecc23b0b0827e
+[33m9ac1c03[m HEAD@{22}: commit: panels replaced cards
+[33m0ec27ae[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{23}: commit: redesigned buy pg
+[33ma53880a[m HEAD@{24}: commit: redesigned buy pg
+[33m576f298[m HEAD@{25}: commit: redesigned buy pg
+[33m0607f9f[m HEAD@{26}: commit: redesigned buy pg
+[33mfdb019e[m HEAD@{27}: checkout: moving from 7704d849a1e5737d6f5d968d5c7491b7458a884a to dev
+[33m7704d84[m HEAD@{28}: checkout: moving from dev to 7704d849a1e5737d6f5d968d5c7491b7458a884a
+[33mfdb019e[m HEAD@{29}: commit: buypg redesign finished
+[33mf2b4f2c[m HEAD@{30}: commit: refactored
+[33m12c2087[m HEAD@{31}: commit: refactoring
+[33mbe81f72[m HEAD@{32}: commit: refactoring
+[33m336393f[m HEAD@{33}: commit: refactoring
+[33m7704d84[m HEAD@{34}: reset: moving to HEAD
+[33m7704d84[m HEAD@{35}: commit: navbar display inline block
+[33mc762fb7[m HEAD@{36}: commit: added context['title']
+[33m78d5c56[m HEAD@{37}: pull origin dev: Fast-forward
+[33mbacac22[m HEAD@{38}: pull: Fast-forward
+[33m0d97726[m[33m ([m[1;31morigin/tempeditimg[m[33m, [m[1;32mtempeditimg[m[33m)[m HEAD@{39}: merge tempeditimg: Fast-forward
+[33m74bf549[m HEAD@{40}: checkout: moving from master to dev
+[33m5eb85dd[m[33m ([m[1;32mmaster[m[33m)[m HEAD@{41}: checkout: moving from dev to master
+[33m74bf549[m HEAD@{42}: checkout: moving from tempeditimg to dev
+[33m0d97726[m[33m ([m[1;31morigin/tempeditimg[m[33m, [m[1;32mtempeditimg[m[33m)[m HEAD@{43}: commit: merge
+[33m8a75df9[m HEAD@{44}: pull origin tempeditimg: Merge made by the 'recursive' strategy.
+[33mac9d8b2[m HEAD@{45}: checkout: moving from tempeditimg to tempeditimg
+[33mac9d8b2[m HEAD@{46}: commit (merge): merge
+[33mb4c783f[m HEAD@{47}: commit: fixed img upload bug
+[33m6ed6b3f[m HEAD@{48}: checkout: moving from editing to tempeditimg
+[33m2e81cac[m HEAD@{49}: checkout: moving from edit to editing
+[33md517526[m HEAD@{50}: checkout: moving from tempeditimg to edit
+[33m6ed6b3f[m HEAD@{51}: checkout: moving from editing to tempeditimg
+[33m2e81cac[m HEAD@{52}: reset: moving to HEAD
+[33m2e81cac[m HEAD@{53}: checkout: moving from 2e81cac1aca109e2ece1fed1c71b5dbfba5889ba to editing
+[33m2e81cac[m HEAD@{54}: checkout: moving from tempeditimg to 2e81cac1aca109e2ece1fed1c71b5dbfba5889ba
+[33m6ed6b3f[m HEAD@{55}: checkout: moving from edit to tempeditimg
+[33md517526[m HEAD@{56}: checkout: moving from tempeditimg to edit
+[33m6ed6b3f[m HEAD@{57}: commit: picture not uploading on edit anymore
+[33m2e81cac[m HEAD@{58}: reset: moving to 2e81cac1aca109e2ece1fed1c71b5dbfba5889ba
+[33m70f8db0[m HEAD@{59}: reset: moving to HEAD
+[33m70f8db0[m HEAD@{60}: commit: img placeholder
+[33m2e81cac[m HEAD@{61}: commit: added 'change picture' img input to edit post
+[33m575e788[m HEAD@{62}: commit: added input field
+[33m7a108e0[m HEAD@{63}: checkout: moving from edit to tempeditimg
+[33md517526[m HEAD@{64}: commit: mt-5 --> mt-3
+[33m7a108e0[m HEAD@{65}: checkout: moving from tempeditimg to edit
+[33m7a108e0[m HEAD@{66}: checkout: moving from edit to tempeditimg
+[33m7a108e0[m HEAD@{67}: checkout: moving from tempeditimg to edit
+[33mdd726d8[m HEAD@{68}: reset: moving to HEAD
+[33mdd726d8[m HEAD@{69}: checkout: moving from edit to tempeditimg
+[33m7a108e0[m HEAD@{70}: checkout: moving from edit-post to edit
+[33m6e7a2bd[m HEAD@{71}: checkout: moving from temp to edit-post
+[33mc13f146[m HEAD@{72}: checkout: moving from edit to temp
+[33m7a108e0[m HEAD@{73}: checkout: moving from edit-post to edit
+[33m6e7a2bd[m HEAD@{74}: checkout: moving from edit-post to edit-post
+[33m6e7a2bd[m HEAD@{75}: commit: more responsive?
+[33m6490c99[m HEAD@{76}: checkout: moving from edit to edit-post
+[33m7a108e0[m HEAD@{77}: checkout: moving from b08b899596d245547b4bf73cdd52f5515928a603 to edit
+[33mb08b899[m[33m ([m[1;31morigin/user-profile[m[33m, [m[1;32muser-profile[m[33m)[m HEAD@{78}: checkout: moving from edit to b08b899596d245547b4bf73cdd52f5515928a603
+[33m7a108e0[m HEAD@{79}: commit: cleaned sell pg
+[33me89bcab[m HEAD@{80}: reset: moving to e89bcab2cd44e0f5bc3fe5e8c37277960c539e15
+[33m6ceb508[m[33m ([m[1;32msell-docked[m[33m, [m[1;32msell-dock[m[33m)[m HEAD@{81}: checkout: moving from e89bcab2cd44e0f5bc3fe5e8c37277960c539e15 to edit
+[33me89bcab[m HEAD@{82}: checkout: moving from edit to e89bcab2cd44e0f5bc3fe5e8c37277960c539e15
+[33m6ceb508[m[33m ([m[1;32msell-docked[m[33m, [m[1;32msell-dock[m[33m)[m HEAD@{83}: checkout: moving from sell-dock to edit
+[33m6ceb508[m[33m ([m[1;32msell-docked[m[33m, [m[1;32msell-dock[m[33m)[m HEAD@{84}: checkout: moving from edit to sell-dock
+[33m6ceb508[m[33m ([m[1;32msell-docked[m[33m, [m[1;32msell-dock[m[33m)[m HEAD@{85}: commit: docked search-no modal- sell pg
+[33me89bcab[m HEAD@{86}: commit (merge): styled better
+[33m23f465c[m HEAD@{87}: checkout: moving from edit-post to edit
+[33m6490c99[m HEAD@{88}: checkout: moving from edit to edit-post
+[33m23f465c[m HEAD@{89}: commit: ?
+[33mdb82afc[m HEAD@{90}: checkout: moving from edit-post to edit
+[33m6490c99[m HEAD@{91}: checkout: moving from tempeditimg to edit-post
+[33mdd726d8[m HEAD@{92}: commit: column of relation already exists
+[33mc13f146[m HEAD@{93}: checkout: moving from c13f146db376f8e68fceb114cc336e316143f091 to tempeditimg
+[33mc13f146[m HEAD@{94}: checkout: moving from edit-post to c13f146db376f8e68fceb114cc336e316143f091
+[33m6490c99[m HEAD@{95
