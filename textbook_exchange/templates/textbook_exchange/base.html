@@ -8,7 +8,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="{% static 'textbook_exchange/images/favicon.png' %}" />
         
         <!-- Font: Raleway, Lato:400,700, Nunito Sans -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Lato:wght@400;700&family=Raleway&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Lato&family=Raleway&display=swap" rel="stylesheet">
 
         <!-- My CSS -->
         <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/main.css' %}">
@@ -86,7 +86,11 @@
                         </ul>
                     </div>
                 </div>
-            </nav>
+            </nav>            
+
+            <!-- BUY PG -->
+            {% block buypg %}
+            {% endblock %}
 
             <!-- MAIN CONTENT -->
             <div class="container" id="content-wrap">
@@ -95,17 +99,17 @@
             </div>
 
             <!-- FOOTER -->
-            <footer>
+            <footer id="footer">
                 <p class="mx-auto" style="margin-top: 1rem !important; margin-bottom: 1rem !important;">
                     © 2020 UVA TextEx 
                     &nbsp;&nbsp; <!-- tab -->
                     &bull;       <!-- dot -->
                     &nbsp;&nbsp; <!-- tab -->
-                    <a href="{% url 'exchange:faq' %}" class="uva uva-nav text-font" style="font-weight: 700; text-decoration: none;">FAQ</a>
+                    <a href="{% url 'exchange:faq' %}" class="uva uva-nav text-font font-weight-bold" style="text-decoration: none;">FAQ</a>
                     &nbsp;&nbsp; <!-- tab -->
                     &bull;       <!-- dot -->
                     &nbsp;&nbsp; <!-- tab -->
-                    <a href="{% url 'exchange:contact_us' %}" class="uva uva-nav text-font" style="font-weight: 700; text-decoration: none;">Contact Us</a>
+                    <a href="{% url 'exchange:contact_us' %}" class="uva uva-nav text-font font-weight-bold" style="text-decoration: none;">Contact Us</a>
                 </p>
             </footer>
         </div>

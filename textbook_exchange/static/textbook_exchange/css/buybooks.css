@@ -1,7 +1,6 @@
 @media (max-width: px) {
-    #searchFilters {
+    .searchFilters {
         width: max-content; 
-        /* delete from html */
     }
     .sidefilter-padding {
         margin-top: 0px;
@@ -9,7 +8,7 @@
 
 }
 @media (min-width: px) {
-    #searchFilters {
+    .searchFilters {
         width: 100%;
     }
     .sidefilter-padding {
