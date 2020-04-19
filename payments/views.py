@@ -64,7 +64,6 @@ def success(request):
         u = get_object_or_404(User, pk=transaction.user.email)
         pt = PendingTransaction(user=u, balance=transaction.price, date_transacted=timezone.now(), date_settled=one_week_in_future())
         pt.save()
-        transaction.sold_date = datetime.now()
         transaction.has_been_sold = True
         transaction.cart = None
         transaction.save()
