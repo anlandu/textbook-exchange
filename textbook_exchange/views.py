@@ -214,6 +214,7 @@ class AccountCurrentListings(ListView):
             if 'sold_listing' in self.request.POST:
                 listing_id = self.request.POST.get('sold_listing')
                 listing = ProductListing.objects.get(pk=listing_id)
+                listing.cart=None
                 listing.has_been_sold = True
                 listing.sold_date = datetime.now()
                 listing.save()

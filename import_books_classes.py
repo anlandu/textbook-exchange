@@ -36,7 +36,8 @@ with open(abs_file_path, encoding='utf-8') as data_file:
         except:
             class_obj = Class.create(**book_data)
 
-        if "**" not in book_data['Title'] and "(eBook" not in book_data['Title'] and "Access Card" not in book_data['Title'] and "access code" not in book_data['Title'].lower() and "Websam" not in book_data['Title']:
+        lower_title=book_data['Title'].lower()
+        if "inclusive access" not in lower_title and "ebook" not in lower_title and "access card" not in lower_title and "access code" not in lower_title and "websam" not in lower_title:
             try:
                 book_obj = Textbook.objects.get(bookstore_isbn=book_data['ISBN'])
                 setattr(book_obj, "isbn13", book_data['ISBN13'])
