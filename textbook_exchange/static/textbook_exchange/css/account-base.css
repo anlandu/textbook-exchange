@@ -1,7 +1,13 @@
 body {
     transition: margin-left .5s;
 }
-.row {
+.page-container {
+    min-height: 800px;
+}    
+a:link, a:visited, a:active, .btn-link:hover {
+    text-decoration: none;
+}
+.p15 {
     padding: 15px;
 }
 #page-container {
