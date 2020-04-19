@@ -1,204 +1,114 @@
 {% extends "textbook_exchange/base.html" %}
+{% load static %}
 
 {% block buypg %}
 
 <head>
-    <style>
-        body {
-            transition: background-color .5s;
-        }
-        #page-container {
-            min-width: 530px;
-        }
-        .top {
-            width: 100%; 
-            margin-bottom: 20px; 
-        }
-        #left {
-            background-color: #f5f5f5;
-            float:left;
-            height: 100%;
-            width:250px;
-            position: absolute;
-            bottom: 0;
-            top: 81px;
-        }
-        #right {
-            width: 100%;
-        }
-        #searchFilters {
-            padding: 40px 32px;
-        }
-        @media only screen and (min-width: 991px) {
-            #mainNav {
-                height: 81px;
-            }
-            #buypg-container {
-                margin-left: 300px;
-                width: 70%;
-                padding-right: 50px;
-            }
-        }
-        @media only screen and (max-width: 991px) {
-            .p20 {
-                padding: 20px;
-            }
-            #left {
-                display: none;
-                }
-            .sort-by-big {
-                display: none;
-            }
-            .sort-by-sm, .toggle-filter, #myFilterTab {
-                display: block !important;
-            }
-            #myFilterTab {
-                width: 265px !important;
-            }
-            .showing-results {
-                padding: 0px !important;
-            }
-        }
-        @media only screen and (max-width: 767px) {
-            #listing {
-                width: 12rem !important;
-                margin: 9px;
-            }
-            .btn-primary {
-                width: 75% !important;
-            }
-            .sidefilter-padding {
-                padding: 10px;
-            }
-            #page-container {
-                min-width: 0;
-            }
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/buybooks.css' %}">
 </head>
-    <div id="myFilterTab" class="filterTab" style="display: none;">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeToggle()">&times;</a>
-        <div class="searchFilters" style="width: max-content; margin-left: 30px;" style="display: none;">
-            <div class="mx-auto sidefilter-padding" style="margin-top: 0px;">
-                <div class="row mx-auto" style="padding: 10px;">
-                    <h3 class="mb-5" style="width: 100%;">Apply Filters</h3>
-                    <form method="GET">
-                        <h5>Condition</h5>
-                        <div class="checkboxes" style="padding-left: 20px;">
-                            <input class="form-check-input" type="checkbox" value="likenew" id="likenew" checked>
-                            <label class="form-check-label" for="likenew">Like new</label>
-                            <br/>
-                            <input class="form-check-input" type="checkbox" value="verygood" id="verygood" checked>
-                            <label class="form-check-label" for="verygood">Very good</label>
-                            <br/>
-                            <input class="form-check-input" type="checkbox" value="" id="good" checked>
-                            <label class="form-check-label" for="good">Good</label>
-                            <br/>
-                            <input class="form-check-input" type="checkbox" value="acceptable" id="acceptable" checked>
-                            <label class="form-check-label" for="Acceptable">Acceptable</label>
-                        </div>
+<!-- SIDEBAR FILTER -->
+<div id="myFilterTab" class="filterTab" style="display: none;">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeToggle()">&times;</a>
+    <div class="searchFilters" style="width: max-content; margin-left: 30px;" style="display: none;">
+        <div class="mx-auto sidefilter-padding" style="margin-top: 0px;">
+            <div class="row mx-auto" style="padding: 10px;">
+                <h3 class="mb-5" style="width: 100%;">Filters</h3>
+                <form method="GET">
+                    <h5>Condition</h5>
+                    <div class="checkboxes" style="padding-left: 20px;">
+                        <input class="form-check-input" type="checkbox" value="likenew" id="likenew" checked>
+                        <label class="form-check-label" for="likenew">Like new</label>
                         <br/>
-                        <hr>
-                        <div class="row mt-4">
-                            <div class="col">                                        
-                                <h5>Max Price</h5>
-                                <input type="number" id="maxPrice" name="quantity" min="0" max="500" class="form-control" style="width:100px;">
-                            </div>
+                        <input class="form-check-input" type="checkbox" value="verygood" id="verygood" checked>
+                        <label class="form-check-label" for="verygood">Very good</label>
+                        <br/>
+                        <input class="form-check-input" type="checkbox" value="" id="good" checked>
+                        <label class="form-check-label" for="good">Good</label>
+                        <br/>
+                        <input class="form-check-input" type="checkbox" value="acceptable" id="acceptable" checked>
+                        <label class="form-check-label" for="Acceptable">Acceptable</label>
+                    </div>
+                    <br/>
+                    <hr>
+                    <div class="row mt-4">
+                        <div class="col">                                        
+                            <h5>Max Price</h5>
+                            <input type="number" id="maxPrice" name="quantity" min="0" max="500" class="form-control" style="width:100px;">
                         </div>
-                        <div class="row">
-                            <input type="button" value="Apply" id="apply_filter" onClick="applyClick()" method="GET" class="btn btn-uva mt-5" style="margin: 0 60px;">
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="row">
+                        <input type="button" value="Apply" id="apply_filter" onClick="applyClick()" method="GET" class="btn btn-uva mt-5" style="margin: 0 60px;">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <!-- No Listings For This Textbook -->
-    {% if num_product_listings == 0 %}
-        <div class="showing-results">
-            <h4><b>{{ textbook.title }}</b></h4>
-            <p>{{ textbook.author_clean }}</p>
-            <div class="cursor-pointer align-items-center justify-content-center" data-toggle="modal" data-target="#moreInfoModalCenter">
-                <p class="btn btn-uva-secondary">More info</p>
-            </div>
-        </div>
-        <div class="col-12">
-            <h3 class="text-center mt-5" style="width: 90%; margin: auto;">
-                There are currently no listings for this textbook. Please try again later.
-            </h3>
-        </div>
-    <!-- Product Listings Exist For This Textbook -->
-    {% elif num_product_listings > 0 %}
-        <div id="left">
-            <div class="searchFilters" id="searchFilters" style="width: max-content;">
-                <div class="mx-auto sidefilter-padding" style="margin-top: 0px;">
-                    <div class="row mx-auto" style="padding: 10px;">
-                        <form method="GET">
-                            <h3 class="mb-5" style="width: 100%;">Apply Filters</h3>
-                            <h5>Condition</h5>
-                            <div class="checkboxes" style="padding-left: 20px;">
-                                <input class="form-check-input" type="checkbox" value="likenew" id="likenew" checked>
-                                <label class="form-check-label" for="likenew">Like new</label>
-                                <br/>
-                                <input class="form-check-input" type="checkbox" value="verygood" id="verygood" checked>
-                                <label class="form-check-label" for="verygood">Very good</label>
-                                <br/>
-                                <input class="form-check-input" type="checkbox" value="" id="good" checked>
-                                <label class="form-check-label" for="good">Good</label>
-                                <br/>
-                                <input class="form-check-input" type="checkbox" value="acceptable" id="acceptable" checked>
-                                <label class="form-check-label" for="Acceptable">Acceptable</label>
-                            </div>
-                            <hr>
-                            <div class="row mt-4">
-                                <div class="col">                                        
-                                    <h5 class="d-inline">Max Price</h5>
-                                    <br/>
-                                    <input type="number" id="maxPrice" name="quantity" min="0" max="500" class="form-control mt-3" style="width:100px;">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <input type="button" value="Apply" onClick="applyClick()" method="GET" class="btn btn-uva mt-4" style="margin: 0 60px;">
-                            </div>
-                        </form>
+</div>
+
+<!-- No Listings For This Textbook -->
+{% if num_product_listings == 0 %}
+<div class="showing-results container">
+    <h4><b>{{ textbook.title }}</b></h4>
+    <p>{{ textbook.author_clean }}</p>
+    <div class="cursor-pointer align-items-center justify-content-center" data-toggle="modal" data-target="#moreInfoModalCenter">
+        <p class="btn btn-uva-secondary">More info</p>
+    </div>
+</div>
+<div class="col-12">
+    <h3 class="text-center mt-5" style="width: 90%; margin: auto;">
+        There are currently no listings for this textbook. Please try again later.
+    </h3>
+</div>
+
+<!-- Product Listings Exist For This Textbook -->
+{% elif num_product_listings > 0 %}
+<div id="left">
+    <div class="searchFilters" id="searchFilters" style="width: max-content;">
+        <div class="mx-auto sidefilter-padding" style="margin-top: 0px;">
+            <div class="row mx-auto" style="padding: 10px;">
+                <form method="GET">
+                    <h3 class="mb-5" style="width: 100%;">Filters</h3>
+                    <h5>Condition</h5>
+                    <div class="checkboxes" style="padding-left: 20px;">
+                        <input class="form-check-input" type="checkbox" value="likenew" id="likenew" checked>
+                        <label class="form-check-label" for="likenew">Like new</label>
+                        <br/>
+                        <input class="form-check-input" type="checkbox" value="verygood" id="verygood" checked>
+                        <label class="form-check-label" for="verygood">Very good</label>
+                        <br/>
+                        <input class="form-check-input" type="checkbox" value="" id="good" checked>
+                        <label class="form-check-label" for="good">Good</label>
+                        <br/>
+                        <input class="form-check-input" type="checkbox" value="acceptable" id="acceptable" checked>
+                        <label class="form-check-label" for="Acceptable">Acceptable</label>
                     </div>
-                </div>
-            </div>
-        </div>
-    <div class="container" id="buypg-container">
-        <div id="right">
-                <div class="row p20">
-                <!-- SHOWING RESULTS & SORT BY -->
-                <div class="showing-results mb-4" style="padding: 0 15px; width: 100%;">
-                    <h4><b>{{ textbook.title }}</b></h4>
-                    <p>{{ textbook.author_clean }}</p>
-                    <div class="align-items-center justify-content-center">
-                        <p class="cursor-pointer btn btn-uva-secondary" data-toggle="modal" data-target="#moreInfoModalCenter">More info</p>
-                        <!-- SORT BY -->
-                        <div class="btn-group pull-right sort-by-big">
-                            <!-- SORT BY -->
-                            <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Sort by: {{ ordering }}
-                            </button>
-                            <form method="GET">
-                                <div class="dropdown-menu">
-                                    <a href="?sort=price" class="dropdown-item">Price: Low to High</a>
-                                    <a href="?sort=-price" class="dropdown-item">Price: High to Low</a>
-                                    <a href="?sort=-published_date" class="dropdown-item">Most recent</a>
-                                </div>
-                            </form>
+                    <hr>
+                    <div class="row mt-4">
+                        <div class="col">                                        
+                            <h5 class="d-inline">Max Price</h5>
+                            <br/>
+                            <input type="number" id="maxPrice" name="quantity" min="0" max="500" class="form-control mt-3" style="width:100px;">
                         </div>
                     </div>
-                </div>
-                <div class="mb-3" style="width: 100%;">
-                    <!-- TOGGLE FILTER -->
-                    <div class="btn-group pull-left toggle-filter" id="toggle-filter" onclick="toggleFilter()" style="display: none;">
-                        <button type="button" class="btn btn-uva btn-sm" style="position: initial;">
-                            Filter Results
-                        </button>
+                    <div class="row">
+                        <input type="button" value="Apply" onClick="applyClick()" method="GET" class="btn btn-uva mt-4" style="margin: 0 60px;">
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" id="buypg-container">
+    <div id="right">
+        <div class="row p20">
+            <!-- SHOWING RESULTS & SORT BY -->
+            <div class="showing-results mb-4" style="padding: 0 15px; width: 100%;">
+                <h4><b>{{ textbook.title }}</b></h4>
+                <p>{{ textbook.author_clean }}</p>
+                <div class="align-items-center justify-content-center">
+                    <p class="cursor-pointer btn btn-uva-secondary" data-toggle="modal" data-target="#moreInfoModalCenter">More info</p>
                     <!-- SORT BY -->
-                    <div class="btn-group pull-right sort-by-sm" style="display: none;">
+                    <div class="btn-group pull-right sort-by-big">
                         <!-- SORT BY -->
                         <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Sort by: {{ ordering }}
@@ -212,55 +122,83 @@
                         </form>
                     </div>
                 </div>
-                {% for listing in product_listings %}
-                    <div class="card text-font mt-0" id="listing" price="{{ listing.price }}" condition="{{ listing.condition }}" style="width: 15rem">
-                    <div class="card-header">
-                        <a href="{{ listing.picture_url }}" data-type="image" data-toggle="lightbox" data-max-width="700" id="{{ listing.isbn10 }}">
-                                <img class="card-img-top img-fluid" src="{{ listing.picture_url }}" alt="{{ listing.textbook.title }}" style="margin-top: 10px;">
-                            </a>
-                            <h5 class="card-title">{{ listing.textbook.title }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author_clean }}</h6> 
-                            <h5 class="card-subtitle mt-4 mb-2">${{ listing.price }}</h5>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
-                            <a class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'> 
-                                Message
-                            </a>
-                            <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">{{ listing.published_date }}</p>                                
-                            <p class="card-subtitle mb-4">
-                                Condition:
-                                {% if listing.condition == "likenew" %}
-                                    Like new
-                                {% elif listing.condition == "verygood" %}
-                                    Very good
-                                {% elif listing.condition == "good" %}
-                                    Good
-                                {% elif listing.condition == "acceptable" %}
-                                    Acceptable
-                                {% endif %}
-                            </p>
-                            <p class="card-text mb-4">{{ listing.comments }}</p>
-                            <a href="javascript:addtoCart({{ listing.id }});" id="add{{listing.id}}"
-                            class="btn btn-primary d-block mx-auto" style="width: 55%;">
-                                Add to Cart
-                        </a>
-                        </div>
-                    </div>
-                {% endfor %}
             </div>
+            <div class="mb-3" style="width: 100%;">
+                <!-- TOGGLE FILTER -->
+                <div class="btn-group pull-left toggle-filter" id="toggle-filter" onclick="toggleFilter()" style="display: none;">
+                    <button type="button" class="btn btn-uva btn-sm" style="position: initial;">
+                        Filter Results
+                    </button>
+                </div>
+                <!-- SORT BY -->
+                <div class="btn-group pull-right sort-by-sm" style="display: none;">
+                    <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sort by: {{ ordering }}
+                    </button>
+                    <form method="GET">
+                        <div class="dropdown-menu">
+                            <a href="?sort=price" class="dropdown-item">Price: Low to High</a>
+                            <a href="?sort=-price" class="dropdown-item">Price: High to Low</a>
+                            <a href="?sort=-published_date" class="dropdown-item">Most recent</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% for listing in product_listings %}
+            <div class="mb-5 w-100">
+                <div class="card flex-row" style="margin: 0;">
+                    <div class="card-header border-0">
+                        <a href="{{ listing.picture_url }}" data-type="image" data-toggle="lightbox" data-max-width="700" id="{{ listing.isbn10 }}">
+                            <img class="card-img-top img-fluid" src="{{ listing.picture_url }}" alt="{{ listing.textbook.title }}" style="max-width: 200px;">
+                        </a>
+                    </div>
+                    <div class="card-block px-3" style="flex-grow: 1; padding: 10px;">
+                        <h5 class="card-title">{{ listing.textbook.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author_clean }}</h6> 
+                        <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">{{ listing.published_date }}</p>                                
+                        <p class="card-subtitle mb-4">
+                            Condition:
+                            {% if listing.condition == "likenew" %}
+                                Like new
+                            {% elif listing.condition == "verygood" %}
+                                Very good
+                            {% elif listing.condition == "good" %}
+                                Good
+                            {% elif listing.condition == "acceptable" %}
+                                Acceptable
+                            {% endif %}
+                        </p>
+                        <p class="card-text mb-4">{{ listing.comments }}</p>
+                    </div>
+                    <div class="px-4" style="flex-grow: 1; padding: 10px; width: 20%; border-left: 1px solid #e5e5e5;">
+                        <h5 class="card-subtitle mt-2 mb-4">${{ listing.price }}</h5>
+                        <h6 class="card-subtitle">{{ listing.user.first_name }} {{ listing.user.last_name }}</h6>
+                        <a class="btn btn-outline-primary btn-sm mt-2 mb-5" style="padding: 2px 10px;" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'> 
+                            Message
+                        </a>
+                        <a href="javascript:addtoCart({{ listing.id }});" id="add{{listing.id}}"
+                        class="btn btn-primary d-block mx-auto">
+                            Add to Cart
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+            {% endfor %}
         </div>
     </div>
-    <!-- NO TEXTBOOK SEARCHED -->
-    {% else %}
-    <div style="width: 80%; margin: 100px auto;">
-        <h1 class="text-center">
-            Please search a textbook or a class in the search bar above to find listings
-        </h1>
-    </div>
-    {% endif %}
-<!-- </div> -->
+</div>
 
+<!-- NO TEXTBOOK SEARCHED -->
+{% else %}
+<div class="pleasesearch" style="width: 60%; margin: 100px auto;">
+    <h1 class="text-center">
+        Please search a textbook or a class in the search bar above to find listings
+    </h1>
+</div>
+{% endif %}
+
+    
 
 {% if search %}
     //updateSearch("{{ search }}");
