@@ -1,7 +1,7 @@
 {% extends "textbook_exchange/base.html" %}
 {% load static %}
 
-{% block buypg %}
+{% block nowrapper %}
 
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/buybooks.css' %}">
@@ -213,7 +213,6 @@ function toggleFilter() {
 }
 
 function closeToggle() {
-  document.getElementById("myFilterTab").style.width = "0";
 //   document.getElementById("buypg-container").style.marginLeft = "0px";
     document.getElementById("myFilterTab").style.marginLeft = "-370px";
 }
@@ -392,4 +391,4 @@ function createTwilio(id, u1, u2, title) {
     </div>
 </div>
 
-{% endblock buypg %}
+{% endblock nowrapper %}

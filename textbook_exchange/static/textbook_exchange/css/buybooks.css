@@ -43,7 +43,12 @@ body {
     }
     #left {
         display: none;
-        }
+    }
+    #right-container {
+        margin: 33px auto !important;
+        padding: 0px !important;
+        width: 93%;
+    }
     .sort-by-big {
         display: none;
     }
@@ -66,11 +71,6 @@ body {
     }
     .pleasesearch {
         width: 85% !important;
-    }
-    #right-container {
-        margin: 75px auto !important;
-        padding: 0px !important;
-        width: 85%;
     }
     .msgcrt {
         padding: 0 15px 10px 15px !important;
@@ -95,12 +95,5 @@ body {
     }
     .price {
         font-size: larger;
-    }
-}
-@media only screen and (max-width: 767px) {
-    #right-container {
-        margin: 33px auto !important;
-        padding: 0px !important;
-        width: 93%;
     }
 }

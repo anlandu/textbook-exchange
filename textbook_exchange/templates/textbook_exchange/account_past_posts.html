@@ -2,7 +2,12 @@
 {% load static %} 
 
 {% block inner-content %}
-<div class="right-container">
+<style>
+    .past-posts-div {
+        background-color: #e5e5e5;
+    }
+</style>
+
     <h1 class="custom-header">Past Posts</h1>
     <!-- POSTS -->
     <div class="row">
@@ -34,5 +39,4 @@
             </div>
         {% endfor %}
     </div>
-</div>
 {% endblock inner-content %}

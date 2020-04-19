@@ -1,57 +1,53 @@
 {% extends "textbook_exchange/base.html" %}
 {% load static %}
 
-{% block content %}
-<style>
-	#page-container {
-        min-width: 500px;
-    }
-	@media only screen and (max-width: 770px){
-        .grid {
-			width: 90vw;
-        }
-        #content-wrap {
-            margin: 0;
-            width: 100vw;
-        }
-    }
-</style>
-<div class="container">
-	<div class="grid">
-		<!-- SIDEBAR -->
-		<div class="col col-4-bg">
-			<ul class="sidebar-align d-inline">
-				<br>
-				<li>
-					<a class="btn btn-uva side-btn d-block" href="{% url 'exchange:account_page' %}">
-						Dashboard
-					</a>
-				</li>
-				<br>
-				<li>
-					<a class="btn btn-uva side-btn d-block" href="{% url 'exchange:past_posts' %}">
-						Past Posts
-					</a>
-				</li>
-				<br>
-				<li>
-					<a class="btn btn-uva side-btn d-block" href="{% url 'exchange:messages' %}">
-						Messages
-					</a>
-				</li>
-				<br>
-				<li>
-					<a class="btn btn-uva side-btn d-block"; href="{% url 'account_logout' %}">
-						Sign Out
-					</a>
-				</li>
-				<br>
-			</ul>
-		</div>
+{% block nowrapper %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/account-base.css' %}">
+</head>
 
-		<!-- MAIN -->
-		{% block inner-content %}
-		{% endblock inner-content %}
-	</div>
+<button type="button" id="menu" onclick="openNav()" class="menu-btn btn btn-uva btn-lg mt-3" style="width: 100px;">Menu</button>
+<div id="left" class="sidenav">
+    <h3 class="menu">Menu</h3>
+    <a href="javascript:void(0)" onclick="closeNav()" class="closebtn" id="closebtn">&times;</a>
+    <div>
+        <a class="menu-link dashboard-div d-block" href="{% url 'exchange:account_page' %}">
+            <div class="menu-item">
+                <h5>Dashboard</h5>
+            </div>  
+        </a>
+        <a class="menu-link d-block past-posts-div" href="{% url 'exchange:past_posts' %}">
+            <div class="menu-item">
+                <h5>Past Posts</h5>
+            </div>
+        </a>
+        <a class="menu-link d-block messages-div" href="{% url 'exchange:messages' %}">
+        <div class="menu-item">
+                <h5>Messages</h5>
+            </div>
+        </a>
+        <a class="menu-link d-block signout-div" href="{% url 'account_logout' %}">
+            <div class="menu-item">
+                <h5>Sign Out</h5>
+            </div>
+        </a>            
+    </div>
 </div>
-{% endblock content %}
+<!-- MAIN -->
+<div class="wrapper">
+    <div id="right">
+        {% block inner-content %}
+        {% endblock inner-content %}
+    </div>
+</div>
+
+<script>
+function openNav() {
+  document.getElementById("left").style.marginLeft = "0px";
+}
+function closeNav() {
+  document.getElementById("left").style.marginLeft= "-370px";
+}
+</script>
+
+{% endblock nowrapper %}
