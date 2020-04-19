@@ -4,8 +4,8 @@
         <h1 class="text-center" style="padding: 150px 0;">Your message was sent successfully! Look for a response in 24-48 hours!</h1>
     {% else %}
         <h1>Contact Us</h1>
+        <br>
         <form action="" method="post" novalidate enctype="multipart/form-data">
-            {{ form }}
             {% csrf_token %}
             {% if form.errors %}
                         <!-- Error messaging -->
@@ -21,6 +21,21 @@
                         </div>
                         <!-- /Error messaging -->
             {% endif %}
+            <div class="form-group row">
+                <div class="col-md-2 col-form-label">{{ form.subject.label_tag }}</div>
+                <div class="col-md-10">{{ form.subject }}</div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-2 col-form-label">{{ form.message.label_tag }}</div>
+                <div class="col-md-10">{{ form.message }}</div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-2 col-form-label">{{ form.email.label_tag }}</div>
+                <div class="col-md-10">{{ form.email }}</div>
+            </div>
+
             <div class="form-group row mt-3">
                 <div class="col-12 text-center">
                     <button type="submit" value="Submit" class="btn btn-lg btn-uva">Send</button>

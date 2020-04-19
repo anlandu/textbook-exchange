@@ -488,7 +488,6 @@ class ViewListingsTest(TestCase):
         response = self.c.get("/accounts/past_posts", secure=True, follow=True)
         decoded_response=response.content.decode()
         self.assertInHTML("Classical Mechanics", decoded_response)
-        self.assertInHTML("$100.00", decoded_response)
         self.assertInHTML("Condition: Like new", decoded_response)
 
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
@@ -576,20 +575,20 @@ class FilterSortTest(TestCase):
     def test_sort_price_low_high(self):        
         response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=price", secure=True, follow=True)  
         soup=Soup(response.content, 'html.parser')
-        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        first_item=soup.find_all("p", class_='card-text mb-1')[0]
         self.assertIn("Acceptable", str(first_item))
 
 
     def test_sort_price_high_low(self):        
         response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=-price", secure=True, follow=True)  
         soup=Soup(response.content, 'html.parser')
-        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        first_item=soup.find_all("p", class_='card-text mb-1')[0]
         self.assertIn("Like new", str(first_item))
 
     def test_sort_recent(self):        
         response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=-published_date", secure=True, follow=True)  
         soup=Soup(response.content, 'html.parser')
-        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        first_item=soup.find_all("p", class_='card-text mb-1')[0]
         self.assertIn("Very good", str(first_item))
 
 #test models
