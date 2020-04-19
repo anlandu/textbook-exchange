@@ -1,9 +1,6 @@
 body {
     transition: background-color .5s;
 }
-#page-container {
-    min-width: 530px;
-}
 .top {
     width: 100%; 
     margin-bottom: 20px; 

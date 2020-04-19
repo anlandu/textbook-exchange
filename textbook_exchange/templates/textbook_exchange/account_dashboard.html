@@ -3,6 +3,9 @@
 
 {% block inner-content %}
 <style>
+    #page-container {
+        min-width: 530px;
+    }
     .dashboard-div {
         background-color: #e5e5e5;
     }
@@ -28,43 +31,53 @@
     </div>
 	<br/><br/>
 	
-    <h1 class="custom-header">Current Posts</h1>
+    <h1 class="custom-header mb-4">Current Posts</h1>
 
     <!-- POSTS -->
     <div class="row">
     {% for post in current_posts %}
-        <div class="card text-font" style="width: 15rem;">
-            <div class="card-header">
-                <img class="card-img-top" src="{{ post.picture_url }}" alt="{{ post.textbook.title }}" style="margin-top: 10px;">
-                <h5 class="card-title">{{ post.textbook.title }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author_clean }}</h6> 
-				<h5 class="card-subtitle mt-4 mb-2">${{ post.price }}</h5>
-				<form method="GET">
-					<a href="{% url 'exchange:edit_post' post.id post.textbook.title_clean %}" class="card-link">edit</a>
-				</form>
-            </div>
-            <div class="card-body">
-                <p class="card-subtitle mb-2 mb-4 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
-                <p class="card-subtitle mb-4">
-                    Condition:
-                    {% if post.condition == "likenew" %}
-                        Like new
-                    {% elif post.condition == "verygood" %}
-                        Very good
-					          {% elif post.condition == "good" %}
-				                Good
-                    {% elif post.condition == "acceptable" %}
-                        Acceptable
-                    {% endif %}
-                </p>
-                <p class="card-text mb-4">{{ post.comments }}</p>
-                <form action="" method="post">
-                  {% csrf_token %}
-                    <button href="#" name="sold_listing" value="{{ post.id }}" class="btn btn-primary mx-auto d-block" style="width: 40%;">
-					  Sold?
-					</button>
-                  {% csrf_token %}     
-                </form>
+        <div class="mb-5 w-100 crd-hidden post-panel" id="post" price="{{ post.price }}" condition="{{ post.condition }}" style="width: 15rem">
+            <div class="card flex-row" style="margin: 0;">
+                <div class="card border-0 px-1" style="margin-right: 5px; min-width: 150px;">
+                    <a href="{{ post.picture_url }}" data-type="image" data-toggle="lightbox" data-max-width="700" id="{{ post.isbn10 }}">
+                        <img class="card-img-top img-fluid" src="{{ post.picture_url }}" alt="{{ post.textbook.title }}" style="max-width: 200px; border-radius: 0;">
+                    </a>
+                </div>
+                <div class="card-block px-3" style="flex-grow: 1; padding: 10px;">
+                    <h5 class="card-title">{{ post.textbook.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author_clean }}</h6> 
+                    <p class="card-subtitle mt-2 text-muted mb-1" style="font-size: smaller;">{{ post.published_date }}</p>                                
+                    <form method="GET">
+                        <a href="{% url 'exchange:edit_post' post.id post.textbook.title_clean %}" class="card-link" style="font-size: large;">
+                        <!-- <a href="{% url 'exchange:edit_post' post.id post.textbook.title_clean %}" class="btn btn-outline-primary btn-sm mt-2" style="padding: 2px 10px;"> -->
+
+                            edit
+                        </a>
+                    </form>
+                    <p class="card-text mb-1">
+                        Condition:
+                        {% if post.condition == "likenew" %}
+                            Like new
+                        {% elif post.condition == "verygood" %}
+                            Very good
+                        {% elif post.condition == "good" %}
+                            Good
+                        {% elif post.condition == "acceptable" %}
+                            Acceptable
+                        {% endif %}
+                    </p>
+                    <p class="card-text mb-4">{{ post.comments }}</p>
+                </div>
+                <div class="px-4 mt-3 mb-3 pricesold" style="flex-grow: 1; padding: 10px; width: 20%; border-left: 1px solid #e5e5e5; min-width: 165px;">
+                    <h5 class="card-text mb-4 price">${{ post.price }}</h5>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                          <button href="#" name="sold_listing" value="{{ post.id }}" class="btn btn-primary mx-auto d-block" style="width: 85%;">
+                            Sold?
+                          </button>
+                        {% csrf_token %}     
+                    </form>
+                </div>
             </div>
         </div>
 	{% endfor %}

@@ -2,6 +2,13 @@
 {% load static %}
 
 {% block nowrapper %}
+{% if num_product_listings > 0 %}
+    <style>
+        #page-container {
+            min-width: 530px;
+        }
+    </style>
+{% endif %}
 
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/buybooks.css' %}">

@@ -189,7 +189,7 @@ class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
-    ordering = ['published_date']
+    ordering = ['-published_date']
     
     def get_context_data(self, **kwargs):          
         context = super().get_context_data(**kwargs)    
@@ -230,7 +230,7 @@ class AccountPastListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_past_posts.html"
     context_object_name = 'past_posts'
-    ordering = ['published_date']
+    ordering = ['-published_date']
 
     def get_context_data(self, **kwargs):          
         context = super().get_context_data(**kwargs)    

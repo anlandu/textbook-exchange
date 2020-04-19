@@ -1,6 +1,9 @@
 body {
     transition: margin-left .5s;
 }
+.row {
+    padding: 15px;
+}
 #page-container {
     min-width: 300px;
     position: relative;
@@ -102,4 +105,32 @@ body {
         font-size: 36px;
         margin-left: 50px;
     } 
+}
+
+
+@media only screen and (max-width: 767px) {
+    .btn-primary {
+        font-size: medium;
+        min-width: 70px !important;
+    }
+    .card-title {
+        font-size: medium;
+        line-height: 1.4em;
+    }
+    .card-subtitle {
+        font-size: small;
+    }
+    .card-text {
+        font-size: medium;
+    }
+    .price {
+        font-size: larger;
+    }
+    .card-title {
+        font-size: medium;
+    }
+    .pricesold {
+        padding: 0 15px 10px 15px !important;
+        min-width: 135px !important;
+    }
 }
