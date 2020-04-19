@@ -2,7 +2,7 @@ body {
     font-family: 'Raleway' !important;
 }
 
-a:link, a:visited, a:active, .btn-link:hover {
+a:link, a:focus, a:visited, a:active, a:hover, .btn-link:link, .btn-link:focus, .btn-link:visited, .btn-link:active, .btn-link:hover {
     text-decoration: none;
 }
 /* Shart Corner */
