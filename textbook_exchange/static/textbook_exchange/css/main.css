@@ -2,6 +2,9 @@ body {
     font-family: 'Raleway' !important;
 }
 
+a:link, a:visited, a:active, .btn-link:hover {
+    text-decoration: none;
+}
 /* Shart Corner */
 body, .form-control, .btn, .card, #results_dropdown {
     border-radius: 0 !important;

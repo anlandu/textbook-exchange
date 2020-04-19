@@ -48,14 +48,9 @@ body {
 }
 .menu-link:hover {
     color: white;
-    text-decoration: none;
-}
-.menu-link:link, .menu-link:visited, .menu-link:active {
-    text-decoration: none;
 }
 .closebtn {
     color: #818181;
-    text-decoration: none;
     position: absolute;
     top: 0;
     right: 25px;
@@ -66,7 +61,6 @@ body {
 }
 .closebtn:hover {
     color: #2c2c2c;
-    text-decoration: none;
 }
 @media only screen and (max-width: 750px) {
     .wrapper {
