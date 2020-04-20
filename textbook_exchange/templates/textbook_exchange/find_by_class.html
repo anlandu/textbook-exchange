@@ -84,14 +84,13 @@
     </div>
 </div>
 
-<script>
 
     
 {% if search %}
-    //updateSearch("{{ search }}");
-    document.getElementById("search_text").value = "{{ search }}";
+<script>document.getElementById("search_text").value = "{{ search }}";</script>
 {% endif %}
 
+<script>
 function addtoCart(id) {
     console.log("add to cart working");
     $.ajax({

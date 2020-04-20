@@ -199,7 +199,7 @@
 {% else %}
 <div class="pleasesearch" style="width: 60%; margin: 100px auto;">
     <h1 class="text-center">
-        Please search a textbook or a class in the search bar above to find listings
+        Please search and select a textbook or a class in the search bar above to find listings
     </h1>
 </div>
 {% endif %}
@@ -207,7 +207,6 @@
     
 
 {% if search %}
-    //updateSearch("{{ search }}");
     <script>document.getElementById("search_text").value = "{{ search }}";</script>
 {% endif %}
 
