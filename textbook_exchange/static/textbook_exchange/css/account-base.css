@@ -108,7 +108,7 @@ a:link, a:visited, a:active, .btn-link:hover {
 }
 
 @media only screen and (max-width: 767px) {
-    .card {
+    .card-wide {
         width: 300px !important;
         margin: auto !important;
     }
