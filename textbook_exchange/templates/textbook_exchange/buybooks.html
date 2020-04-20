@@ -62,7 +62,7 @@
 <!-- Product Listings Exist For This Textbook -->
 {% elif num_product_listings > 0 %}
 <div id="left">
-    <div class="searchFilters" id="searchFilters" style="width: max-content; padding-top: 65px;">
+    <div class="searchFilters" id="searchFilters" style="width: max-content; padding-top: 50px;">
         <div class="mx-auto sidefilter-padding" style="margin-top: 0px;">
             <div class="row mx-auto" style="padding: 10px;">
                 <form method="GET">
@@ -159,7 +159,7 @@
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author_clean }}</h6> 
                                 <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">{{ listing.published_date }}</p>                                
-                                <h6 class="card-text" style="margin-bottom: 0px;" id="post-bottom" style="display: none !important;">{{ listing.user.first_name }} {{ listing.user.last_name }} </h6>
+                                <h6 class="card-text" style="margin-bottom: 0px;" id="post-bottom" style="display: none;">{{ listing.user.first_name }} {{ listing.user.last_name }} </h6>
                                 <a class="btn btn-outline-primary btn-sm pl-2" id="post-bottom" style="display: none;" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'>Message</a>
                                 <h5 class="card-text price mt-3 mb-4" style="display: none;" id="post-bottom">${{ listing.price }}</h5>
                                 <p class="card-text mb-1">
