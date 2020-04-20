@@ -77,20 +77,25 @@ body {
         padding: 5px;
     }
     .card-title {
-        font-size: medium;
         line-height: 1.4em;
     }
     .card-subtitle {
+        margin-bottom: 0px !important;
         font-size: small;
     }
-    .card-text {
-        font-size: medium;
+    /* .card-text {
+        margin-bottom: 0px !important;
+    } */
+    #post-right {
+        display: none !important;
     }
-    .btn-primary {
+    #post-bottom {
+        display: block !important;
+        width: 100px;
+        margin: 10px 0;
+    }
+    .cart {
         font-size: medium;
         width: 100% !important;
-    }
-    .price {
-        font-size: larger;
     }
 }

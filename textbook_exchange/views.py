@@ -275,11 +275,13 @@ class BuyProductListings(ListView):
         return context
 
     def get_queryset(self, *args, **kwargs):
+        print("hi")
         url_ibsn = self.kwargs['isbn']
         url_ordering = self.request.GET.get('sort')
         url_keywords = self.request.GET.get('search')
         print(url_keywords)
         print(url_ordering)
+        print("hi")
 
         textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
