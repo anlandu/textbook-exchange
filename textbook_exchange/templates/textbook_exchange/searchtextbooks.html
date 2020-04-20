@@ -1,0 +1,72 @@
+{% extends "textbook_exchange/base.html" %}
+{% load static %}
+
+{% block nowrapper %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/account-base.css' %}">
+    <style>
+        .top {
+            width: 100%; 
+            margin-bottom: 20px; 
+        }
+    </style>
+</head>
+
+<div class="container">
+    {% if results.count == 0 %}
+        <div class="top">
+            <div class="showing-results mb-5">
+                <h3><b>Showing results for "{{ search }}"</b></h3>
+            </div>
+        </div>
+        <div>
+            <h3 style="text-align: center;">No results found</h3>
+        </div>
+    {% else %}
+        <div class="top">
+            <div class="showing-results mb-5">
+                <h6 style="font-style: italic;"><b>Showing {{ results.count }} results for "{{ search }}"</b></h6>
+            </div>
+        </div>
+        <br/>
+        <!-- LISTINGS -->
+        <div class="row">
+            {% for textbook in results %}
+                <div class="card w-100" id="listing" style="margin: 25px;">
+                    <a href="{% url 'exchange:buy_product' textbook.isbn13 textbook.title_clean %}" style="text-decoration: none; color: black;">
+                        <div class="card flex-row border-0" style="margin: 0;">
+                            <div class="card border-0 px-1" style="margin-right: 5px; min-width: 150px;">
+                                <img class="card-img-top" src="https://isbndb.com/modules/isbndb/img/default-book-cover.jpg" onload="this.onload = null; this.src = translateURL({{ textbook.cover_photo_url }});" alt="{{ textbook.title }}" style="margin-top: 10px; border-radius: 0px;">
+                            </div>
+                            <div class="card-block px-3" style="flex-grow: 1; padding: 10px;">
+                                <h5 class="card-title mt-3">{{ textbook.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ textbook.author_clean }}</h6> 
+                                <p class="card-text mb-1">
+                                    <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">
+                                        ISBN13: {{ textbook.isbn13 }}
+                                        <br/>
+                                        ISBN10: {{ textbook.isbn10 }}
+                                    </p>
+                                        <p class="card-text">
+                                            Requirement Type: {{ textbook.req_type }}
+                                        </p>
+                                    <p class="card-text">
+                                        <u>Bookstore Price</u>
+                                        <br/>
+                                        NEW: ${{ textbook.bookstore_new_price }}
+                                        <br/>USED: ${{ textbook.bookstore_used_price }}
+                                    </p>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+
+
+
+{% endblock %}

@@ -1,6 +1,11 @@
-function updateSearch(search){
+function updateSearch(event, search, click="") {
     if(search.length >= 2){
         //console.log(search);
+        console.log(event.keyCode + " " + search);
+        if ( (event.keyCode == 13) || (click == "click") ) {
+            search = search.replace(/[\W_]+/g,"000");
+            window.location.href = '/search/' + search;
+        } 
 
         var xmlhttp = new XMLHttpRequest();
 

@@ -25,6 +25,7 @@ urlpatterns = [
     path('accounts/cashout', views.cashout, name='cashout'),
     path('accounts/process', views.process_pending, name='process'),
     path('buy/', views.buy_books, name='buybooks'),
+    path('search/<slug:keywords>/', views.SearchTextbooks.as_view(), name='search'),
     path('buy/autocomplete/', views.autocomplete, name='ajax_autocomplete'),
     path('buy/<slug:isbn>/<slug:slug>/', views.BuyProductListings.as_view(), name='buy_product'), 
     path('buy/<slug:isbn>/<slug:slug>/<slug:sort>/', views.BuyProductListings.as_view(), name='buy_product'), 
