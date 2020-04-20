@@ -195,6 +195,24 @@
     </div>
 </div>
 
+<div class="modal fade" id="addToCartModel" tabindex="-1" role="dialog" aria-labelledby="addToCartModelTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addToCartModelTitle">Success</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="success_message"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-uva-secondary" data-dismiss="modal" id="continueShopping">Continue Shopping</button>
+          <button type="button" class="btn btn-uva" id="goToCart">Go to cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!-- NO TEXTBOOK SEARCHED -->
 {% else %}
 <div class="pleasesearch" style="width: 60%; margin: 100px auto;">
@@ -235,7 +253,12 @@ function addtoCart(id) {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(json) {
-            if (json['status'] == 'success') window.location.href = "{% url 'payments:cart' %}";
+            if (json['status'] == 'success') {
+                document.getElementById("goToCart").onclick = function(){window.location.href = "{% url 'payments:cart' %}";};
+                document.getElementById("continueShopping").onclick = function(){window.location.reload();};
+                document.getElementById("success_message").innerHTML = json['title'] + " was added to the cart successfully.<br><br>Sold by: " + json['seller'];
+                $('#addToCartModel').modal('show');
+            }
             else if (json['status'] == 'not_logged_in') window.location.href = "{% url 'exchange:login' %}" + "?login_redirect_target=/cart/";
         },
         error: function(xhr, errmsg, err) {
