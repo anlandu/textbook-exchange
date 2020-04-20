@@ -431,12 +431,12 @@ class ViewListingsTest(TestCase):
     def test_add_listing_to_cart(self):
         response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        self.assertEqual(json.loads(response.content), {'status': 'success', 'title': 'Classical Mechanics', 'seller': 'rc8yw@virginia.edu'})
 
     def test_remove_listing_from_cart(self):
         response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        self.assertEqual(json.loads(response.content), {'status': 'success', 'title': 'Classical Mechanics', 'seller': 'rc8yw@virginia.edu'})
         response = self.c.post("/cart/", {"id": self.pl.id, "function": "remove"})        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
@@ -461,7 +461,7 @@ class ViewListingsTest(TestCase):
     def test_checkout_success(self):
         response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        self.assertEqual(json.loads(response.content), {'status': 'success', 'title': 'Classical Mechanics', 'seller': 'rc8yw@virginia.edu'})
         response = self.c.get("/cart/checkout/success", secure=True, follow=True)
         #self.assertInHTML("Success!", decoded_response)
         response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
