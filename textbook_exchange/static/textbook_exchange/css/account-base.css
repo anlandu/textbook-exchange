@@ -109,25 +109,29 @@ a:link, a:visited, a:active, .btn-link:hover {
 
 
 @media only screen and (max-width: 767px) {
+    .card {
+        width: 300px !important;
+        margin: auto !important;
+    }
     .btn-primary {
         font-size: medium;
         min-width: 70px !important;
     }
     .card-title {
-        font-size: medium;
         line-height: 1.4em;
     }
     .card-subtitle {
+        margin-bottom: 0px !important;
         font-size: small;
     }
-    .card-text {
-        font-size: medium;
+    form {
+        margin-bottom: 0px !important;
     }
-    .price {
-        font-size: larger;
+    #price-right {
+        display: none;
     }
-    .card-title {
-        font-size: medium;
+    #price-bottom {
+        display: block !important;
     }
     .pricesold {
         padding: 0 15px 10px 15px !important;

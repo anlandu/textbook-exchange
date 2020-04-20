@@ -154,11 +154,14 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-12 col-md-5">
+                        <div class="col-12 col-md-6">
                             <div class="card-block p-2">
                                 <h5 class="card-title">{{ listing.textbook.title }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{ listing.textbook.author_clean }}</h6> 
                                 <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">{{ listing.published_date }}</p>                                
+                                <h6 class="card-text" style="margin-bottom: 0px;" id="post-bottom" style="display: none;">{{ listing.user.first_name }} {{ listing.user.last_name }} </h6>
+                                <a class="btn btn-outline-primary btn-sm pl-2" id="post-bottom" style="display: none;" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'>Message</a>
+                                <h5 class="card-text price mt-3 mb-4" style="display: none;" id="post-bottom">${{ listing.price }}</h5>
                                 <p class="card-text mb-1">
                                     Condition:
                                     {% if listing.condition == "likenew" %}
@@ -174,13 +177,11 @@
                                 <p class="card-text mb-4">{{ listing.comments }}</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-4" style="border-left: 1px;">
-                            <div class="card-block p-2">
-                                <h5 class="card-text price">${{ listing.price }}</h5>
-                                <h6 class="card-text" style="margin-bottom: 0px;">{{ listing.user.first_name }} {{ listing.user.last_name }} </h6>
-                                <br>
-                                <a class="btn btn-outline-primary btn-sm pl-2" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'>Message</a>
-                                <br><br>
+                        <div class="col-12 col-md-3" style="border-left: 1px;">
+                            <div class="card-block p-2 mx-auto" style="width: fit-content;">
+                                <h5 class="card-text price" id="post-right">${{ listing.price }}</h5>
+                                <h6 class="card-text mt-3" style="margin-bottom: 0px;" id="post-right">{{ listing.user.first_name }} {{ listing.user.last_name }} </h6>
+                                <a class="mt-2 mb-5 d-block btn btn-outline-primary btn-sm pl-2" style="width: 100px;" id="post-right" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'>Message</a>
                                 <a href="javascript:addtoCart({{listing.id}}, '{{listing.user}}');" id="add{{listing.id}}" class="btn btn-primary mx-auto cart">Add to Cart</a>
                             </div>
                         </div>

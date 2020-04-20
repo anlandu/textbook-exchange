@@ -60,8 +60,9 @@ body {
     }
 }
 @media only screen and (max-width: 767px) {
-    .btn-primary {
-        width: 75% !important;
+    .card {
+        width: 300px !important;
+        margin: auto !important;
     }
     .sidefilter-padding {
         padding: 10px;
@@ -77,20 +78,22 @@ body {
         padding: 5px;
     }
     .card-title {
-        font-size: medium;
         line-height: 1.4em;
     }
     .card-subtitle {
+        margin-bottom: 0px !important;
         font-size: small;
     }
-    .card-text {
-        font-size: medium;
+    #post-right {
+        display: none !important;
     }
-    .btn-primary {
-        font-size: medium;
-        width: 100% !important;
+    #post-bottom {
+        display: block !important;
+        width: 100px;
+        margin: 10px 0;
     }
-    .price {
-        font-size: larger;
+    .cart {
+        font-size: medium;
+        width: 150px !important;
     }
 }

@@ -43,14 +43,15 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-12 col-md-5">
+                    <div class="col-12 col-md-6">
                         <div class="card-block p-2">
                             <h5 class="card-title">{{ post.textbook.title }}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author_clean }}</h6> 
-                            <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">{{ post.published_date }}</p>   
+                            <p class="card-subtitle mt-2 text-muted mb-1" style="font-size: smaller;">{{ post.published_date }}</p>   
                             <form method="GET">
                                 <a href="{% url 'exchange:edit_post' post.id post.textbook.title_clean %}" class="card-link" style="font-size: large;">edit</a>
-                            </form>                             
+                            </form>   
+                            <h5 class="card-text price mt-2 mb-4" style="display: none;" id="price-bottom">${{ post.price }}</h5>
                             <p class="card-text mb-1">
                                 Condition:
                                 {% if post.condition == "likenew" %}
@@ -66,9 +67,9 @@
                             <p class="card-text mb-4">{{ post.comments }}</p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4" style="border-left: 1px;">
-                        <div class="card-block p-2">
-                            <h5 class="card-text mb-4 price">${{ post.price }}</h5>
+                    <div class="col-12 col-md-3" border-left: 1px;">
+                        <div class="card-block p-2 mx-auto" style="width: fit-content;" >
+                            <h5 class="card-text mb-4 price" id="price-right">${{ post.price }}</h5>
                             <form action="" method="post">
                                 {% csrf_token %}
                                 <button name="sold_listing" value="{{ post.id }}" class="btn btn-primary mx-auto d-block" style="width: 85%;">Sold?</button>
