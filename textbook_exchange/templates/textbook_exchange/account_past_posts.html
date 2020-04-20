@@ -16,7 +16,7 @@
     <div class="row p15">
         {% for listing in past_posts %}
         <div class="mb-5 w-100 crd-hidden listing-panel" id="listing" price="{{ listing.price }}" condition="{{ listing.condition }}" style="width: 15rem">
-            <div class="card flex-row" style="margin: 0;">
+            <div class="card flex-row card-past" style="margin: 0;">
                 <div class="card border-0 px-1" style="margin-right: 5px; min-width: 150px;">
                     <a href="{{ listing.picture_url }}" data-type="image" data-toggle="lightbox" data-max-width="700" id="{{ listing.isbn10 }}">
                         <img class="card-img-top img-fluid" src="{{ listing.picture_url }}" alt="{{ listing.textbook.title }}" style="max-width: 200px; border-radius: 0;">

@@ -20,9 +20,12 @@ body {
     padding: 40px 32px;
 }
 #right-container {
-    margin: 75px auto;
+    margin: 50px auto;
     margin-left: 320px;
     padding-right: 70px;
+}
+#post-bottom {
+    display: none !important;
 }
 @media only screen and (min-width: 991px) {
     #mainNav {
