@@ -97,11 +97,11 @@ def cart_functions(user, listing_id, fn):
     if fn == "add":
         if listing.cart is not None:
             if listing.cart is user.cart:
-                return JsonResponse({'status': 'success'})
+                return JsonResponse({'status': 'success', 'title': listing.textbook.title, 'seller': listing.user.email})
             return JsonResponse({'status': "error - already in another user's cart"})
         listing.cart = user.cart
         listing.save()       
-        return JsonResponse({'status': 'success'})
+        return JsonResponse({'status': 'success', 'title': listing.textbook.title, 'seller': listing.user.email})
     elif fn == "remove":
         if listing.cart != user.cart:
             return JsonResponse({'status': "error - not authorized to perform this action"})
