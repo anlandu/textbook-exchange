@@ -179,7 +179,7 @@
                         </div>
                         <div class="col-12 col-md-3" style="border-left: 1px;">
                             <div class="card-block p-2 mx-auto" style="width: fit-content;">
-                                <h5 class="card-text price" id="post-right">${{ listing.price }}</h5>
+                                <h5 class="card-text price mt-2" id="post-right">${{ listing.price }}</h5>
                                 <h6 class="card-text mt-3" style="margin-bottom: 0px;" id="post-right">{{ listing.user.first_name }} {{ listing.user.last_name }} </h6>
                                 <a class="mt-2 mb-5 d-block btn btn-outline-primary btn-sm pl-2" style="width: 100px;" id="post-right" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'>Message</a>
                                 <a href="javascript:addtoCart({{listing.id}}, '{{listing.user}}');" id="add{{listing.id}}" class="btn btn-primary mx-auto cart">Add to Cart</a>

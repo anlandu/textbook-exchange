@@ -67,12 +67,12 @@
                             <p class="card-text mb-4">{{ post.comments }}</p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3" border-left: 1px;">
+                    <div class="col-12 col-md-3" style="border-left: 1px;">
                         <div class="card-block p-2 mx-auto" style="width: fit-content;" >
-                            <h5 class="card-text mb-4 price" id="price-right">${{ post.price }}</h5>
+                            <h5 class="card-text mb-4 mt-2 price" id="price-right">${{ post.price }}</h5>
                             <form action="" method="post">
                                 {% csrf_token %}
-                                <button name="sold_listing" value="{{ post.id }}" class="btn btn-primary mx-auto d-block" style="width: 85%;">Sold?</button>
+                                <button name="sold_listing" value="{{ post.id }}" class="btn btn-primary mx-auto d-block" style="width: 85px;">Sold?</button>
                             </form>
                         </div>
                     </div>
