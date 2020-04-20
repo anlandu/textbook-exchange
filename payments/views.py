@@ -57,7 +57,7 @@ def one_week_in_future():
     return timezone.now() + timezone.timedelta(weeks=1)
 
 def success(request):
-    # TODO: remove items from cart, mark them as sold and move to user purchase history
+    # TODO: remove items from cart, move to user purchase history
     context=get_cart(request)
     sold_items = []
     for transaction in request.user.cart.productlisting_set.all():

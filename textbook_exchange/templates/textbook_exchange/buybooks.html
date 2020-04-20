@@ -183,7 +183,7 @@
                         <a class="btn btn-outline-primary btn-sm mt-2 mb-5" style="padding: 2px 10px;" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'> 
                             Message
                         </a>
-                        <a href="javascript:addtoCart({{ listing.id }});" id="add{{listing.id}}"
+                        <a href="javascript:addtoCart({{listing.id}}, '{{listing.user}}');" id="add{{listing.id}}"
                         class="btn btn-primary d-block mx-auto cart">
                             Add to Cart
                         </a>
@@ -242,29 +242,34 @@ function closeToggle() {
     document.getElementById("myFilterTab").style.marginLeft = "-370px";
 }
 
-function addtoCart(id) {
-    console.log("add to cart working");
-    $.ajax({
-        url : "{% url 'payments:cart' %}",
-        type: "POST",
-        data: { 
-            id : id,
-            function: "add",
-            csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
-        success: function(json) {
-            if (json['status'] == 'success') {
-                document.getElementById("goToCart").onclick = function(){window.location.href = "{% url 'payments:cart' %}";};
-                document.getElementById("continueShopping").onclick = function(){window.location.reload();};
-                document.getElementById("success_message").innerHTML = json['title'] + " was added to the cart successfully.<br><br>Sold by: " + json['seller'];
-                $('#addToCartModel').modal('show');
-            }
-            else if (json['status'] == 'not_logged_in') window.location.href = "{% url 'exchange:login' %}" + "?login_redirect_target=/cart/";
-        },
-        error: function(xhr, errmsg, err) {
-            console.log("error");
-        },
-    });
+function addtoCart(id, seller_email) {
+    if (seller_email == "{{myemail}}") {
+        alert("Sorry, you cannot buy a book from youself.");
+    }
+    else {
+        console.log("add to cart working");
+        $.ajax({
+            url : "{% url 'payments:cart' %}",
+            type: "POST",
+            data: { 
+                id : id,
+                function: "add",
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(json) {
+                if (json['status'] == 'success') {
+                    document.getElementById("goToCart").onclick = function(){window.location.href = "{% url 'payments:cart' %}";};
+                    document.getElementById("continueShopping").onclick = function(){window.location.reload();};
+                    document.getElementById("success_message").innerHTML = json['title'] + " was added to the cart successfully.<br><br>Sold by: " + json['seller'];
+                    $('#addToCartModel').modal('show');
+                }   
+                else if (json['status'] == 'not_logged_in') window.location.href = "{% url 'exchange:login' %}" + "?login_redirect_target=/cart/";
+            },
+            error: function(xhr, errmsg, err) {
+                console.log("error");
+            },
+        });
+    }
 }
 
 function applyClick() {

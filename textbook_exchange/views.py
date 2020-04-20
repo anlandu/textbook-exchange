@@ -262,6 +262,7 @@ class BuyProductListings(ListView):
         context['title'] = '"' + textbook.title + '"'
         context['textbook'] = textbook
         context['num_product_listings'] = len(textbook.productlisting_set.all())
+        context['myemail'] = self.request.user
         
         context['ordering'] = self.request.GET.get('sort')
         if context['ordering'] == "-price":
@@ -298,7 +299,7 @@ class FindTextbooks(ListView):
         clss = get_object_or_404(Class, class_info=url_class_info)
         context = super().get_context_data(**kwargs)
         context['class'] = get_object_or_404(Class, class_info=url_class_info)
-        context['title'] = clss.class_info + " - " + '"' + clss.class_title + '"'
+        context['title'] = clss.class_info + " - " + clss.class_title
         context['num_textbooks'] = len(clss.textbook_set.all())
 
         return context
