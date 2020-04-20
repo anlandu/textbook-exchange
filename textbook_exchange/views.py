@@ -95,7 +95,7 @@ def sell_books(request):
                 listing.condition = cleaned_data['book_condition']
                 listing.picture_upload = cleaned_data['picture']
                 response = cloudinary.uploader.upload(cleaned_data['picture'])
-                listing.picture_url = response['url']
+                listing.picture_url = response['url'].replace("http://", "https://")
                 listing.comments = cleaned_data['comments']
                 
                 # finding textbook using isbn
@@ -440,7 +440,7 @@ def chat_view(request):
     message = 'Dear ' + listing.user.first_name +",\n\nSomeone has contacted you about your listing of '" + listing.textbook.title + "' at UVA TextEx! Visit https://pineapple-seals.herokuapp.com/accounts/messages to view your new message!\n\nThanks for using TextEx for all your used textbook needs,\nThe Team at UVA TextEx"
     recipient = listing.user.email
     send_mail(subject, message, EMAIL_HOST_USER, [recipient], fail_silently=False)
-    
+
     return render(request, 'textbook_exchange/create_twilio.html', context = context)
 
 def channel_view(request):
