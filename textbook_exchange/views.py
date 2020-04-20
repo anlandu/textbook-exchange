@@ -277,6 +277,9 @@ class BuyProductListings(ListView):
     def get_queryset(self, *args, **kwargs):
         url_ibsn = self.kwargs['isbn']
         url_ordering = self.request.GET.get('sort')
+        url_keywords = self.request.GET.get('search')
+        print(url_keywords)
+        print(url_ordering)
 
         textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
