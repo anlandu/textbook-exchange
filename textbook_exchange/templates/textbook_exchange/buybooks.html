@@ -177,8 +177,10 @@
                         <div class="col-12 col-md-4" style="border-left: 1px;">
                             <div class="card-block p-2">
                                 <h5 class="card-text price">${{ listing.price }}</h5>
-                                <h6 class="card-text" style="margin-bottom: 0px;">{{ listing.user.first_name }} {{ listing.user.last_name }} <a class="btn btn-outline-primary btn-sm pl-2" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'>Message</a></h6>
+                                <h6 class="card-text" style="margin-bottom: 0px;">{{ listing.user.first_name }} {{ listing.user.last_name }} </h6>
                                 <br>
+                                <a class="btn btn-outline-primary btn-sm pl-2" href='javascript:createTwilio("{{listing.id}}", "{{listing.user.username}}", "{{user.username}}", "{{listing.textbook.title}}");'>Message</a>
+                                <br><br>
                                 <a href="javascript:addtoCart({{listing.id}}, '{{listing.user}}');" id="add{{listing.id}}" class="btn btn-primary mx-auto cart">Add to Cart</a>
                             </div>
                         </div>
