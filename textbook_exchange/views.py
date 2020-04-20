@@ -11,7 +11,7 @@ from paypalpayoutssdk.core import PayPalHttpClient, SandboxEnvironment
 from paypalpayoutssdk.payouts import PayoutsPostRequest
 from paypalhttp import HttpError
 from datetime import datetime
-from django.core.mail import mail_admins
+from django.core.mail import mail_admins, send_mail
 from textexc.settings import EMAIL_HOST_USER
 
 from faker import Factory
@@ -95,7 +95,7 @@ def sell_books(request):
                 listing.condition = cleaned_data['book_condition']
                 listing.picture_upload = cleaned_data['picture']
                 response = cloudinary.uploader.upload(cleaned_data['picture'])
-                listing.picture_url = response['url']
+                listing.picture_url = response['url'].replace("http://", "https://")
                 listing.comments = cleaned_data['comments']
                 
                 # finding textbook using isbn
@@ -149,15 +149,19 @@ def edit_post(request, listing_id, title):
     template_name = "textbook_exchange/edit_post.html"
     context = {}
     context['context_postUpdated'] = False
+    listing = ProductListing.objects.get(pk=listing_id)
+    context['title'] = 'Edit Post'
 
     if request.method == 'POST':
         if 'cancel_edit' in request.POST:
             return HttpResponseRedirect('/accounts')
         elif 'edit_listing' in request.POST:
-            # get data
-            listing_id = request.POST.get('edit_listing')
-            listing = ProductListing.objects.get(pk=listing_id)
             data = request.POST
+
+            # store data
+            listing.price = data['price']
+            listing.condition = data['condition']
+            listing.comments = data['comments']
             
             # if img is uploaded, store it
             if len(request.FILES) != 0:                
@@ -165,11 +169,6 @@ def edit_post(request, listing_id, title):
                 response = cloudinary.uploader.upload(newimg)
                 listing.picture_url = response['url']
                 listing.picture_upload = newimg
-
-            # store other submitted data
-            listing.price = data['price']
-            listing.condition = data['condition']
-            listing.comments = data['comments']
 
             # update listing
             listing.save()
@@ -190,10 +189,11 @@ class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
-    ordering = ['published_date']
+    ordering = ['-published_date']
     
     def get_context_data(self, **kwargs):          
-        context = super().get_context_data(**kwargs)                     
+        context = super().get_context_data(**kwargs)    
+        context['title'] = "Dashboard"           
         sum = 0
         for pt in self.request.user.pendingtransaction_set.all():
             sum += pt.balance
@@ -214,6 +214,7 @@ class AccountCurrentListings(ListView):
             if 'sold_listing' in self.request.POST:
                 listing_id = self.request.POST.get('sold_listing')
                 listing = ProductListing.objects.get(pk=listing_id)
+                listing.cart=None
                 listing.has_been_sold = True
                 listing.sold_date = datetime.now()
                 listing.save()
@@ -230,7 +231,12 @@ class AccountPastListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_past_posts.html"
     context_object_name = 'past_posts'
-    ordering = ['published_date']
+    ordering = ['-published_date']
+
+    def get_context_data(self, **kwargs):          
+        context = super().get_context_data(**kwargs)    
+        context['title'] = "Past Posts" 
+        return context     
 
     def get_queryset(self):
         queryset = super(AccountPastListings, self).get_queryset()
@@ -256,6 +262,7 @@ class BuyProductListings(ListView):
         context['title'] = '"' + textbook.title + '"'
         context['textbook'] = textbook
         context['num_product_listings'] = len(textbook.productlisting_set.all())
+        context['myemail'] = self.request.user
         
         context['ordering'] = self.request.GET.get('sort')
         if context['ordering'] == "-price":
@@ -268,8 +275,13 @@ class BuyProductListings(ListView):
         return context
 
     def get_queryset(self, *args, **kwargs):
+        print("hi")
         url_ibsn = self.kwargs['isbn']
         url_ordering = self.request.GET.get('sort')
+        url_keywords = self.request.GET.get('search')
+        print(url_keywords)
+        print(url_ordering)
+        print("hi")
 
         textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
@@ -292,7 +304,7 @@ class FindTextbooks(ListView):
         clss = get_object_or_404(Class, class_info=url_class_info)
         context = super().get_context_data(**kwargs)
         context['class'] = get_object_or_404(Class, class_info=url_class_info)
-        context['title'] = clss.class_info + " - " + '"' + clss.class_title + '"'
+        context['title'] = clss.class_info + " - " + clss.class_title
         context['num_textbooks'] = len(clss.textbook_set.all())
 
         return context
@@ -420,6 +432,7 @@ def contact_us(request):
             # raise forms.ValidationError("Please fill in all fields in red.")
     else:
         return render(request, 'textbook_exchange/contact_us.html', context={'form': ContactForm, 'sent': 'sent' in request.GET})
+
 def chat_view(request):
     context=get_logged_in(request)
     listing = get_object_or_404(ProductListing, pk=request.GET.get('listing_id'))
@@ -427,6 +440,12 @@ def chat_view(request):
     context['listing'] = listing 
     context['listing_id'] = request.GET.get('listing_id')
     context['book_name'] = request.GET.get('bname')
+
+    subject = 'New Chat on UVA Text!'
+    message = 'Dear ' + listing.user.first_name +",\n\nSomeone has contacted you about your listing of '" + listing.textbook.title + "' at UVA TextEx! Visit https://pineapple-seals.herokuapp.com/accounts/messages to view your new message!\n\nThanks for using TextEx for all your used textbook needs,\nThe Team at UVA TextEx"
+    recipient = listing.user.email
+    send_mail(subject, message, EMAIL_HOST_USER, [recipient], fail_silently=False)
+
     return render(request, 'textbook_exchange/create_twilio.html', context = context)
 
 def channel_view(request):

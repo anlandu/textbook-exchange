@@ -33,7 +33,7 @@
       $container = $('<div class="d-flex flex-row p-1">');
     }
     
-    var $message = $('<div class="p-2" style="background: lightgray; border-radius: 15px;">').text(message);
+    var $message = $('<div class="p-2" style="background: var(--uva-orange); border-radius: 15px; color: white;">').text(message);
     $container.append($message);
     $chatWindow.append($container);
     $chatWindow.scrollTop($chatWindow[0].scrollHeight);

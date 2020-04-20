@@ -81,7 +81,7 @@
   
   .me, .username.me {
     font-weight:bold;
-    color: #F57900;
+    color: var(--uva-orange);
   }
   
   .message-container .username.me {

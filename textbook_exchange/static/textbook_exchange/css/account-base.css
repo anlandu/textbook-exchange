@@ -1,0 +1,139 @@
+body {
+    transition: margin-left .5s;
+}
+.page-container {
+    min-height: 800px;
+}    
+a:link, a:visited, a:active, .btn-link:hover {
+    text-decoration: none;
+}
+.p15 {
+    padding: 15px;
+}
+#page-container {
+    min-width: 300px;
+    position: relative;
+}
+#left, #right {
+    display: inline-block;
+}
+#right {
+    margin: 60px 0 150px 350px;
+    width: -webkit-fill-available;
+    margin-right: 60px;
+}
+#left {
+    width: 275px;
+    top: 81px;
+    bottom: 0;
+    position: absolute;
+    background-color: #f5f5f5;
+    transition: 0.5s;
+}
+.closebtn, .menu-btn {
+    display: none;
+}
+.menu {
+    padding: 50px 0 25px 50px;
+}
+.menu-item {
+    padding: 15px 50px;
+}
+.menu-item:hover {
+    background-color: rgb(255,139,25);
+    color: white;
+    cursor: pointer;
+}
+.menu-item:hover a {
+    color: white;
+}
+.menu-link {
+    color: black;
+    padding: 0;
+    width: 100%;
+}
+.menu-link:hover {
+    color: white;
+}
+.closebtn {
+    color: #818181;
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    transition: 0.3s;
+    padding: 10px 10px 10px 35px;
+}
+.closebtn:hover {
+    color: #2c2c2c;
+}
+@media only screen and (max-width: 750px) {
+    .wrapper {
+        width: 93% !important;
+        margin: 33px auto !important;
+        padding: 0px !important;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .wrapper {
+        width: 80%;
+        margin: 33px auto;
+        padding: 0px;
+    }
+    #right {
+        width: 100%;
+        margin: auto;
+    }
+    #left {
+        z-index: 1;
+        margin-left: -350px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.40);
+    }
+    #wrapper {
+        width: 80%;
+        margin: 60px auto;
+    }
+    .closebtn, .menu-btn {
+        display: block !important;
+    }
+    .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    } 
+}
+
+@media only screen and (max-width: 767px) {
+    .card {
+        width: 300px !important;
+        margin: auto !important;
+    }
+    .btn-primary {
+        font-size: medium;
+        min-width: 70px !important;
+    }
+    .card-title {
+        line-height: 1.4em;
+    }
+    .card-subtitle {
+        margin-bottom: 2px !important;
+        font-size: small;
+    }
+    form {
+        margin-bottom: 20px !important;
+    }
+    #price-right {
+        display: none;
+    }
+    #price-bottom {
+        display: block !important;
+    }
+    .pricesold {
+        padding: 0 15px 10px 15px !important;
+        min-width: 135px !important;
+    }
+}

@@ -431,12 +431,12 @@ class ViewListingsTest(TestCase):
     def test_add_listing_to_cart(self):
         response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        self.assertEqual(json.loads(response.content), {'status': 'success', 'title': 'Classical Mechanics', 'seller': 'rc8yw@virginia.edu'})
 
     def test_remove_listing_from_cart(self):
         response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        self.assertEqual(json.loads(response.content), {'status': 'success', 'title': 'Classical Mechanics', 'seller': 'rc8yw@virginia.edu'})
         response = self.c.post("/cart/", {"id": self.pl.id, "function": "remove"})        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {'status': 'success'})
@@ -461,7 +461,7 @@ class ViewListingsTest(TestCase):
     def test_checkout_success(self):
         response = self.c.post("/cart/", {"id": self.pl.id, "function": "add"})        
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        self.assertEqual(json.loads(response.content), {'status': 'success', 'title': 'Classical Mechanics', 'seller': 'rc8yw@virginia.edu'})
         response = self.c.get("/cart/checkout/success", secure=True, follow=True)
         #self.assertInHTML("Success!", decoded_response)
         response = self.c.get("/buy/9781891389221/ClassicalMechanics/", secure=True, follow=True)
@@ -488,7 +488,6 @@ class ViewListingsTest(TestCase):
         response = self.c.get("/accounts/past_posts", secure=True, follow=True)
         decoded_response=response.content.decode()
         self.assertInHTML("Classical Mechanics", decoded_response)
-        self.assertInHTML("$100.00", decoded_response)
         self.assertInHTML("Condition: Like new", decoded_response)
 
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
@@ -576,20 +575,20 @@ class FilterSortTest(TestCase):
     def test_sort_price_low_high(self):        
         response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=price", secure=True, follow=True)  
         soup=Soup(response.content, 'html.parser')
-        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        first_item=soup.find_all("p", class_='card-text mb-1')[0]
         self.assertIn("Acceptable", str(first_item))
 
 
     def test_sort_price_high_low(self):        
         response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=-price", secure=True, follow=True)  
         soup=Soup(response.content, 'html.parser')
-        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        first_item=soup.find_all("p", class_='card-text mb-1')[0]
         self.assertIn("Like new", str(first_item))
 
     def test_sort_recent(self):        
         response = self.c.get("/buy/9781891389221/ClassicalMechanics/?sort=-published_date", secure=True, follow=True)  
         soup=Soup(response.content, 'html.parser')
-        first_item=soup.find_all("p", class_='card-subtitle mb-4')[0]
+        first_item=soup.find_all("p", class_='card-text mb-1')[0]
         self.assertIn("Very good", str(first_item))
 
 #test models

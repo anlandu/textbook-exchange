@@ -57,7 +57,7 @@ def one_week_in_future():
     return timezone.now() + timezone.timedelta(weeks=1)
 
 def success(request):
-    # TODO: remove items from cart, mark them as sold and move to user purchase history
+    # TODO: remove items from cart, move to user purchase history
     context=get_cart(request)
     sold_items = []
     for transaction in request.user.cart.productlisting_set.all():
@@ -97,11 +97,11 @@ def cart_functions(user, listing_id, fn):
     if fn == "add":
         if listing.cart is not None:
             if listing.cart is user.cart:
-                return JsonResponse({'status': 'success'})
+                return JsonResponse({'status': 'success', 'title': listing.textbook.title, 'seller': listing.user.email})
             return JsonResponse({'status': "error - already in another user's cart"})
         listing.cart = user.cart
         listing.save()       
-        return JsonResponse({'status': 'success'})
+        return JsonResponse({'status': 'success', 'title': listing.textbook.title, 'seller': listing.user.email})
     elif fn == "remove":
         if listing.cart != user.cart:
             return JsonResponse({'status': "error - not authorized to perform this action"})

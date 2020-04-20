@@ -2,6 +2,11 @@
 {% load static %} 
 
 {% block inner-content %}
+<style>
+    .dashboard-div {
+        background-color: #e5e5e5;
+    }
+</style>
 
 {% if postSold %}
     <script>
@@ -15,56 +20,66 @@
 {% endif %}
 
 <!-- Name/Email/Header -->
-<div class="right-container">
-    <div style="background-color: whitesmoke; padding: 10px 10px 10px 18px;">
+    <div style="border: 2px solid black; padding: 10px 10px 10px 18px; margin-bottom: 25px;">
         <h1 style="margin-bottom: 10px;">{{ user.first_name }} {{ user.last_name }}</h1>
         <h5>{{ user.email }}</h5>
         <h5>Balance: ${{ user.balance }} <a href="{% url 'exchange:cashout' %}">Cashout</a></h5>
-        <h5>Pending Balance: ${{ pending_balance }} <a href="{% url 'exchange:process' %}">Process (only exists for testing)</a></h5>
+        <h5>Pending Balance: ${{ pending_balance }} <a href="{% url 'exchange:process' %}">Process</a></h5>
     </div>
 	<br/><br/>
 	
-    <h1 class="custom-header">Current Posts</h1>
+    <h1 class="custom-header mb-4">Current Posts</h1>
 
     <!-- POSTS -->
-    <div class="row">
+    <div class="row p15">
     {% for post in current_posts %}
-        <div class="card text-font" style="width: 15rem;">
-            <div class="card-header">
-                <img class="card-img-top" src="{{ post.picture_url }}" alt="{{ post.textbook.title }}" style="margin-top: 10px;">
-                <h5 class="card-title">{{ post.textbook.title }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author_clean }}</h6> 
-				<h5 class="card-subtitle mt-4 mb-2">${{ post.price }}</h5>
-				<form method="GET">
-					<a href="{% url 'exchange:edit_post' post.id post.textbook.title_clean %}" class="card-link">edit</a>
-				</form>
-            </div>
-            <div class="card-body">
-                <p class="card-subtitle mb-2 mb-4 text-muted" style="font-size: smaller;">Posted: {{ post.published_date }}</p>
-                <p class="card-subtitle mb-4">
-                    Condition:
-                    {% if post.condition == "likenew" %}
-                        Like new
-                    {% elif post.condition == "verygood" %}
-                        Very good
-					          {% elif post.condition == "good" %}
-				                Good
-                    {% elif post.condition == "acceptable" %}
-                        Acceptable
-                    {% endif %}
-                </p>
-                <p class="card-text mb-4">{{ post.comments }}</p>
-                <form action="" method="post">
-                  {% csrf_token %}
-                    <button href="#" name="sold_listing" value="{{ post.id }}" class="btn btn-primary mx-auto d-block" style="width: 40%;">
-					  Sold?
-					</button>
-                  {% csrf_token %}     
-                </form>
+        <div class="mb-5 w-100 crd-hidden post-panel" id="post" price="{{ post.price }}" condition="{{ post.condition }}" style="width: 15rem">
+            <div class="card w-100" style="margin: 0;">
+                <div class="row p-2">
+                    <div class="col-12 col-md-3">
+                        <div class="card-block p-2 text-center">
+                            <a href="{{ post.picture_url }}" data-type="image">
+                                <img class="card-img-top img-fluid" src="{{ post.picture_url }}" alt="{{ post.textbook.title }}" style="max-width: 200px; border-radius: 0;">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card-block p-2">
+                            <h5 class="card-title">{{ post.textbook.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ post.textbook.author_clean }}</h6> 
+                            <p class="card-subtitle mt-2 text-muted mb-2" style="font-size: smaller;">{{ post.published_date }}</p>   
+                            <form method="GET">
+                                <a href="{% url 'exchange:edit_post' post.id post.textbook.title_clean %}" class="card-link" style="font-size: large;">edit</a>
+                            </form>   
+                            <h5 class="card-text price mt-2 mb-2" style="display: none;" id="price-bottom">${{ post.price }}</h5>
+                            <p class="card-text mb-1">
+                                Condition:
+                                {% if post.condition == "likenew" %}
+                                    Like new
+                                {% elif post.condition == "verygood" %}
+                                    Very good
+                                {% elif post.condition == "good" %}
+                                    Good
+                                {% elif post.condition == "acceptable" %}
+                                    Acceptable
+                                {% endif %}
+                            </p>
+                            <p class="card-text mb-4">{{ post.comments }}</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3" style="border-left: 1px;">
+                        <div class="card-block p-2 mx-auto" style="width: fit-content;" >
+                            <h5 class="card-text mb-4 mt-2 price" id="price-right">${{ post.price }}</h5>
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <button name="sold_listing" value="{{ post.id }}" class="btn btn-primary mx-auto d-block" style="width: 85px;">Sold?</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 	{% endfor %}
-	</div>
 </div>
   
 <script>
@@ -81,6 +96,28 @@ $(document).ready(function() {
 		alert("Post was successfully updated");
 		document.cookie = "postUpdated=false";
 	} 
+
+    // $(".past-posts-div").hover(function() {
+    //     console.log("hovering");
+    //     $(".dashboard-div").css('background-color', '#f5f5f5');
+    // });
+    // $(".messages-div").hover(function() {
+    //     console.log("hovering");
+    //     $(".dashboard-div").css('background-color', '#f5f5f5');
+    // });
+    // $(".signout-div").hover(function() {
+    //     console.log("hovering");
+    //     $(".dashboard-div").css('background-color', '#f5f5f5');
+    // });
+    
+    // $("#right").hover(function() {
+    //     console.log("hovering");
+    //     $(".dashboard-div").css('background-color', '#e5e5e5');
+    // });
+    // $("#left").hover(function() {
+    //     console.log("hovering");
+    //     $(".dashboard-div").css('background-color', '#e5e5e5');
+    // });
 });
 
 </script>

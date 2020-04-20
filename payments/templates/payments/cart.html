@@ -1,5 +1,22 @@
 {% extends 'textbook_exchange/base.html' %}
 {% block content %}
+<style>
+    @media only screen and (max-width: 767px) {
+        .col-sm-2, #bookimg {
+            display: none;
+        }
+        .container {
+            max-width: 900px;
+            padding-right: 40px;
+        }
+    }
+    @media only screen and (max-width: 575px) {
+        .container {
+            max-width: 720px;
+            padding-right: 15px;
+        }
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="col-sm-8">
@@ -20,10 +37,17 @@
             {% for product in user.cart.productlisting_set.all %}
             <div class="row">
                 <div class="col-sm-2">
-                    <img class="img-fluid" src='{{ product.picture_url }}'>
+                    <a href="{{ listing.picture_url }}" data-type="image" id="{{ listing.isbn10 }}">
+                        <img class="img-fluid" src='{{ product.picture_url }}' id="bookimg">
+                    </a>
                 </div>
                 <div class="col-sm-6">
-                    <p><b>{{ product.textbook.title }}</b><br><span class="text-muted">{{ product.textbook.author_clean }}</span><br><a href="javascript:removeFromCart({{ product.id }});" style="position:absolute; bottom:0;">remove</a></p>
+                    <p>
+                        <b>{{ product.textbook.title }}</b>
+                        <br>
+                        <span class="text-muted">{{ product.textbook.author_clean }}</span>
+                        <br>
+                        <a href="javascript:removeFromCart({{ product.id }});" class="mt-4">remove</a></p>
                 </div>
                 <div class="col-sm-4">
                     <p class="text-right font-weight-bold">${{ product.price}}</p>

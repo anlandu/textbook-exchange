@@ -2,6 +2,9 @@ body {
     font-family: 'Raleway' !important;
 }
 
+a:link, a:focus, a:visited, a:active, a:hover, .btn-link:link, .btn-link:focus, .btn-link:visited, .btn-link:active, .btn-link:hover {
+    text-decoration: none;
+}
 /* Shart Corner */
 body, .form-control, .btn, .card, #results_dropdown {
     border-radius: 0 !important;
@@ -60,6 +63,32 @@ body, .form-control, .btn, .card, #results_dropdown {
     background-color: var(--uva-darkblue);
 }
 
+/* Navar */
+@media (min-width: 992px) {
+    .navbar-nav {
+        text-align: right !important;
+    }
+    .nav-search {
+        width: 65% !important;
+    }
+}
+@media (max-width: 992px) {
+    .nav-search {
+        width: 70% !important;
+    }
+    .navbar-search {
+        margin-top: 5px;
+    }
+    .navbar-nav {
+        width: 80% !important;
+        text-align: center !important;
+        margin-top: 10px !important;
+    }
+    .nav-item {
+        width: 30% !important;
+    }
+}
+
 /* Standard HTML Tag Theming */
 
 .cursor-pointer, #cursor-pointer {
@@ -110,4 +139,41 @@ footer {
 }
 .padding-top30 {
     padding-top: 30px;
+}
+
+@media only screen and (max-width: 991px) {
+    .filterTab {
+        position: fixed;
+        top: 0px;
+        overflow-x: hidden !important;
+
+        left: 0;
+        width: 0;
+        height: 100%;
+        z-index: 1;
+        background-color: #f5f5f5;
+        transition: 0.5s;
+        padding-top: 60px;
+        margin-left: -370px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.40);
+    }
+    .filterTab a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+    .filterTab a:hover {
+        color: #2c2c2c;
+    }
+    .filterTab .closebtn {
+        text-decoration: none;
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
 }
