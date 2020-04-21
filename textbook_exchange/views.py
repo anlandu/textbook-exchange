@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-import json, itertools, functools, requests, os, cloudinary.uploader
+import json, itertools, functools, requests, os, cloudinary.uploader, re
 from .forms import SellForm, ContactForm
 from .models import ProductListing, Class, Textbook, Class
 from paypalpayoutssdk.core import PayPalHttpClient, SandboxEnvironment
@@ -247,7 +247,7 @@ def buy_books(request):
     context = get_logged_in(request)
     context['title'] ='Buy Books'
     if request.GET.get("search"):
-        context['search'] = request.GET.get('search')
+        return redirect(reverse('exchange:search', kwargs={'keywords' : re.sub('[\W_]+',"000", request.GET.get('search'))})) # catch other redirects
     return render(request, 'textbook_exchange/buybooks.html', context=context)
 
 class BuyProductListings(ListView):
