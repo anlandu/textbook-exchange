@@ -291,7 +291,7 @@ class BuyProductListings(ListView):
 
 class SearchTextbooks(ListView):
     model = Textbook
-    template_name = "textbook_exchange/searchtextbooks.html"
+    template_name = "textbook_exchange/searchbooks.html"
     context_object_name = 'results'
 
     def get_context_data(self, **kwargs):
