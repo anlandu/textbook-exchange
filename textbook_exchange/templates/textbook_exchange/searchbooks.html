@@ -38,12 +38,19 @@
         .container {
             margin-top: 0px !important;
         }
+        
+    @media only screen and (max-width: 991px) {
+        .container {
+            max-width: 991px !important;
+            padding: 33px !important;
+        }
+    }
     </style>
 </head>
 
 <div class="container">
-    <div class="row mt-3">
-        <form class="my-2 my-lg-0 w-100 mb-5 nav-search d-sm-block d-lg-none" action="{% url 'exchange:buybooks' %}" method="GET">
+    <div class="row mx-auto">
+        <form class="my-2 my-lg-0 w-100 nav-search d-sm-block d-lg-none" action="{% url 'exchange:buybooks' %}" method="GET">
             <div class="input-group">
                 <input name="search" type="text" class="form-control navbar-search" id="search_text_mobile" style="background-clip: unset;" placeholder="Search a book, class, ISBN, or keyword" onkeyup="updateSearch(this.value, 'small')" autofocus autocomplete="off">
                 <button type="submit" style="display: none;"></button>
@@ -69,8 +76,8 @@
 
     {% if results.count == 0 %}
         <div class="top">
-            <div class="showing-results mb-5">
-                <h3><b>Showing results for "{{ search }}"</b></h3>
+            <div class="showing-results mt-5 mb-5">
+                <h4><b>Showing results for "{{ search }}"</b></h4>
             </div>
         </div>
         <br/>
