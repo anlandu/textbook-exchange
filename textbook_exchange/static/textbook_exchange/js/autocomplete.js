@@ -1,7 +1,7 @@
-function updateSearch(event, search, caller) {
+function updateSearch(event, search, click) {
     if(search.length >= 2) {
 
-        if ( (event.key) || (caller == "click") ) {
+        if ( (event.keyCode == 13) || (click == "click") ) {
             search = search.replace(/[\W_]+/g,"000");
             window.location.href = '/search/' + search;
         }
