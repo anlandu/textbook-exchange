@@ -19,16 +19,16 @@
                 <h3><b>Showing results for "{{ search }}"</b></h3>
             </div>
         </div>
+        <br/>
         <div>
             <h3 style="text-align: center;">No results found</h3>
         </div>
     {% else %}
         <div class="top">
             <div class="showing-results mb-5">
-                <h6 style="font-style: italic;"><b>Showing {{ results.count }} results for "{{ search }}"</b></h6>
+                <h3><b>Showing {{ results.count }} {% if results.count == 1 %}result{% else %}results{% endif %} for "{{ search }}"</b></h3>
             </div>
         </div>
-        <br/>
         <!-- LISTINGS -->
         <div class="row">
             {% for textbook in results %}
