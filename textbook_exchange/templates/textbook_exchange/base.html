@@ -60,7 +60,7 @@
                     <div class="collapse navbar-collapse text-center" id="navbarResponsive">
                         <form class="my-2 my-lg-0 mx-auto nav-search" action="{% url 'exchange:buybooks' %}" method="GET">
                             <div class="input-group">
-                                <input name="search" type="text" class="form-control navbar-search" id="search_text" style="background-clip: unset;" placeholder="Search a title, author, class, or ISBN" onkeyup="updateSearch(event, this.value, 'enter')" autofocus autocomplete="off">
+                                <input name="search" type="text" class="form-control navbar-search" id="search_text" style="background-clip: unset;" placeholder="Search a title, author, class, or ISBN" onkeyup="updateSearch(event, this.value, '')" autofocus autocomplete="off">
                                 <button type="submit" style="display: none;"></button>
                                 <span class="input-group-append navbar-search" type='submit' style="-webkit-appearance: none;"><button type="button" class="btn btn-uva" onclick="updateSearch(event, document.getElementById('search_text').value, 'click')"><i class="fa fa-search my-auto"></i></button></span>
                                 <div class="input-group-append" style="width: 100%;">
