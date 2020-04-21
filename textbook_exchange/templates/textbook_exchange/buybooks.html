@@ -1,15 +1,61 @@
 {% extends "textbook_exchange/base.html" %}
 {% load static %}
 
+{% block search_largescreen %}
+<form class="my-2 my-lg-0 mx-auto nav-search d-none d-md-block" action="{% url 'exchange:buybooks' %}" method="GET">
+    <div class="input-group">
+        <input name="search" type="text" class="form-control navbar-search" id="search_text" style="background-clip: unset;" placeholder="Search a book, class, ISBN, or keyword" onkeyup="updateSearch(this.value, 'big')" autofocus autocomplete="off">
+        <button type="submit" style="display: none;"></button>
+        <span class="input-group-append navbar-search" type='submit' style="-webkit-appearance: none;"><button type="button" class="btn btn-uva" onclick="updateSearch(document.getElementById('search_text').value, 'big')"><i class="fa fa-search my-auto"></i></button></span>
+        <div class="input-group-append" style="width: 100%;">
+            <ul style="width:100%;" id="results_dropdown" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
+                <li id="results_books"><div id="book_results"></div></li>
+                <li id="results_courses"><div id="course_results"></div></li>
+                <li id="noresults">
+                    <div class="py-2" style="height: 65px;">
+                        <div class="row px-0 mx-0 pl-2" style="height: 100%;">
+                            <div class="col-12 align-self-center" style="height: 100%; display: flex; align-items: center;">
+                                <p class="my-auto"><b><i>No Results Found</i></b></p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
 {% block nowrapper %}
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/buybooks.css' %}">
-    <style>
-        #page-container {
-            min-height: 800px !important;
-        }
-    </style>
 </head>
+
+<div class="row">
+    <form class="my-2 my-lg-0 mx-auto nav-search d-block d-md-none" action="{% url 'exchange:buybooks' %}" method="GET">
+        <div class="input-group">
+            <input name="search" type="text" class="form-control navbar-search" id="search_text_mobile" style="background-clip: unset;" placeholder="Search a book, class, ISBN, or keyword" onkeyup="updateSearch(this.value, 'small')" autofocus autocomplete="off">
+            <button type="submit" style="display: none;"></button>
+            <span class="input-group-append navbar-search" type='submit' style="-webkit-appearance: none;"><button type="button" class="btn btn-uva" onclick="updateSearch(document.getElementById('search_text').value, 'small')"><i class="fa fa-search my-auto"></i></button></span>
+            <div class="input-group-append" style="width: 100%;">
+                <ul style="width:100%;" id="results_dropdown_mobile" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
+                    <li id="results_books_mobile"><div id="book_results_mobile"></div></li>
+                    <li id="results_courses_mobile"><div id="course_results_mobile"></div></li>
+                    <li id="noresults_mobile">
+                        <div class="py-2" style="height: 65px;">
+                            <div class="row px-0 mx-0 pl-2" style="height: 100%;">
+                                <div class="col-12 align-self-center" style="height: 100%; display: flex; align-items: center;">
+                                    <p class="my-auto"><b><i>No Results Found</i></b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </form>
+</div>
+
 <!-- SIDEBAR FILTER -->
 <div id="myFilterTab" class="filterTab" style="display: none; padding: 25px; padding-left: 10px;">
     <a href="javascript:void(0)" class="closebtn" onclick="closeToggle()">&times;</a>
@@ -51,7 +97,7 @@
 
 <!-- No Listings For This Textbook -->
 {% if num_product_listings == 0 %}
-<div class="showing-results container">
+<div class="container">
     <h4><b>{{ textbook.title }}</b></h4>
     <p>{{ textbook.author_clean }}</p>
     <div class="cursor-pointer align-items-center justify-content-center" data-toggle="modal" data-target="#moreInfoModalCenter">
