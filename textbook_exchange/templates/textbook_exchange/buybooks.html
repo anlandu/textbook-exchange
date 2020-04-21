@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block search_largescreen %}
-<form class="my-2 my-lg-0 mx-auto nav-search d-none d-md-block" action="{% url 'exchange:buybooks' %}" method="GET">
+<form class="my-2 my-lg-0 mx-auto nav-search d-none d-sm-block" action="{% url 'exchange:buybooks' %}" method="GET">
     <div class="input-group">
         <input name="search" type="text" class="form-control navbar-search" id="search_text" style="background-clip: unset;" placeholder="Search a book, class, ISBN, or keyword" onkeyup="updateSearch(this.value, 'big')" autofocus autocomplete="off">
         <button type="submit" style="display: none;"></button>
@@ -32,7 +32,7 @@
 </head>
 
 <div class="row">
-    <form class="my-2 my-lg-0 mx-auto nav-search d-block d-md-none" action="{% url 'exchange:buybooks' %}" method="GET">
+    <form class="my-2 my-lg-0 mx-auto nav-search d-sm-block d-lg-none" action="{% url 'exchange:buybooks' %}" method="GET">
         <div class="input-group">
             <input name="search" type="text" class="form-control navbar-search" id="search_text_mobile" style="background-clip: unset;" placeholder="Search a book, class, ISBN, or keyword" onkeyup="updateSearch(this.value, 'small')" autofocus autocomplete="off">
             <button type="submit" style="display: none;"></button>
