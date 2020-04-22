@@ -6,7 +6,7 @@
     <div class="input-group">
         <input name="search" type="text" class="form-control navbar-search" id="search_text" style="background-clip: unset;" placeholder="Search a book, class, ISBN, or keyword" onkeyup="updateSearch(this.value, 'big')" autofocus autocomplete="off">
         <button type="submit" style="display: none;"></button>
-        <span class="input-group-append navbar-search" type='submit' style="-webkit-appearance: none;"><button type="button" class="btn btn-uva" onclick="updateSearch(document.getElementById('search_text').value, 'big')"><i class="fa fa-search my-auto"></i></button></span>
+        <span class="input-group-append navbar-search" style="-webkit-appearance: none;"><button type="submit" class="btn btn-uva" onclick="updateSearch(document.getElementById('search_text').value, 'big')"><i class="fa fa-search my-auto"></i></button></span>
         <div class="input-group-append" style="width: 100%;">
             <ul style="width:100%;" id="results_dropdown" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
                 <li id="results_books"><div id="book_results"></div></li>

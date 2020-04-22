@@ -12,8 +12,7 @@
         background-size:cover;
     }
     .navbar, #footer {
-        /* background-color: rgba(32, 44, 80,.55); */
-        background-color: rgba(32, 44, 80,.5);
+        background-color: rgba(32, 44, 80,.01);
     }
     a:not(#button) {
         background-color: transparent !important;
@@ -32,8 +31,15 @@
         background-attachment: fixed;
     }
     #page-container {
-        background-color: rgba(255,255,255, 0.85) !important;
+        background-color: rgba(255,255,255, 0.8) !important;
+    }
+    @media only screen and (max-width: 767px){
+        body {
+            background-position: top !important;
+        }
     } */
+
+
     @media screen and (max-width: 991px) and (min-width: 768px) {
         .welcome {
             font-size: 37px;
@@ -52,6 +58,9 @@
         }
     }
     @media only screen and (max-width: 767px){
+        body {
+            background-position: top !important;
+        }
         .padding-top30, .desc {
             text-align: center !important;
             margin: auto !important;
