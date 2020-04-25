@@ -60,7 +60,7 @@
 
         chatClient.createChannel({
           uniqueName: uniqueChannelName,
-          friendlyName: '{{ seller_name }} - {{ user.username }} - {{ book_name }}',
+          friendlyName: 'From {{ seller_name }}{{ user.username }}: {{ book_name }}',
           isPrivate: false
         }).then(function(channel) {
             channel.invite('{{ seller_name }}').then(function() {
