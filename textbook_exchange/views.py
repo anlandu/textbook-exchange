@@ -466,7 +466,7 @@ def chat_view(request):
 
 
     subject = 'New Chat on UVA Text!'
-    message = 'Dear ' + listing.user.first_name +",\n\nSomeone has contacted you about your listing of '" + listing.textbook.title + "' at UVA TextEx! Visit https://pineapple-seals.herokuapp.com/accounts/messages to view your new message!\n\nThanks for using TextEx for all your used textbook needs,\nThe Team at UVA TextEx"
+    message = f"Dear {listing.user.first_name},\n\n{request.user.first_name} {request.user.last_name} has contacted you about your listing of \"{listing.textbook.title}\" at UVA TextEx! Visit https://pineapple-seals.herokuapp.com/accounts/messages to view your new message!\n\nThanks for using TextEx for all your used textbook needs,\nThe Team at UVA TextEx"
     recipient = listing.user.email
     send_mail(subject, message, EMAIL_HOST_USER, [recipient], fail_silently=False)
 
