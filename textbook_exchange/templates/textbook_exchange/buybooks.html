@@ -441,7 +441,7 @@ function truncateString(str, num) {
         return str;
     }
     // Return str truncated with '...' concatenated to the end of str.
-    return str.slice(0, num);
+    return str.slice(0, num)+"...";
 }
 
 function createTwilio(id, u1, u2, title) {
