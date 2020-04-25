@@ -3,7 +3,6 @@
 
 {% block content %}
 <style>
-    /* Night */
     body {
         background-image: url("{% static 'textbook_exchange/images/Rotunda.jpg' %}");
         background-repeat: no-repeat;
@@ -12,7 +11,7 @@
         background-size:cover;
     }
     .navbar, #footer {
-        background-color: rgba(32, 44, 80,.01);
+        background-color: rgba(32, 44, 80,.5);
     }
     a:not(#button) {
         background-color: transparent !important;
@@ -23,23 +22,6 @@
     .col-md-8 {
         color: white;
     }
-
-    /* Winter */
-    /* body {
-        background-image: url("{% static 'textbook_exchange/images/Rotunda_Dusk_Spring.jpg' %}");
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
-    #page-container {
-        background-color: rgba(255,255,255, 0.8) !important;
-    }
-    @media only screen and (max-width: 767px){
-        body {
-            background-position: top !important;
-        }
-    } */
-
-
     @media screen and (max-width: 991px) and (min-width: 768px) {
         .welcome {
             font-size: 37px;
