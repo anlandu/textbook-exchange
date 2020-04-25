@@ -452,10 +452,18 @@ def contact_us(request):
 def chat_view(request):
     context=get_logged_in(request)
     listing = get_object_or_404(ProductListing, pk=request.GET.get('listing_id'))
-    context['seller_name'] = listing.user.username
     context['listing'] = listing 
+    context['seller_user'] = listing.user.username
+    context['seller_first'] = listing.user.first_name
+    context['seller_last'] = listing.user.last_name
+    full_title=listing.textbook.title
+    if len(full_title)>20: #hard code bad but not sure what the scope of this var should be 
+        context['book_name'] = full_title[:20]+"..."
+    else:
+        context['book_name'] = full_title
+
     context['listing_id'] = request.GET.get('listing_id')
-    context['book_name'] = request.GET.get('bname')
+
 
     subject = 'New Chat on UVA Text!'
     message = 'Dear ' + listing.user.first_name +",\n\nSomeone has contacted you about your listing of '" + listing.textbook.title + "' at UVA TextEx! Visit https://pineapple-seals.herokuapp.com/accounts/messages to view your new message!\n\nThanks for using TextEx for all your used textbook needs,\nThe Team at UVA TextEx"

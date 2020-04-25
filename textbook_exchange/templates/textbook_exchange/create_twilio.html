@@ -44,7 +44,7 @@
     });
   
     function createOrJoinGeneralChannel() {
-      var uniqueChannelName = '{{seller_name}}' + '{{user.username}}'+'{{listing_id}}';
+      var uniqueChannelName = '{{seller_user}}' + '{{user.username}}' + '{{listing_id}}';
 
       // Get the general chat channel, which is where all the messages are
       // sent in this simple application
@@ -56,14 +56,14 @@
         redirect(uniqueChannelName);
       }).catch(function() {
         // If it doesn't exist, let's create it
-        console.log('Creating channel ' + uniqueChannelName +'\n{{book_name}}');
+        console.log('Creating channel ' + uniqueChannelName + '\n{{book_name}}');
 
         chatClient.createChannel({
           uniqueName: uniqueChannelName,
-          friendlyName: 'From {{ seller_name }}{{ user.username }}: {{ book_name }}',
+          friendlyName: '{{ seller_first }} {{ seller_last }}{{ user.first_name }} {{user.last_name}}: {{ book_name }}',
           isPrivate: false
         }).then(function(channel) {
-            channel.invite('{{ seller_name }}').then(function() {
+            channel.invite('{{ seller_user }}').then(function() {
                 console.log("Invitation sent!")
             }).catch(function(e) {
                 console.error(e);
