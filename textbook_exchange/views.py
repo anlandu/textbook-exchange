@@ -64,6 +64,14 @@ def login_redirect_before(request):
     return response
 
 def login_redirect_after(request):
+    account_sid = settings.TWILIO_ACCT_SID
+    auth_token = settings.TWILIO_AUTH_TOKEN
+    client = Client(account_sid, auth_token)
+
+    user = client.chat.services(settings.TWILIO_CHAT_SID) \
+                .users \
+                .create(identity=request.user.username)
+
     if "redirect_address" not in request.COOKIES:
         return HttpResponseRedirect(reverse('exchange:landing'))
     address = request.COOKIES.get("redirect_address")
