@@ -215,7 +215,7 @@ class AccountCurrentListings(ListView):
             if 'sold_listing' in self.request.POST:
                 listing_id = self.request.POST.get('sold_listing')
                 listing = ProductListing.objects.get(pk=listing_id)
-                listing.cart=None
+                listing.cart.clear()
                 listing.has_been_sold = True
                 listing.sold_date = datetime.now()
                 listing.save()
@@ -281,7 +281,7 @@ class BuyProductListings(ListView):
 
         textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
-        queryset = product_listings.filter(has_been_sold=False, cart=None)
+        queryset = product_listings.filter(has_been_sold=False)
 
         if url_ordering is not None:
             queryset = queryset.order_by(url_ordering)
