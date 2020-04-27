@@ -211,8 +211,7 @@
 <script>
     // clears form on load
     $(window).on('load', function() { 
-        form=document.getElementById("form")
-        if (form != null) {
+        if (document.getElementById("form") != null) {
             document.getElementById("form").reset();
         }
     });
