@@ -211,7 +211,10 @@
 <script>
     // clears form on load
     $(window).on('load', function() { 
-        document.getElementById("form").reset();
+        form=document.getElementById("form")
+        if (form != null) {
+            document.getElementById("form").reset();
+        }
     });
 </script>
 <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
