@@ -200,7 +200,7 @@ $(document).on("click touchstart", function(e) {
 function translateURL(url) {
     if (url != '') {
         try {
-            if (typeof url =='object') return url['thumbnail']; //only works on class search
+            if (typeof url === 'object') return url['thumbnail']; //only works on class search
             else {
                 try {
                     //create valid json from the array
@@ -209,7 +209,7 @@ function translateURL(url) {
                     jsonURL = jsonURL.replace(/'/g, "\"");
                     return JSON.parse(jsonURL)["smallThumbnail"];
                 } catch (e2) {
-                   return url
+                    return url;
                 }
             }
         } catch (e) {

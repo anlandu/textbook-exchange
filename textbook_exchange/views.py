@@ -13,6 +13,7 @@ from paypalhttp import HttpError
 from datetime import datetime
 from django.core.mail import mail_admins, send_mail
 from textexc.settings import EMAIL_HOST_USER
+from django.template.loader import render_to_string
 
 from faker import Factory
 from django.http import JsonResponse
@@ -64,14 +65,6 @@ def login_redirect_before(request):
     return response
 
 def login_redirect_after(request):
-    account_sid = settings.TWILIO_ACCT_SID
-    auth_token = settings.TWILIO_AUTH_TOKEN
-    client = Client(account_sid, auth_token)
-
-    user = client.chat.services(settings.TWILIO_CHAT_SID) \
-                .users \
-                .create(identity=request.user.username)
-
     if "redirect_address" not in request.COOKIES:
         return HttpResponseRedirect(reverse('exchange:landing'))
     address = request.COOKIES.get("redirect_address")
