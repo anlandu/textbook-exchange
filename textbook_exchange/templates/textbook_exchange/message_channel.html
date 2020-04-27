@@ -8,8 +8,7 @@
     <div class="form-group mt-2">
       <input id="chat-input" class="form-control type="text" placeholder="say anything" autofocus/>
       <small id="chatHelp" class="form-text text-muted">Remember to never give out personal information to strangers!</small>
-    </div>
-    
+    </div>    
   </div>
   <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
   <script src="https://media.twiliocdn.com/sdk/js/chat/v3.0/twilio-chat.min.js"></script>
@@ -17,5 +16,5 @@
     let channelName = '{{ channel_name }}';
     let u_name = '{{ user.username }}';
   </script>
-  <script src="{% static 'textbook_exchange/index.js' %}"></script>
+  <script src="{% static 'textbook_exchange/js/index.js' %}"></script>
 {% endblock %}

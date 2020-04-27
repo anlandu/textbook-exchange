@@ -211,8 +211,43 @@
 <script>
     // clears form on load
     $(window).on('load', function() { 
-        document.getElementById("form").reset();
+        if (document.getElementById("form") != null) {
+            document.getElementById("form").reset();
+        }
     });
 </script>
+<script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
+<script src="https://media.twiliocdn.com/sdk/js/chat/v3.0/twilio-chat.min.js"></script>
+<script>
+    /** 
+    *   Check if a user is logged in and then check for new messages
+    *   This is a little overkill since we don't show the number of unread messages someone has
+    *   However, it is useful to ensure that a chat account has been created for a user
+    *   So if someone else attempts to message a seller of a textbook, the seller is 
+    *   guarenteed to have an account setup, preventing an error
+    */
+    {% if user.is_authenticated %}
+        $.getJSON('/token', {
+            device: 'browser'
+            }, function(data) {
+        
+            // Initialize the Chat client
+            Twilio.Chat.Client.create(data.token).then(client => {
+                console.log('logged in - checking for new messages');
+                chatClient = client;
+                chatClient.on('channelInvited', function(channel) {
+                console.log('Invited to channel ' + channel.friendlyName);
+                if(channel.state.status !== "joined") 
+                    channel.join().then(function(channel) {
+                    console.log("joined channel" + channel.friendlyName);
+                        redirect(channel.uniqueName);
+                    });
+                });
+            }).catch(error => {
+                console.error(error);
+            });
+            });
+        </script>
+    {% endif %}
 
 {% endblock content %}

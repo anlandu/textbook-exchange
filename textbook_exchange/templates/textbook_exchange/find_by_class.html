@@ -1,22 +1,29 @@
 {% extends "textbook_exchange/base.html" %}
 {% load static %} 
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/account-base.css' %}">
-</head>
 
 {% block content %}
 <head>
+    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/account-base.css' %}">
     <style>
         .top {
             width: 100%; 
             margin-bottom: 20px; 
         }
+        .img-margin {
+            margin-left: 25px;
+        }
+        @media only screen and (max-width: 767px) {
+            .img-margin {
+                margin: auto;
+                margin-top: 10px;
+            }
+            .card-wide {
+                margin-bottom: 50px !important;
+            }
+        }
     </style>
 </head>
 <div class="container">
-    <div class="input-group">
-        <!-- Searchbar? -->
-    </div>
     <div>
         <!-- LISTINGS -->
         {% if num_textbooks == 0 %}
@@ -41,13 +48,13 @@
             </div>
             <div class="row">
                 {% for textbook in textbooks %}
-                    <div class="card w-100" id="listing" style="margin: 25px;">
+                    <div class="card w-100 card-wide" id="listing" style="margin: 25px;">
                         <a href="{% url 'exchange:buy_product' textbook.isbn13 textbook.title_clean %}" style="text-decoration: none; color: black;">
-                            <div class="card flex-row border-0" style="margin: 0;">
-                                <div class="card border-0 px-1" style="margin-right: 5px; min-width: 150px;">
-                                    <img class="card-img-top" src="https://isbndb.com/modules/isbndb/img/default-book-cover.jpg" onload="this.onload = null; this.src = translateURL({{ textbook.cover_photo_url }});" alt="{{ textbook.title }}" style="margin-top: 10px; border-radius: 0px;">
+                            <div class="card row flex-row border-0" style="margin: 0;">
+                                <div class="card img-margin border-0 px-1 col-12 col-md-4" style="min-width: 150px; max-width: fit-content;">
+                                    <img class="card-img-top" src="https://isbndb.com/modules/isbndb/img/default-book-cover.jpg" onload='this.onload = null; this.src = translateURL("{{ textbook.cover_photo_url }}");' alt="{{ textbook.title }}" style="margin-top: 10px; border-radius: 0px; max-width: 142px;">
                                 </div>
-                                <div class="card-block px-3" style="flex-grow: 1; padding: 10px;">
+                                <div class="card-block px-3 col-12 col-md-8" style="flex-grow: 1; padding: 10px;">
                                     <h5 class="card-title mt-3">{{ textbook.title }}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">{{ textbook.author_clean }}</h6> 
                                     <p class="card-text mb-1">

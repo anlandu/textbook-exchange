@@ -44,8 +44,6 @@
   
       }).catch(error => {
         console.error(error);
-        print('There was an error creating the chat client:<br/>' + error, true);
-        print('Please check your .env file.', false);
       });
     });
 
@@ -56,7 +54,7 @@
             const div_style = 'style="margin: 10px;"';
             const a_style = 'class="btn btn-uva side-btn d-block" style="border-radius: 30px !important"';
             console.log('Channel: ' + channel.friendlyName);
-            var channelItem = '<li><div ' + div_style + '><a ' + a_style + 'href="/messaging/channel?channel_name=' + channel.uniqueName + '">' + channel.friendlyName  + '</a></div></li>';
+            var channelItem = '<li><div ' + div_style + '><a ' + a_style + 'href="/messaging/channel?channel_name=' + channel.uniqueName + '">' + channel.friendlyName.replace("{{user.first_name}} {{user.last_name}}", "")  + '</a></div></li>';
             //var channelItem = '<li>' +channel.friendlyName  + '</li>';
             $('ul#channels').append(channelItem);
         }

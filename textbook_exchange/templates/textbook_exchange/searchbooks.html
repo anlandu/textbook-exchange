@@ -1,0 +1,144 @@
+{% extends "textbook_exchange/base.html" %}
+{% load static %}
+
+{% block search_largescreen %}
+<form class="my-2 my-lg-0 mx-auto nav-search d-none d-sm-block" action="{% url 'exchange:buybooks' %}" method="GET">
+    <div class="input-group">
+        <input name="search" type="text" class="form-control navbar-search" id="search_text" style="background-clip: unset;" placeholder="Search a book, class, ISBN, or keyword" onkeyup="updateSearch(this.value, 'big')" autofocus autocomplete="off">
+        <button type="submit" style="display: none;"></button>
+        <span class="input-group-append navbar-search" style="-webkit-appearance: none;"><button type="submit" class="btn btn-uva" onclick="updateSearch(document.getElementById('search_text').value, 'big')"><i class="fa fa-search my-auto"></i></button></span>
+        <div class="input-group-append" style="width: 100%;">
+            <ul style="width:100%;" id="results_dropdown" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
+                <li id="results_books"><div id="book_results"></div></li>
+                <li id="results_courses"><div id="course_results"></div></li>
+                <li id="noresults">
+                    <div class="py-2" style="height: 65px;">
+                        <div class="row px-0 mx-0 pl-2" style="height: 100%;">
+                            <div class="col-12 align-self-center" style="height: 100%; display: flex; align-items: center;">
+                                <p class="my-auto"><b><i>No Results Found</i></b></p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+
+{% block nowrapper %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'textbook_exchange/css/account-base.css' %}">
+    <style>
+        .top {
+            width: 100%; 
+            margin-bottom: 20px; 
+        }
+        .img-margin {
+            margin-left: 25px;
+        }
+        .container {
+            margin-top: 0px !important;
+        }
+        @media only screen and (max-width: 767px) {
+            .img-margin {
+                margin: auto;
+                margin-top: 10px;
+            }
+            .card-wide {
+                margin-bottom: 50px !important;
+            }
+        }
+        @media only screen and (max-width: 991px) {
+            .container {
+                max-width: 991px !important;
+                padding: 33px !important;
+            }
+        }
+    </style>
+</head>
+
+<div class="container">
+    <div class="row mx-auto">
+        <form class="my-2 my-lg-0 w-100 nav-search d-sm-block d-lg-none" action="{% url 'exchange:buybooks' %}" method="GET">
+            <div class="input-group">
+                <input name="search" type="text" class="form-control navbar-search" id="search_text_mobile" style="background-clip: unset;" placeholder="Search a book, class, ISBN, or keyword" onkeyup="updateSearch(this.value, 'small')" autofocus autocomplete="off">
+                <button type="submit" style="display: none;"></button>
+                <span class="input-group-append navbar-search" type='submit' style="-webkit-appearance: none;"><button type="button" class="btn btn-uva" onclick="updateSearch(document.getElementById('search_text').value, 'small')"><i class="fa fa-search my-auto"></i></button></span>
+                <div class="input-group-append" style="width: 100%;">
+                    <ul style="width:100%;" id="results_dropdown_mobile" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
+                        <li id="results_books_mobile"><div id="book_results_mobile"></div></li>
+                        <li id="results_courses_mobile"><div id="course_results_mobile"></div></li>
+                        <li id="noresults_mobile">
+                            <div class="py-2" style="height: 65px;">
+                                <div class="row px-0 mx-0 pl-2" style="height: 100%;">
+                                    <div class="col-12 align-self-center" style="height: 100%; display: flex; align-items: center;">
+                                        <p class="my-auto"><b><i>No Results Found</i></b></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if results.count == 0 %}
+        <div class="top">
+            <div class="showing-results mt-5 mb-5">
+                <h4><b>Showing results for "{{ search }}"</b></h4>
+            </div>
+        </div>
+        <br/>
+        <div>
+            <h3 style="text-align: center;">No results found</h3>
+        </div>
+    {% else %}
+        <div class="top">
+            <div class="showing-results mt-5 mb-5">
+                <h3><b>Showing {{ results.count }} {% if results.count == 1 %}result{% else %}results{% endif %} for "{{ search }}"</b></h3>
+            </div>
+        </div>
+        <!-- LISTINGS -->
+        <div class="row">
+            {% for textbook in results %}
+                <div class="card card-wide w-100" id="listing" style="margin: 25px;">
+                    <a href="{% url 'exchange:buy_product' textbook.isbn13 textbook.title_clean %}" style="text-decoration: none; color: black;">
+                        <div class="card row flex-row border-0" style="margin: 0;">
+                            <div class="card img-margin border-0 px-1 col-12 col-md-4" style="min-width: 150px; max-width: fit-content;">
+                                <img class="card-img-top" src="https://isbndb.com/modules/isbndb/img/default-book-cover.jpg" onload='this.onload = null; this.src = translateURL("{{ textbook.cover_photo_url }}");' alt="{{ textbook.title }}" style="margin-top: 10px; border-radius: 0px; max-width: 142px;">
+                            </div>
+                            <div class="card-block px-3 col-12 col-md-8" style="flex-grow: 1; padding: 10px;">
+                                <h5 class="card-title mt-3">{{ textbook.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ textbook.author_clean }}</h6> 
+                                <p class="card-text mb-1">
+                                    <p class="card-subtitle mt-2 text-muted mb-4" style="font-size: smaller;">
+                                        ISBN13: {{ textbook.isbn13 }}
+                                        <br/>
+                                        ISBN10: {{ textbook.isbn10 }}
+                                    </p>
+                                        <p class="card-text">
+                                            Requirement Type: {{ textbook.req_type }}
+                                        </p>
+                                    <p class="card-text">
+                                        <u>Bookstore Price</u>
+                                        <br/>
+                                        NEW: ${{ textbook.bookstore_new_price }}
+                                        <br/>USED: ${{ textbook.bookstore_used_price }}
+                                    </p>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+
+
+
+{% endblock %}

@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-import json, itertools, functools, requests, os, cloudinary.uploader
+import json, itertools, functools, requests, os, cloudinary.uploader, re
 from .forms import SellForm, ContactForm
 from .models import ProductListing, Class, Textbook, Class
 from paypalpayoutssdk.core import PayPalHttpClient, SandboxEnvironment
@@ -13,6 +13,7 @@ from paypalhttp import HttpError
 from datetime import datetime
 from django.core.mail import mail_admins, send_mail
 from textexc.settings import EMAIL_HOST_USER
+from django.template.loader import render_to_string
 
 from faker import Factory
 from django.http import JsonResponse
@@ -52,11 +53,6 @@ def faq(request):
     context = {}
     context['title'] ='FAQ'
     return render(request, 'textbook_exchange/faq.html', context=context)
-
-def error_404(request):
-    context = {}
-    context['title'] ='404 Error: Not Found'
-    return render(request, 'textbook_exchange/404_error.html')
 
 def login_redirect_before(request):
     response = HttpResponseRedirect(reverse('google_login'))
@@ -189,7 +185,7 @@ class AccountCurrentListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_dashboard.html"
     context_object_name = 'current_posts'
-    ordering = ['-published_date']
+    ordering = ['published_date']
     
     def get_context_data(self, **kwargs):          
         context = super().get_context_data(**kwargs)    
@@ -214,7 +210,7 @@ class AccountCurrentListings(ListView):
             if 'sold_listing' in self.request.POST:
                 listing_id = self.request.POST.get('sold_listing')
                 listing = ProductListing.objects.get(pk=listing_id)
-                listing.cart=None
+                listing.cart.clear()
                 listing.has_been_sold = True
                 listing.sold_date = datetime.now()
                 listing.save()
@@ -231,7 +227,7 @@ class AccountPastListings(ListView):
     model = ProductListing
     template_name = "textbook_exchange/account_past_posts.html"
     context_object_name = 'past_posts'
-    ordering = ['-published_date']
+    ordering = ['published_date']
 
     def get_context_data(self, **kwargs):          
         context = super().get_context_data(**kwargs)    
@@ -247,7 +243,7 @@ def buy_books(request):
     context = get_logged_in(request)
     context['title'] ='Buy Books'
     if request.GET.get("search"):
-        context['search'] = request.GET.get('search')
+        return redirect(reverse('exchange:search', kwargs={'keywords' : re.sub('[\W_]+',"000", request.GET.get('search'))})) # catch other redirects
     return render(request, 'textbook_exchange/buybooks.html', context=context)
 
 class BuyProductListings(ListView):
@@ -275,23 +271,39 @@ class BuyProductListings(ListView):
         return context
 
     def get_queryset(self, *args, **kwargs):
-        print("hi")
         url_ibsn = self.kwargs['isbn']
         url_ordering = self.request.GET.get('sort')
-        url_keywords = self.request.GET.get('search')
-        print(url_keywords)
-        print(url_ordering)
-        print("hi")
 
         textbook = get_object_or_404(Textbook, isbn13=url_ibsn)
         product_listings = textbook.productlisting_set.all()
-        queryset = product_listings.filter(has_been_sold=False, cart=None)
+        queryset = product_listings.filter(has_been_sold=False)
 
         if url_ordering is not None:
             queryset = queryset.order_by(url_ordering)
         else:
             queryset = queryset.order_by('price')
             
+        return queryset
+
+class SearchTextbooks(ListView):
+    model = Textbook
+    template_name = "textbook_exchange/searchbooks.html"
+    context_object_name = 'results'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        keywords_list = self.kwargs['keywords'].split('000')
+        context['search'] = self.kwargs['keywords'].replace('000', " ")
+
+        return context
+
+    def get_queryset(self, *args, **kwargs):
+        keywords_list = self.kwargs['keywords'].split('000')
+        queryset = Textbook.objects.all()
+        
+        for i in keywords_list:
+            queryset = queryset.filter(title__icontains=i)
+                    
         return queryset
 
 class FindTextbooks(ListView):
@@ -436,13 +448,21 @@ def contact_us(request):
 def chat_view(request):
     context=get_logged_in(request)
     listing = get_object_or_404(ProductListing, pk=request.GET.get('listing_id'))
-    context['seller_name'] = listing.user.username
     context['listing'] = listing 
+    context['seller_user'] = listing.user.username
+    context['seller_first'] = listing.user.first_name
+    context['seller_last'] = listing.user.last_name
+    full_title=listing.textbook.title
+    if len(full_title)>20: #hard code bad but not sure what the scope of this var should be 
+        context['book_name'] = full_title[:20]+"..."
+    else:
+        context['book_name'] = full_title
+
     context['listing_id'] = request.GET.get('listing_id')
-    context['book_name'] = request.GET.get('bname')
+
 
     subject = 'New Chat on UVA Text!'
-    message = 'Dear ' + listing.user.first_name +",\n\nSomeone has contacted you about your listing of '" + listing.textbook.title + "' at UVA TextEx! Visit https://pineapple-seals.herokuapp.com/accounts/messages to view your new message!\n\nThanks for using TextEx for all your used textbook needs,\nThe Team at UVA TextEx"
+    message = f"Dear {listing.user.first_name},\n\n{request.user.first_name} {request.user.last_name} has contacted you about your listing of \"{listing.textbook.title}\" at UVA TextEx! Visit https://pineapple-seals.herokuapp.com/accounts/messages to view your new message!\n\nThanks for using TextEx for all your used textbook needs,\nThe Team at UVA TextEx"
     recipient = listing.user.email
     send_mail(subject, message, EMAIL_HOST_USER, [recipient], fail_silently=False)
 

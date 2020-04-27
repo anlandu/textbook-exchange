@@ -65,7 +65,7 @@ def success(request):
         pt = PendingTransaction(user=u, balance=transaction.price, date_transacted=timezone.now(), date_settled=one_week_in_future())
         pt.save()
         transaction.has_been_sold = True
-        transaction.cart = None
+        transaction.cart.clear()
         transaction.save()
         transaction.sold_date = datetime.now()
         sold_items.append(transaction)
@@ -95,18 +95,12 @@ def cancelled(request):
 def cart_functions(user, listing_id, fn):
     listing = get_object_or_404(ProductListing, pk=listing_id)
     if fn == "add":
-        if listing.cart is not None:
-            if listing.cart is user.cart:
-                return JsonResponse({'status': 'success', 'title': listing.textbook.title, 'seller': listing.user.email})
-            return JsonResponse({'status': "error - already in another user's cart"})
-        listing.cart = user.cart
+        listing.cart.add(user.cart)
         listing.save()       
         return JsonResponse({'status': 'success', 'title': listing.textbook.title, 'seller': listing.user.email})
     elif fn == "remove":
-        if listing.cart != user.cart:
+        if not user.cart in listing.cart.all():
             return JsonResponse({'status': "error - not authorized to perform this action"})
-        if listing.cart is None:
-            return JsonResponse({'status': "error - this item was not in the user's cart"})
-        listing.cart = None
+        listing.cart.remove(user.cart)
         listing.save()
         return JsonResponse({'status': 'success'})

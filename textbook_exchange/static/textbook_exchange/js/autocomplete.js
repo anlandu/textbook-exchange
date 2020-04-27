@@ -1,13 +1,19 @@
-function updateSearch(search){
-    if(search.length >= 2){
-        //console.log(search);
+function updateSearch(search, location) {
+    if(search.length >= 2) {
+
+        let results_dropdown = (location === "big") ? 'results_dropdown' : 'results_dropdown_mobile';
+        let results_books = (location === "big") ? 'results_books' : 'results_books_mobile';
+        let book_results = (location === "big") ? 'book_results' : 'book_results_mobile';
+        let results_courses = (location === "big") ? 'results_courses' : 'results_courses_mobile';
+        let course_results = (location === "big") ? 'course_results' : 'course_results_mobile';
+        let noresults = (location === "big") ? 'noresults' : 'noresults_mobile';
 
         var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
                 if (xmlhttp.status == 200) {
-                    $('#results_dropdown').show(); //open the dropdown menu
+                    $('#' + results_dropdown).show(); //open the dropdown menu
                     var searchResults = JSON.parse(xmlhttp.responseText);
                     //console.log(searchResults);
 
@@ -17,8 +23,8 @@ function updateSearch(search){
 
                     //update dropdown with availible results
                     if(searchResults['books'].length > 0){
-                        document.getElementById("results_books").style.display = 'inline'; //show header
-                        var isbnList = document.getElementById("book_results");
+                        document.getElementById(results_books).style.display = 'inline'; //show header
+                        var isbnList = document.getElementById(book_results);
                         isbnList.innerHTML = ''; //remove old list elements
                         for(var i = 0; i < searchResults['books'].length; i++){ //add new elements
                             let book = JSON.parse(searchResults['books'][i]);
@@ -76,12 +82,12 @@ function updateSearch(search){
                         }
                     }
                     else {
-                        document.getElementById("results_books").style.display = 'none'; //hide section
+                        document.getElementById(results_books).style.display = 'none'; //hide section
                     }
 
                     if(searchResults['courses'].length > 0){
-                        document.getElementById("results_courses").style.display = 'inline'; //show header
-                        var isbnList = document.getElementById("course_results");
+                        document.getElementById(results_courses).style.display = 'inline'; //show header
+                        var isbnList = document.getElementById(course_results);
 
                         isbnList.innerHTML = ''; //remove old list elements
 
@@ -130,19 +136,19 @@ function updateSearch(search){
                         }
                     }
                     else{
-                        document.getElementById("results_courses").style.display = 'none'; //hide header
+                        document.getElementById(results_courses).style.display = 'none'; //hide header
                     }
 
                     if(searchResults['courses'].length > 0 || searchResults['books'].length > 0){
-                        document.getElementById("noresults").style.display = 'none'; //hide no results message
+                        document.getElementById(noresults).style.display = 'none'; //hide no results message
                     }
                     else{
-                        document.getElementById("noresults").style.display = 'inline'; //show no results message
+                        document.getElementById(noresults).style.display = 'inline'; //show no results message
                     }
                 }
                 else {
                     console.error("Search autocomplete not availible");
-                    $('#results_dropdown').hide();
+                    $('#' + results_dropdown).hide();
                 }
             }
         };
@@ -151,28 +157,50 @@ function updateSearch(search){
         xmlhttp.send();
     }
     else{
-        $('#results_dropdown').hide();
+        hideAutocomplete();
     }
 };
 
 function hideAutocomplete() {
     $('#results_dropdown').hide();
+    try {
+        $('#results_dropdown_mobile').hide();
+    } catch (e) {
+        console.log("not mobile")
+    }
 }
 
 $(document).on("click touchstart", function(e) {
-    var t = $(e.target).closest('#results_dropdown');
-    var exceptDiv = $('#results_dropdown');
-    var s = $(e.target).closest('#search_text');
-    var searchDiv = $('#search_text');
-    if (!exceptDiv.is(t) && !searchDiv.is(s)) hideAutocomplete();
-    else if (searchDiv.is(s)) updateSearch(searchDiv.val());
+    try {
+        var t = $(e.target).closest('#results_dropdown');
+        var exceptDiv = $('#results_dropdown');
+        var s = $(e.target).closest('#search_text');
+        var searchDiv = $('#search_text');
+
+        var t_m = $(e.target).closest('#results_dropdown_mobile');
+        var exceptDiv_m = $('#results_dropdown_mobile');
+        var s_m = $(e.target).closest('#search_text_mobile');
+        var searchDiv_m = $('#search_text_mobile');
+        
+        if (!exceptDiv.is(t) && !searchDiv.is(s) && !exceptDiv_m.is(t_m) && !searchDiv_m.is(s_m)) hideAutocomplete();
+        else if (searchDiv.is(s)) updateSearch(searchDiv.val(), 'big');
+        else if (searchDiv_m.is(s_m)) updateSearch(searchDiv_m.val(), 'small');
+    } catch (error) {
+        var t = $(e.target).closest('#results_dropdown');
+        var exceptDiv = $('#results_dropdown');
+        var s = $(e.target).closest('#search_text');
+        var searchDiv = $('#search_text');
+
+        if (!exceptDiv.is(t) && !searchDiv.is(s)) hideAutocomplete();
+        else if (searchDiv.is(s)) updateSearch(searchDiv.val(), 'big');
+    }
+    
 });
 
 function translateURL(url) {
-    let returl = '';
     if (url != '') {
         try {
-            if (typeof url =='object') return url['thumbnail']; //only works on class search
+            if (typeof url === 'object') return url['thumbnail']; //only works on class search
             else {
                 try {
                     //create valid json from the array
@@ -181,13 +209,12 @@ function translateURL(url) {
                     jsonURL = jsonURL.replace(/'/g, "\"");
                     return JSON.parse(jsonURL)["smallThumbnail"];
                 } catch (e2) {
-                   return url
+                    return url;
                 }
             }
         } catch (e) {
             return 'https://isbndb.com/modules/isbndb/img/default-book-cover.jpg';
         }
-        return returl;
     } else {
         return 'https://isbndb.com/modules/isbndb/img/default-book-cover.jpg';
     }

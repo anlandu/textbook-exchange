@@ -20,11 +20,11 @@
 {% endif %}
 
 <!-- Name/Email/Header -->
-    <div style="border: 2px solid black; padding: 10px 10px 10px 18px; margin-bottom: 25px;">
+    <div style="border: 1px solid darkgray; padding: 10px 10px 10px 18px; margin-bottom: 25px;">
         <h1 style="margin-bottom: 10px;">{{ user.first_name }} {{ user.last_name }}</h1>
         <h5>{{ user.email }}</h5>
         <h5>Balance: ${{ user.balance }} <a href="{% url 'exchange:cashout' %}">Cashout</a></h5>
-        <h5>Pending Balance: ${{ pending_balance }} <a href="{% url 'exchange:process' %}">Process</a></h5>
+        <h5>Pending Balance: ${% if pending_balance == 0 %}0.00{% else %}{{ pending_balance }}{% endif %} <a href="{% url 'exchange:process' %}">Process</a></h5>
     </div>
 	<br/><br/>
 	

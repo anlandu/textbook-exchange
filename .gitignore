@@ -2,6 +2,7 @@ env
 db.sqlite3
 listing_images/
 textbook_images/
+staticfiles/
 *.png
 
 #image upload locations

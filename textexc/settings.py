@@ -13,13 +13,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SECRET_KEY = 'bzlj_!^o$51mc-3zb^xg87$0u=ygwuo*(+(57fk1^=0w4zs#j-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # OAUTH 2 ID and Secret: keep this private
 CLIENT_ID = '926789688582-6hj6sj5kcquk9o6hc4proqh9p266v6mj.apps.googleusercontent.com'
 CLIENT_SECRET = 'VKJy7twp3ZHgG8wUoGFxv3yx'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'textexc.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,7 +119,6 @@ AUTHENTICATION_BACKENDS = (
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -178,11 +177,12 @@ EMAIL_USE_SSL = False
 ADMINS = [('Pineapple Seals Admin', 'pineappleseals@gmail.com')]
 
 TWILIO_ACCT_SID='ACf0385517838b0c0e46062e41663cd6c8'
-TWILIO_CHAT_SID='IS132e7a7ce77447468436a24845500d04'
+TWILIO_AUTH_TOKEN='85d5a9285958fda0dbac2fded8f6b4f8'
+TWILIO_CHAT_SID='IS8bf9f457e4224899919366c2902f6835' #change
 TWILIO_SYNC_SID='IS7086992d661eb157e6b5149543febb51'
 TWILIO_API_SID='SK9c7fe6717da5318751e61ca951dd784e'
 TWILIO_API_SECRET='YP8YzQNQw8K1VM9bgiFlezje0MckJenx'
 
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-#STATICFILES_DIRS = (os.path.join(os.path.dirname(__file__),'static'),)
+STATIC_ROOT = os.path.join(BASE_DIR, 'textbook_exchange/static/textbook_exchange/')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'textbook_exchange/static/textbook_exchange/'),)
 django_heroku.settings(locals())

@@ -40,7 +40,7 @@
   }
  
    // Alert the user they have been assigned a random username
-   print('Logging in...');
+   console.log('Logging in...');
  
    // Get an access token for the current user, passing a username (identity)
    // and a device ID - for browser-based apps, we'll always just use the
@@ -67,8 +67,6 @@
         })      
      }).catch(error => {
        console.error(error);
-       print('There was an error creating the chat client:<br/>' + error, true);
-       print('Please check your .env file.', false);
      });
    });
  
@@ -100,7 +98,7 @@
  
      if (e.keyCode == 13) {
        if (generalChannel === undefined) {
-         print('The Chat Service is not configured. Please check your .env file.', false);
+         console.log('The Chat Service is not configured. Please check your .env file.', false);
          return;
        }
        generalChannel.sendMessage($input.val())

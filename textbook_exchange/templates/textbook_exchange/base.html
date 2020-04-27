@@ -24,7 +24,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        
+
         <!--Autocomplete urls, cant access template tags from external js, so we pass the only one we used-->
         <script>let auto_url = "{% url 'exchange:ajax_autocomplete' %}";</script>
         <script src="{% static 'textbook_exchange/js/autocomplete.js' %}"></script>
@@ -52,15 +52,19 @@
                         <span class="uva fa fa-bars"></span>
                     </button>
                     <!-- Logo -->
-                    <a class="uva navbar-brand mx-auto" href="{% url 'exchange:landing' %}">
+                    <a class="navbar-brand mx-auto" href="{% url 'exchange:landing' %}">
                         <img src="{% static 'textbook_exchange/images/Logo1White.png' %}" alt="TextEx" style="height: 55px; margin-right: 25px;"/>
                     </a> 
-                    <!-- Search Bar -->
+                    
+                    
                     <div class="collapse navbar-collapse text-center" id="navbarResponsive">
+                        <!-- Search Bar -->
+                        {% block search_largescreen %}
                         <form class="my-2 my-lg-0 mx-auto nav-search" action="{% url 'exchange:buybooks' %}" method="GET">
                             <div class="input-group">
-                                <input name="search" type="text" class="form-control navbar-search" id="search_text" style="background-clip: unset;" placeholder="Search a title, author, class, or ISBN" onkeyup="updateSearch(this.value)" autofocus autocomplete="off">
-                                <span class="input-group-append navbar-search" type='submit' style="-webkit-appearance: none;"><button type="submit" class="btn btn-uva"><i class="fa fa-search my-auto"></i></button></span>
+                                <input name="search" type="text" class="form-control navbar-search" id="search_text" style="background-clip: unset;" placeholder="Search a book, class, ISBN, or keyword" onkeyup="updateSearch(this.value, 'big')" autofocus autocomplete="off">
+                                <button type="submit" style="display: none;"></button>
+                                <span class="input-group-append navbar-search" style="-webkit-appearance: none;"><button type="submit" class="btn btn-uva" onclick="updateSearch(document.getElementById('search_text').value, 'big')"><i class="fa fa-search my-auto"></i></button></span>
                                 <div class="input-group-append" style="width: 100%;">
                                     <ul style="width:100%;" id="results_dropdown" class="cursor-pointer dropdown-menu m-0 p-0" aria-labelledby="dropdownMenu1">
                                         <li id="results_books"><div id="book_results"></div></li>
@@ -78,6 +82,8 @@
                                 </div>
                             </div>
                         </form>
+                        {% endblock %}
+
                         <!-- Sell, Cart, Login Buttons -->
                         <ul class="navbar-nav mx-auto mx-lg-0 float-lg-right d-block" style="min-width: 245px;">
                             <li class="nav-item d-inline-block"><a class="uva nav-link uva-nav" href="{% url 'exchange:sellbooks' %}">Sell a book</a></li>
