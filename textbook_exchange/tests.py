@@ -366,7 +366,6 @@ class ViewListingsTest(TestCase):
         self.pl = ProductListing.objects.create(
             user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
             price=100.0,
             condition="likenew",
         )
@@ -541,7 +540,6 @@ class FilterSortTest(TestCase):
         pl = ProductListing.objects.create(
             user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
             price=100.0,
             condition="likenew",
         )
@@ -549,14 +547,12 @@ class FilterSortTest(TestCase):
         p2 = ProductListing.objects.create(
             user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
             price=60.0,
             condition="good",
         )
         p3 = ProductListing.objects.create(
             user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
             price=40.0,
             condition="acceptable",
         )
@@ -564,7 +560,6 @@ class FilterSortTest(TestCase):
         p4 = ProductListing.objects.create(
             user=self.test_user,
             textbook=Textbook.objects.get(pk="1-891389-22-X"), 
-            cart=None,
             price=80.0,
             condition="verygood",
         )
