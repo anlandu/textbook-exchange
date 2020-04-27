@@ -13,7 +13,6 @@ app_name = "exchange"
 urlpatterns = [
     path('', views.landing, name='landing'),
     path('faq', views.faq, name='faq'),
-    path('404_error', views.error_404, name='404_error'),
     path('login/', views.login_redirect_before, name="login"),
     path('login/redirect/', views.login_redirect_after, name="login_redirect"),
     path('sell/', views.sell_books, name='sellbooks'),

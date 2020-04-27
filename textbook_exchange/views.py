@@ -54,11 +54,6 @@ def faq(request):
     context['title'] ='FAQ'
     return render(request, 'textbook_exchange/faq.html', context=context)
 
-def error_404(request):
-    context = {}
-    context['title'] ='404 Error: Not Found'
-    return render(request, 'textbook_exchange/404_error.html')
-
 def login_redirect_before(request):
     response = HttpResponseRedirect(reverse('google_login'))
     response.set_cookie("redirect_address", request.GET.get('login_redirect_target'))

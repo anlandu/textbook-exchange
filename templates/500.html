@@ -1,0 +1,63 @@
+{% extends 'textbook_exchange/base.html' %}
+{% load static %} 
+
+{% block content %}
+<style>
+    body {
+        background-image: url("{% static 'textbook_exchange/images/Rotunda.jpg' %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        background-size:cover;
+    }
+    .navbar, #footer {
+        background-color: rgba(32, 44, 80,.5);
+    }
+    a:not(#button) {
+        background-color: transparent !important;
+    }
+    #page-container {
+        background-color: rgba(0,0,0, 0.65) !important;
+    }
+    .col-md-8 {
+        color: white;
+    }
+    @media screen and (max-width: 991px) and (min-width: 768px) {
+        .welcome {
+            font-size: 37px;
+        }
+        .desc {
+            font-size: 21px;
+            width: 90% !important;
+        }
+        .col-md-8 {
+            padding-left: 0 !important;
+        }
+    }
+    @media only screen and (max-width: 991px){
+        .padding-top50 {
+            padding: 10px !important;
+        }
+    }
+    @media only screen and (max-width: 767px){
+        body {
+            background-position: top !important;
+        }
+        .padding-top30, .desc {
+            text-align: center !important;
+            margin: auto !important;
+        }
+        .desc {
+            width: 100% !important;
+        }
+
+    }
+</style>
+
+<div class="row padding-top30">
+    <div class="col-md-8">
+        <h1 class="mb-5 welcome">Whoops!</h1>
+        <h4 class="p-font desc" style="width: 80%">There was an internal server error... Please try again later.</h4>
+    </div>
+</div>
+{% endblock %}
